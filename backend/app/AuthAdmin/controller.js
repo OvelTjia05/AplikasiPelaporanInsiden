@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const Admin = require("../Admin/model");
+const bcrypt = require("bcrypt");
 
 const { accessTokenSecret, refreshTokenSecret } = require("../../config");
 
@@ -38,9 +39,13 @@ const registerAdmin = async (req, res) => {
 
       const tanggal_pembuatan_akun = `${year}-${month}-${date}`;
 
+      // enkripsi password
+      const salt = await bcrypt.genSalt();
+      const hashingPassword = await bcrypt.hash(password, salt);
+
       await Admin.create({
         username,
-        password,
+        password: hashingPassword,
         tanggal_pembuatan_akun,
       });
 
@@ -91,7 +96,9 @@ const loginAdmin = async (req, res) => {
         });
 
       // PASSWORD TIDAK COCOK
-      if (password !== admin.password)
+      const match = await bcrypt.compare(password, admin.password);
+
+      if (!match)
         return res.status(401).json({
           code: "400",
           status: "BAD_REQUEST",
@@ -99,9 +106,6 @@ const loginAdmin = async (req, res) => {
         });
 
       const id_admin = admin.id_admin;
-
-      console.log("ini id_user: ", id_admin);
-      console.log("ini username: ", username);
 
       const accessToken = jwt.sign({ id_admin, username }, accessTokenSecret, {
         expiresIn: "1h",

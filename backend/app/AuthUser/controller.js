@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../User/model");
+const bcrypt = require("bcrypt");
 
 const { accessTokenSecret, refreshTokenSecret } = require("../../config");
 
@@ -38,9 +39,13 @@ const registerUser = async (req, res) => {
 
       const tanggal_pembuatan_akun = `${year}-${month}-${date}`;
 
+      // enkripsi password
+      const salt = await bcrypt.genSalt();
+      const hashingPassword = await bcrypt.hash(password, salt);
+
       await User.create({
         username,
-        password,
+        password: hashingPassword,
         tanggal_pembuatan_akun,
       });
 
@@ -91,7 +96,12 @@ const loginUser = async (req, res) => {
         });
 
       // PASSWORD TIDAK COCOK
-      if (password !== user.password)
+      const match = await bcrypt.compare(password, user.password);
+      console.log(match);
+      console.log(password);
+      console.log(user.password);
+
+      if (!match)
         return res.status(401).json({
           code: "400",
           status: "BAD_REQUEST",

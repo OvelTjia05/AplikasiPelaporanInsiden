@@ -40,6 +40,19 @@ const postLaporan = async (req, res) => {
   const kriteriaWord = ["sakit", "kebakaran", "kecelakaan"];
   let tingkat_prioritas;
 
+  const user = await User.findOne({
+    where: {
+      id_user: req.params.id_user,
+    },
+  });
+
+  if (!user)
+    return res.status(400).json({
+      code: "400",
+      status: "BAD_REQUEST",
+      errors: "user id not found",
+    });
+
   if (req.file === undefined)
     return res.status(400).json({
       code: "400",
