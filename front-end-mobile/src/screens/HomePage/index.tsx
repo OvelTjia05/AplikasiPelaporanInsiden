@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Image,
   ScrollView,
@@ -7,22 +8,23 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native';
-import React from 'react';
 import Header from '../../components/molecules/Header';
 import {MyFont} from '../../components/atoms/MyFont';
 import {MyColor} from '../../components/atoms/MyColor';
 import Gap from '../../components/atoms/Gap';
-import {Ilustrasi} from '../../assets/images';
+import {Ilustrasi, Ilustrasi1} from '../../assets/images';
 import {
+  IconBuatLaporan,
+  IconBuatLaporanAnonim,
   IconCentang,
+  IconLaporan,
   IconPanahKanan,
   IconSedangDitindak,
   IconTolak,
   IconWaktu,
 } from '../../assets/icons';
 
-const HomePage = () => {
-  // Fungsi untuk mendapatkan warna berdasarkan status
+const HomePage = ({navigation}: any) => {
   const getStatusColor = (status: any) => {
     switch (status) {
       case 'Dalam Antrian':
@@ -34,11 +36,10 @@ const HomePage = () => {
       case 'Laporan Ditolak':
         return '#8D0000';
       default:
-        return 'white'; // Atur warna default sesuai kebutuhan
+        return 'white';
     }
   };
 
-  // Fungsi untuk mendapatkan ikon berdasarkan status
   const getStatusIcon = (status: any) => {
     switch (status) {
       case 'Dalam Antrian':
@@ -50,31 +51,102 @@ const HomePage = () => {
       case 'Laporan Ditolak':
         return <IconTolak />;
       default:
-        return null;
+        return '';
     }
   };
 
-  //data dummy untuk riwayat
   const riwayat = [
-    {
-      jenis: 'UTD',
-      waktu: '19:45',
-      tanggal: '6 September 2023',
-      status: 'Laporan Ditolak',
-    },
     {
       jenis: 'Radiologi',
       waktu: '19:45',
-      tanggal: '6 September 2023',
+      tanggal: '2023-02-07',
       status: 'Laporan Selesai',
     },
     {
       jenis: 'Radiologi',
-      waktu: '19:45',
-      tanggal: '6 September 2023',
-      status: 'Dalam Antrian',
+      waktu: '19:46',
+      tanggal: '2023-09-03',
+      status: 'Laporan Ditolak',
     },
   ];
+
+  const dummyCardData = {
+    gambar: require('../../assets/images/ilustrasi1.png'),
+    judul: '4 Strategi Pemerintah kendalikan TB di Indonesia',
+    tanggal: '5 September 2021',
+    sumber: 'sehatnegeriku.kemkes.go.id',
+  };
+
+  const renderRiwayatLaporan = () => {
+    return (
+      <View style={styles.card}>
+        <Text style={styles.txtCardTitle}>Riwayat Laporan</Text>
+        {riwayat.length === 0 ? (
+          <Text
+            style={{
+              color: '#787878',
+              fontFamily: 'Poppins-Bold',
+              fontSize: 17,
+              paddingHorizontal: 20,
+            }}>
+            Anda belum membuat{'\n'}laporan apapun.
+          </Text>
+        ) : (
+          <>
+            {riwayat.map((item, index) => (
+              <View
+                style={[
+                  styles.cardContent,
+                  {
+                    backgroundColor: getStatusColor(item.status),
+                  },
+                ]}
+                key={index}>
+                <Image source={Ilustrasi} />
+                <View>
+                  <Text style={styles.txtCard}>{item.jenis}</Text>
+                  <Text style={styles.txtCardTime}>{item.waktu}</Text>
+                  <Text style={styles.txtCard}>{item.tanggal}</Text>
+                  <Text style={styles.txtCardStatus}>{item.status}</Text>
+                </View>
+                {getStatusIcon(item.status)}
+              </View>
+            ))}
+            <Pressable style={styles.cardFooter}>
+              <Text
+                style={{
+                  fontFamily: MyFont.Primary,
+                  fontSize: 14,
+                  color: MyColor.Light,
+                }}>
+                Lihat lebih lengkap di menu riwayat
+              </Text>
+              <IconPanahKanan />
+            </Pressable>
+          </>
+        )}
+      </View>
+    );
+  };
+
+  const findLatestReport = (riwayat: any[]) => {
+    let latestReport = null;
+    let latestTimestamp = 0;
+
+    for (const report of riwayat) {
+      const timestamp = new Date(report.tanggal).getTime(); // Ubah tanggal ke timestamp
+
+      if (timestamp > latestTimestamp) {
+        latestTimestamp = timestamp;
+        latestReport = report;
+      }
+    }
+
+    return latestReport;
+  };
+
+  // Menemukan laporan terbaru
+  const latestReport = findLatestReport(riwayat);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -85,47 +157,119 @@ const HomePage = () => {
           Selamat Pagi,{'\n'}
           <Text style={styles.txtName}>Roger</Text>
         </Text>
-        <View style={styles.cardLaporanTerakhir}>
-          <Text>Anda belum membuat laporan apapun</Text>
-        </View>
-        <Gap height={20} />
-        <View style={styles.cardRiwayatLaporan}>
-          <Text style={styles.txtCardTitle}>Riwayat Laporan</Text>
-          {riwayat.length === 0 ? (
-            <Text style={{color: 'black'}}>
+        {riwayat.length === 0 ? (
+          <View style={styles.cardLaporanTerakhir}>
+            <Text style={styles.txtLaporanTerakhir}>
               Anda belum membuat laporan apapun
             </Text>
-          ) : (
-            <>
-              {riwayat.map((item, index) => (
-                <View
-                  style={[
-                    styles.cardContent,
-                    {
-                      backgroundColor: getStatusColor(item.status),
-                    },
-                  ]}
-                  key={index}>
-                  <Image source={Ilustrasi} />
-                  <View>
-                    <Text style={styles.txtCard}>{item.jenis}</Text>
-                    <Text style={styles.txtCardTime}>{item.waktu}</Text>
-                    <Text style={styles.txtCard}>{item.tanggal}</Text>
-                    <Text style={styles.txtCardStatus}>{item.status}</Text>
-                  </View>
-                  {getStatusIcon(item.status)}
-                </View>
-              ))}
-            </>
-          )}
+            <TouchableOpacity
+              style={styles.createReportButton}
+              onPress={() => navigation.navigate('BuatLaporanFoto')}>
+              <Text style={styles.createReportButtonText}>
+                Tekan disini untuk {'\n'}membuat laporan baru!
+              </Text>
+              <Image source={IconLaporan} resizeMode="contain" />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          // <View style={styles.card}>
+          //   <Text style={styles.txtCardTitle}>
+          //     Berikut laporan Anda yang terakhir
+          //   </Text>
+          //   {riwayat.map((item, index) => (
+          //     <View
+          //       style={[
+          //         styles.cardContent,
+          //         {
+          //           backgroundColor: getStatusColor(item.status),
+          //         },
+          //       ]}
+          //       key={index}>
+          //       <Image source={Ilustrasi} />
+          //       <View>
+          //         <Text style={styles.txtCard}>{item.jenis}</Text>
+          //         <Text style={styles.txtCardTime}>{item.waktu}</Text>
+          //         <Text style={styles.txtCard}>{item.tanggal}</Text>
+          //         <Text style={styles.txtCardStatus}>{item.status}</Text>
+          //       </View>
+          //       {getStatusIcon(item.status)}
+          //     </View>
+          //   ))}
+          // </View>
+          <View style={styles.card}>
+            <Text style={styles.txtCardTitle}>
+              Berikut laporan Anda yang terakhir
+            </Text>
+            <View
+              style={[
+                styles.cardContent,
+                {
+                  backgroundColor: getStatusColor(latestReport.status),
+                },
+              ]}>
+              <Image source={Ilustrasi} />
+              <View>
+                <Text style={styles.txtCard}>{latestReport.jenis}</Text>
+                <Text style={styles.txtCardTime}>{latestReport.waktu}</Text>
+                <Text style={styles.txtCard}>{latestReport.tanggal}</Text>
+                <Text style={styles.txtCardStatus}>{latestReport.status}</Text>
+              </View>
+              {getStatusIcon(latestReport.status)}
+            </View>
+          </View>
+        )}
+        <Gap height={20} />
+        {renderRiwayatLaporan()}
+        <Gap height={20} />
+        <View style={styles.card}>
+          <Text style={styles.txtCardTitle}>Berita Kesehatan</Text>
+          <View
+            style={{
+              backgroundColor: MyColor.Light,
+              flexDirection: 'row',
+              columnGap: 10,
+              height: 'auto',
+            }}>
+            <Image
+              source={dummyCardData.gambar}
+              resizeMode="contain"
+              style={{width: 100}}
+            />
+            <View style={{flex: 1, maxHeight: 68}}>
+              <Text
+                style={{
+                  fontFamily: 'Poppins-Bold',
+                  fontSize: 12,
+                  color: '#212121',
+                }}>
+                {dummyCardData.judul}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: MyFont.Primary,
+                  fontSize: 10,
+                  color: '#212121',
+                }}>
+                {dummyCardData.tanggal}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: 'Poppins-Italic',
+                  fontSize: 10,
+                  color: '#212121',
+                }}>
+                {dummyCardData.sumber}
+              </Text>
+            </View>
+          </View>
           <Pressable style={styles.cardFooter}>
             <Text
               style={{
                 fontFamily: MyFont.Primary,
-                fontSize: 14,
+                fontSize: 12,
                 color: MyColor.Light,
               }}>
-              Lihat lebih lengkap di menu riwayat
+              Lihat informasi & berita kesehatan lainnya
             </Text>
             <IconPanahKanan />
           </Pressable>
@@ -142,19 +286,31 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   container1: {
-    flex: 1,
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 80,
   },
   cardLaporanTerakhir: {
     flexWrap: 'wrap',
-    height: 'auto',
     minHeight: 119,
-    borderRadius: 20,
     backgroundColor: MyColor.Primary,
   },
-  cardRiwayatLaporan: {
-    borderWidth: 1,
-    borderColor: 'black',
+  txtLaporanTerakhir: {
+    padding: 20,
+    fontFamily: MyFont.Primary,
+    fontSize: 11,
+    color: '#fff',
+  },
+  createReportButton: {
+    flexDirection: 'row',
+    columnGap: 60,
+    paddingHorizontal: 20,
+  },
+  createReportButtonText: {
+    fontFamily: 'Poppins-Bold',
+    fontSize: 16,
+    color: '#fff',
+  },
+  card: {
     backgroundColor: '#ffffff',
     overflow: 'hidden',
     flexWrap: 'wrap',
@@ -176,7 +332,8 @@ const styles = StyleSheet.create({
     fontFamily: MyFont.Primary,
     fontSize: 17,
     color: '#000000',
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
   },
   txtCard: {
     fontSize: 11,
@@ -199,7 +356,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     height: 120,
-    backgroundColor: MyColor.Primary,
     width: '100%',
   },
   cardFooter: {
