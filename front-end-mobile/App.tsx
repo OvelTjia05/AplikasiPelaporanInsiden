@@ -3,7 +3,7 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SplashScreen from './src/screens/SplashScreen';
-import DashBoard from './src/screens/DashBoard';
+
 import KategoriBidang from './src/screens/KategoriBidang';
 import Login from './src/screens/Login';
 import BuatLaporanFoto from './src/screens/BuatLaporanFoto';
@@ -13,6 +13,7 @@ import SignUp from './src/screens/SignUp';
 import ForgetPass from './src/screens/ForgetPass';
 import CreatePass from './src/screens/CreatePass';
 import Navigation from './src/Navigation';
+import DetailLaporan from './src/screens/DetailLaporan';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,11 +29,6 @@ const App = () => {
         <Stack.Screen
           name="WelcomePage"
           component={WelcomePage}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="DashBoard"
-          component={DashBoard}
           options={{headerShown: false}}
         />
         <Stack.Screen
@@ -73,6 +69,11 @@ const App = () => {
         <Stack.Screen
           name="BuatLaporanFoto"
           component={BuatLaporanFoto}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="DetailLaporan"
+          component={DetailLaporan}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

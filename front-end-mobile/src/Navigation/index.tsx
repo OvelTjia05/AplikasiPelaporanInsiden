@@ -153,5 +153,6 @@ const style = StyleSheet.create({
     height: 60,
     margin: 20,
     elevation: 5,
+    position: 'absolute',
   },
 });

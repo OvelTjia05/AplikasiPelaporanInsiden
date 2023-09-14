@@ -44,7 +44,7 @@ const BuatLaporanTeks = ({navigation}: any) => {
           width={150}
           backgroundColor="#efefef"
           textColor={MyColor.Primary}
-          onClick={() => navigation.navigate('DashBoard')}
+          onClick={() => navigation.navigate('BuatLaporanFoto')}
         />
         <Button
           label="Selanjutnya"
