@@ -68,6 +68,18 @@ const HomePage = ({navigation}: any) => {
       tanggal: '2023-09-03',
       status: 'Laporan Ditolak',
     },
+    {
+      jenis: 'Radiologi',
+      waktu: '19:46',
+      tanggal: '2023-09-15',
+      status: 'Sedang Ditindak',
+    },
+    {
+      jenis: 'Radiologi',
+      waktu: '19:46',
+      tanggal: '2023-09-14',
+      status: 'Dalam Antrian',
+    },
   ];
 
   const dummyCardData = {
@@ -77,11 +89,21 @@ const HomePage = ({navigation}: any) => {
     sumber: 'sehatnegeriku.kemkes.go.id',
   };
 
-  const renderRiwayatLaporan = () => {
+  const sortByDateTime = (data: any[]) => {
+    return data.slice().sort((a, b) => {
+      const dateA = new Date(`${a.tanggal}T${a.waktu}`);
+      const dateB = new Date(`${b.tanggal}T${b.waktu}`);
+      return dateB.getTime() - dateA.getTime();
+    });
+  };
+
+  const sortedRiwayat = sortByDateTime(riwayat);
+
+  const renderRiwayatLaporan = (riwayatData: any[]) => {
     return (
       <View style={styles.card}>
         <Text style={styles.txtCardTitle}>Riwayat Laporan</Text>
-        {riwayat.length === 0 ? (
+        {riwayatData.length === 0 ? (
           <Text
             style={{
               color: '#787878',
@@ -93,7 +115,7 @@ const HomePage = ({navigation}: any) => {
           </Text>
         ) : (
           <>
-            {riwayat.map((item, index) => (
+            {riwayatData.slice(1, 3).map((item, index) => (
               <View
                 style={[
                   styles.cardContent,
@@ -129,25 +151,6 @@ const HomePage = ({navigation}: any) => {
     );
   };
 
-  const findLatestReport = (riwayat: any[]) => {
-    let latestReport = null;
-    let latestTimestamp = 0;
-
-    for (const report of riwayat) {
-      const timestamp = new Date(report.tanggal).getTime(); // Ubah tanggal ke timestamp
-
-      if (timestamp > latestTimestamp) {
-        latestTimestamp = timestamp;
-        latestReport = report;
-      }
-    }
-
-    return latestReport;
-  };
-
-  // Menemukan laporan terbaru
-  const latestReport = findLatestReport(riwayat);
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Header />
@@ -172,30 +175,6 @@ const HomePage = ({navigation}: any) => {
             </TouchableOpacity>
           </View>
         ) : (
-          // <View style={styles.card}>
-          //   <Text style={styles.txtCardTitle}>
-          //     Berikut laporan Anda yang terakhir
-          //   </Text>
-          //   {riwayat.map((item, index) => (
-          //     <View
-          //       style={[
-          //         styles.cardContent,
-          //         {
-          //           backgroundColor: getStatusColor(item.status),
-          //         },
-          //       ]}
-          //       key={index}>
-          //       <Image source={Ilustrasi} />
-          //       <View>
-          //         <Text style={styles.txtCard}>{item.jenis}</Text>
-          //         <Text style={styles.txtCardTime}>{item.waktu}</Text>
-          //         <Text style={styles.txtCard}>{item.tanggal}</Text>
-          //         <Text style={styles.txtCardStatus}>{item.status}</Text>
-          //       </View>
-          //       {getStatusIcon(item.status)}
-          //     </View>
-          //   ))}
-          // </View>
           <View style={styles.card}>
             <Text style={styles.txtCardTitle}>
               Berikut laporan Anda yang terakhir
@@ -204,22 +183,24 @@ const HomePage = ({navigation}: any) => {
               style={[
                 styles.cardContent,
                 {
-                  backgroundColor: getStatusColor(latestReport.status),
+                  backgroundColor: getStatusColor(sortedRiwayat[0].status),
                 },
               ]}>
               <Image source={Ilustrasi} />
               <View>
-                <Text style={styles.txtCard}>{latestReport.jenis}</Text>
-                <Text style={styles.txtCardTime}>{latestReport.waktu}</Text>
-                <Text style={styles.txtCard}>{latestReport.tanggal}</Text>
-                <Text style={styles.txtCardStatus}>{latestReport.status}</Text>
+                <Text style={styles.txtCard}>{sortedRiwayat[0].jenis}</Text>
+                <Text style={styles.txtCardTime}>{sortedRiwayat[0].waktu}</Text>
+                <Text style={styles.txtCard}>{sortedRiwayat[0].tanggal}</Text>
+                <Text style={styles.txtCardStatus}>
+                  {sortedRiwayat[0].status}
+                </Text>
               </View>
-              {getStatusIcon(latestReport.status)}
+              {getStatusIcon(sortedRiwayat[0].status)}
             </View>
           </View>
         )}
         <Gap height={20} />
-        {renderRiwayatLaporan()}
+        {renderRiwayatLaporan(sortedRiwayat)}
         <Gap height={20} />
         <View style={styles.card}>
           <Text style={styles.txtCardTitle}>Berita Kesehatan</Text>

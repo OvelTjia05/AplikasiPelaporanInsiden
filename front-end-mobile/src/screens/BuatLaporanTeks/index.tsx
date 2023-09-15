@@ -51,7 +51,7 @@ const BuatLaporanTeks = ({navigation}: any) => {
           width={150}
           backgroundColor={MyColor.Primary}
           textColor="#efefef"
-          onClick={() => navigation.navigate('BuatLaporanTeks')}
+          onClick={() => navigation.navigate('SubmitLaporan')}
           icons={<IconPanahKanan />}
         />
       </View>

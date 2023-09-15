@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, Image} from 'react-native';
 import {IconPanahKanan} from '../../../assets/icons';
+import {MyFont} from '../MyFont';
 
 const Button = ({
   label,
@@ -44,7 +45,7 @@ const styles = StyleSheet.create({
   },
   label: {
     textAlign: 'center',
-    fontFamily: 'Poppins',
+    fontFamily: MyFont.Primary,
     fontSize: 18,
   },
 });
