@@ -36,20 +36,6 @@ const CostumTab = ({children, onPress}: any) => (
   </TouchableOpacity>
 );
 
-const Stack = createNativeStackNavigator();
-
-const BuatLaporanFotoStack = () => {
-  return (
-    <Stack.Navigator initialRouteName="BuatLaporanFotoStack">
-      <Stack.Screen
-        name="BuatLaporanFotoStack"
-        component={BuatLaporanFoto}
-        options={{headerShown: false}}
-      />
-    </Stack.Navigator>
-  );
-};
-
 const Navigation = () => {
   return (
     <Tab.Navigator

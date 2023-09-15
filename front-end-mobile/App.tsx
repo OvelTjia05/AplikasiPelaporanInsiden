@@ -14,6 +14,7 @@ import ForgetPass from './src/screens/ForgetPass';
 import CreatePass from './src/screens/CreatePass';
 import Navigation from './src/Navigation';
 import DetailLaporan from './src/screens/DetailLaporan';
+import SubmitLaporan from './src/screens/SubmitLaporan';
 
 const Stack = createNativeStackNavigator();
 
@@ -74,6 +75,11 @@ const App = () => {
         <Stack.Screen
           name="DetailLaporan"
           component={DetailLaporan}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="SubmitLaporan"
+          component={SubmitLaporan}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
