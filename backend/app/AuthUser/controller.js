@@ -130,16 +130,21 @@ const loginUser = async (req, res) => {
         }
       );
 
-      res.cookie("refresh_token", refreshToken, {
-        httpOnly: true,
-        // expire in 1 day
-        maxAge: 24 * 60 * 60 * 1000,
-      });
+      // res.cookie("refresh_token", refreshToken, {
+      //   httpOnly: true,
+      //   // expire in 1 day
+      //   maxAge: 24 * 60 * 60 * 1000,
+      // });
 
-      res.status(200).json({
+      const maxAgesInSeconds = 24 * 60 * 60;
+      const cookie = `refresh_token=${refreshToken}; HttpOnly; samesite=none; secure; Max-Age=${maxAgesInSeconds};`;
+
+      res.setHeader("set-cookie", [cookie]).status(200).json({
         code: "200",
         status: "OK",
         data: {
+          id_user,
+          username,
           accessToken,
         },
       });

@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const db = require("../../database");
 
 const Admin = db.define(
-  "Admin",
+  "admin",
   {
     id_admin: {
       type: DataTypes.UUID,

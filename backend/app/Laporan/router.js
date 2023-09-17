@@ -9,8 +9,8 @@ const upload = multer({ dest: "public/images" });
 
 router.get("/laporan", getAllLaporan);
 router.post("/laporan/:id_user", upload.single("gambar"), postLaporan);
-router.patch("/laporan/status_laporan/tindak/:id_laporan", VerifyTokenAdmin, updateStatusLaporanTindak);
-router.patch("/laporan/status_laporan/tolak/:id_laporan", VerifyTokenAdmin, updateStatusLaporanTolak);
-router.patch("/laporan/status_laporan/selesai/:id_laporan", VerifyTokenAdmin, updateStatusLaporanSelesai);
+router.patch("/laporan/status_laporan/tindak/:id_laporan", updateStatusLaporanTindak);
+router.patch("/laporan/status_laporan/tolak/:id_laporan", updateStatusLaporanTolak);
+router.patch("/laporan/status_laporan/selesai/:id_laporan", updateStatusLaporanSelesai);
 
 module.exports = router;

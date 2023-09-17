@@ -3,7 +3,7 @@ const db = require("../../database");
 const User = require("../User/model");
 
 const Laporan = db.define(
-  "Laporan",
+  "laporan",
   {
     id_laporan: {
       type: DataTypes.INTEGER,
@@ -34,7 +34,7 @@ const Laporan = db.define(
     waktu_submit: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: Sequelize.fn("NOW"),
+      // defaultValue: Sequelize.fn("NOW"),
     },
     status_laporan: {
       type: DataTypes.STRING,

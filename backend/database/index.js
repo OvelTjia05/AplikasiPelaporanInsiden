@@ -1,10 +1,11 @@
 const { Sequelize } = require("sequelize");
+const { dbName, dbUsername, dbPassword, dbHostname } = require("../config/index.js");
 
-const db = new Sequelize("pelaporan_insiden", "root", "", {
-  host: "localhost",
+const db = new Sequelize(dbName, dbUsername, dbPassword, {
+  host: dbHostname,
   port: 3307,
-  dialect: "mariadb",
-  timezone: "Asia/Makassar",
+  dialect: "mysql",
+  // timezone: "Asia/Makassar",
 });
 
 db.authenticate()

@@ -2,12 +2,30 @@ const Laporan = require("./model");
 const User = require("../User/model");
 const fs = require("fs");
 const path = require("path");
+const db = require("../../database");
+const { QueryTypes } = require("sequelize");
 
 //@description     Get All Laporan User
 //@route           GET /api/laporan
 //@access          Public
 const getAllLaporan = async (req, res, next) => {
   try {
+    console.log(req.query.date);
+    if (req.query.date) {
+      const result = await db.query("SELECT * FROM laporan WHERE DATE(waktu_submit) = ?", {
+        replacements: [req.query.date],
+        type: QueryTypes.SELECT,
+      });
+
+      console.log("ini result...: ", result);
+
+      return res.status(200).json({
+        code: "200",
+        status: "OK",
+        data: result,
+      });
+    }
+
     const laporan = await Laporan.findAll({
       attributes: ["id_laporan", "kategori_bidang", "deskripsi", "nama_file_gambar", "url_gambar", "waktu_submit", "status_laporan", "tingkat_prioritas", "pesan_dari_admin"],
       include: [
@@ -18,7 +36,7 @@ const getAllLaporan = async (req, res, next) => {
       ],
     });
 
-    res.json({
+    res.status(200).json({
       code: "200",
       status: "OK",
       data: laporan,
@@ -103,6 +121,11 @@ const postLaporan = async (req, res) => {
   }
 
   if ((kategori_bidang, deskripsi, url_gambar)) {
+    // ini waktu utc 0, untuk ke indonesia tengah harus di konversi
+    const waktu_submit = new Date();
+    // const waktu_submit_str = waktu_submit.toLocaleString("id-ID", { timeZone: "Asia/Makassar" });
+    // console.log("ini waktu submit: ", waktu_submit_str);
+
     try {
       const laporan = await Laporan.create({
         id_user,
@@ -110,6 +133,7 @@ const postLaporan = async (req, res) => {
         deskripsi,
         nama_file_gambar,
         url_gambar,
+        waktu_submit,
         status_laporan,
         tingkat_prioritas,
       });
