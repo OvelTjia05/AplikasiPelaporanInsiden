@@ -70,24 +70,24 @@ const HomePage = ({navigation, route}: any) => {
       tanggal: '2023-02-07',
       status: 'Laporan Selesai',
     },
-    {
-      jenis: 'Radiologi',
-      waktu: '19:46',
-      tanggal: '2023-09-03',
-      status: 'Laporan Ditolak',
-    },
-    {
-      jenis: 'Radiologi',
-      waktu: '19:46',
-      tanggal: '2023-09-15',
-      status: 'Sedang Ditindak',
-    },
-    {
-      jenis: 'Radiologi',
-      waktu: '19:46',
-      tanggal: '2023-09-14',
-      status: 'Dalam Antrian',
-    },
+    // {
+    //   jenis: 'Radiologi',
+    //   waktu: '19:46',
+    //   tanggal: '2023-09-03',
+    //   status: 'Laporan Ditolak',
+    // },
+    // {
+    //   jenis: 'Radiologi',
+    //   waktu: '19:46',
+    //   tanggal: '2023-09-15',
+    //   status: 'Sedang Ditindak',
+    // },
+    // {
+    //   jenis: 'Radiologi',
+    //   waktu: '19:46',
+    //   tanggal: '2023-09-14',
+    //   status: 'Dalam Antrian',
+    // },
   ];
 
   const dummyCardData = {
@@ -111,50 +111,36 @@ const HomePage = ({navigation, route}: any) => {
     return (
       <View style={styles.card}>
         <Text style={styles.txtCardTitle}>Riwayat Laporan</Text>
-        {riwayatData.length === 0 ? (
+        {riwayatData.slice(1, 3).map((item, index) => (
+          <View
+            style={[
+              styles.cardContent,
+              {
+                backgroundColor: getStatusColor(item.status),
+              },
+            ]}
+            key={index}>
+            <Image source={Ilustrasi} />
+            <View>
+              <Text style={styles.txtCard}>{item.jenis}</Text>
+              <Text style={styles.txtCardTime}>{item.waktu}</Text>
+              <Text style={styles.txtCard}>{item.tanggal}</Text>
+              <Text style={styles.txtCardStatus}>{item.status}</Text>
+            </View>
+            {getStatusIcon(item.status)}
+          </View>
+        ))}
+        <Pressable style={styles.cardFooter}>
           <Text
             style={{
-              color: '#787878',
-              fontFamily: 'Poppins-Bold',
-              fontSize: 17,
-              paddingHorizontal: 20,
+              fontFamily: MyFont.Primary,
+              fontSize: 14,
+              color: MyColor.Light,
             }}>
-            Anda belum membuat{'\n'}laporan apapun.
+            Lihat lebih lengkap di menu riwayat
           </Text>
-        ) : (
-          <>
-            {riwayatData.slice(1, 3).map((item, index) => (
-              <View
-                style={[
-                  styles.cardContent,
-                  {
-                    backgroundColor: getStatusColor(item.status),
-                  },
-                ]}
-                key={index}>
-                <Image source={Ilustrasi} />
-                <View>
-                  <Text style={styles.txtCard}>{item.jenis}</Text>
-                  <Text style={styles.txtCardTime}>{item.waktu}</Text>
-                  <Text style={styles.txtCard}>{item.tanggal}</Text>
-                  <Text style={styles.txtCardStatus}>{item.status}</Text>
-                </View>
-                {getStatusIcon(item.status)}
-              </View>
-            ))}
-            <Pressable style={styles.cardFooter}>
-              <Text
-                style={{
-                  fontFamily: MyFont.Primary,
-                  fontSize: 14,
-                  color: MyColor.Light,
-                }}>
-                Lihat lebih lengkap di menu riwayat
-              </Text>
-              <IconPanahKanan />
-            </Pressable>
-          </>
-        )}
+          <IconPanahKanan />
+        </Pressable>
       </View>
     );
   };
@@ -208,7 +194,7 @@ const HomePage = ({navigation, route}: any) => {
           </View>
         )}
         <Gap height={20} />
-        {renderRiwayatLaporan(sortedRiwayat)}
+        {sortedRiwayat.length > 1 ? renderRiwayatLaporan(sortedRiwayat) : null}
         <Gap height={20} />
         <View style={styles.card}>
           <Text style={styles.txtCardTitle}>Berita Kesehatan</Text>
