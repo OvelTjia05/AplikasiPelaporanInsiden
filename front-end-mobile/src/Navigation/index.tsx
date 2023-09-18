@@ -36,7 +36,9 @@ const CostumTab = ({children, onPress}: any) => (
   </TouchableOpacity>
 );
 
-const Navigation = () => {
+const Navigation = ({navigation, route}: any) => {
+  console.log('in navigation::: ', route.params);
+  const dataUser = route.params;
   return (
     <Tab.Navigator
       initialRouteName="HomePage"
@@ -47,6 +49,7 @@ const Navigation = () => {
       <Tab.Screen
         name="HomePage"
         component={HomePage}
+        initialParams={dataUser}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (

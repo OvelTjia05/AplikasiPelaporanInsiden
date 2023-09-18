@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Image,
   ScrollView,
@@ -24,7 +24,15 @@ import {
   IconWaktu,
 } from '../../assets/icons';
 
-const HomePage = ({navigation}: any) => {
+const HomePage = ({navigation, route}: any) => {
+  const [username, setUsername] = useState('');
+  const dataUser = route.params;
+
+  useEffect(() => {
+    console.log('Ini homePage: ', dataUser.username);
+    setUsername(dataUser.username);
+  }, []);
+
   const getStatusColor = (status: any) => {
     switch (status) {
       case 'Dalam Antrian':
@@ -158,7 +166,7 @@ const HomePage = ({navigation}: any) => {
       <View style={styles.container1}>
         <Text style={styles.txtWelcome}>
           Selamat Pagi,{'\n'}
-          <Text style={styles.txtName}>Roger</Text>
+          <Text style={styles.txtName}>{username}</Text>
         </Text>
         {riwayat.length === 0 ? (
           <View style={styles.cardLaporanTerakhir}>

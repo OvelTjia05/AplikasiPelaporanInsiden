@@ -18,6 +18,8 @@ import {
   IconPanahKanan,
 } from '../../assets/icons';
 import Button from '../../components/atoms/Button';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PasswordInput = ({placeholder, onChangeText, value}: any) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
@@ -46,6 +48,47 @@ const PasswordInput = ({placeholder, onChangeText, value}: any) => {
 const Login = ({navigation}: any) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const login = async () => {
+    try {
+      const response = await axios.post(
+        'https://backend-pelaporaninsiden.glitch.me/auth/user/login',
+        {
+          username,
+          password,
+        },
+      );
+      console.log('ini response: ', response.data);
+      const cookies = response.headers['set-cookie'];
+      console.log('ini cookies: ', cookies);
+      const cookiesValue = cookies[0];
+
+      const cookieArray = cookiesValue.split(';');
+      let refreshToken = '';
+
+      // Loop melalui array cookies untuk mencari nilai 'refresh_token'
+      for (const cookie of cookieArray) {
+        if (cookie.trim().startsWith('refresh_token=')) {
+          refreshToken = cookie.trim().substring('refresh_token='.length); // Mengambil nilai refresh_token
+          break; // Keluar dari loop setelah nilai ditemukan
+        }
+      }
+
+      console.log('ini refresh token jadi: ', refreshToken);
+
+      await AsyncStorage.setItem('refresh_token', refreshToken);
+
+      const value = await AsyncStorage.getItem('refresh_token');
+      console.log('ini adalah value:::::: ', value);
+      if (response.data.code == '200') {
+        console.log('masuk sini');
+        const dataUser = response.data.data;
+        navigation.navigate('Navigation', dataUser);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -80,9 +123,7 @@ const Login = ({navigation}: any) => {
         width={193}
         backgroundColor={MyColor.Primary}
         textColor="#efefef"
-        onClick={() => {
-          navigation.navigate('Navigation');
-        }}
+        onClick={login}
         icons={<IconPanahKanan />}
       />
       <Gap height={10} />
