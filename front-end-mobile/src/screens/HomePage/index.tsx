@@ -23,40 +23,58 @@ import {
   IconTolak,
   IconWaktu,
 } from '../../assets/icons';
+import axios from 'axios';
 
 const HomePage = ({navigation, route}: any) => {
   const [username, setUsername] = useState('');
+  const [latestLaporan, setLatestLaporan] = useState([]);
   const dataUser = route.params;
 
   useEffect(() => {
-    console.log('Ini homePage: ', dataUser.username);
     setUsername(dataUser.username);
+    getLatestLaporan();
   }, []);
 
-  const getStatusColor = (status: any) => {
-    switch (status) {
-      case 'Dalam Antrian':
-        return MyColor.Primary;
-      case 'Sedang Ditindak':
-        return '#A37F00';
-      case 'Laporan Selesai':
-        return '#008656';
-      case 'Laporan Ditolak':
-        return '#8D0000';
-      default:
-        return 'white';
+  const getLatestLaporan = async () => {
+    if (dataUser.id_user) {
+      await axios
+        .get(
+          `https://backend-pelaporaninsiden.glitch.me/api/laporan/user/latest/${dataUser.id_user}`,
+        )
+        .then(response => {
+          console.log('ini response data data: ', response.data.data);
+          setLatestLaporan(response.data.data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   };
 
-  const getStatusIcon = (status: any) => {
-    switch (status) {
-      case 'Dalam Antrian':
+  const getStatusColor = (status_laporan: any) => {
+    switch (status_laporan) {
+      case 'antrian':
+        return MyColor.Primary;
+      case 'tindak':
+        return '#A37F00';
+      case 'selesai':
+        return '#008656';
+      case 'tolak':
+        return '#8D0000';
+      default:
+        return 'pink';
+    }
+  };
+
+  const getStatusIcon = (status_laporan: any) => {
+    switch (status_laporan) {
+      case 'antrian':
         return <IconWaktu />;
-      case 'Sedang Ditindak':
+      case 'tindak':
         return <IconSedangDitindak />;
-      case 'Laporan Selesai':
+      case 'selesai':
         return <IconCentang />;
-      case 'Laporan Ditolak':
+      case 'tolak':
         return <IconTolak />;
       default:
         return '';
@@ -97,15 +115,36 @@ const HomePage = ({navigation, route}: any) => {
     sumber: 'sehatnegeriku.kemkes.go.id',
   };
 
-  const sortByDateTime = (data: any[]) => {
-    return data.slice().sort((a, b) => {
-      const dateA = new Date(`${a.tanggal}T${a.waktu}`);
-      const dateB = new Date(`${b.tanggal}T${b.waktu}`);
-      return dateB.getTime() - dateA.getTime();
-    });
-  };
+  // const sortByDateTime = (data: any[]) => {
+  //   return data.slice().sort((a, b) => {
+  //     const dateA = new Date(`${a.tanggal}T${a.waktu}`);
+  //     const dateB = new Date(`${b.tanggal}T${b.waktu}`);
+  //     return dateB.getTime() - dateA.getTime();
+  //   });
+  // };
 
-  const sortedRiwayat = sortByDateTime(riwayat);
+  // const sortedRiwayat = sortByDateTime(riwayat);
+
+  function convertToWITHour(utcDate: any) {
+    const offset = 7; // Offset waktu WIT dari UTC adalah +7 jam
+    const localTime = new Date(utcDate.getTime() + offset * 60 * 60 * 1000);
+
+    const hours = localTime.getUTCHours().toString().padStart(2, '0');
+    const minutes = localTime.getUTCMinutes().toString().padStart(2, '0');
+
+    return `${hours}:${minutes}`;
+  }
+
+  function convertToWITDate(utcDate: any) {
+    const offset = 7; // Offset waktu WIT dari UTC adalah +7 jam
+    const localTime = new Date(utcDate.getTime() + offset * 60 * 60 * 1000);
+
+    const year = localTime.getUTCFullYear().toString();
+    const month = (localTime.getUTCMonth() + 1).toString().padStart(2, '0'); // Bulan dimulai dari 0, tambahkan 1
+    const day = localTime.getUTCDate().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
 
   const renderRiwayatLaporan = (riwayatData: any[]) => {
     return (
@@ -116,18 +155,29 @@ const HomePage = ({navigation, route}: any) => {
             style={[
               styles.cardContent,
               {
-                backgroundColor: getStatusColor(item.status),
+                backgroundColor: getStatusColor(item.status_laporan),
               },
             ]}
             key={index}>
-            <Image source={Ilustrasi} />
+            <Image
+              source={{
+                uri: item.url_gambar,
+              }}
+              resizeMode="cover"
+              width={50}
+              height={50}
+            />
             <View>
-              <Text style={styles.txtCard}>{item.jenis}</Text>
-              <Text style={styles.txtCardTime}>{item.waktu}</Text>
-              <Text style={styles.txtCard}>{item.tanggal}</Text>
-              <Text style={styles.txtCardStatus}>{item.status}</Text>
+              <Text style={styles.txtCard}>{item.kategori_bidang}</Text>
+              <Text style={styles.txtCardTime}>
+                {convertToWITHour(new Date(item.waktu_submit))}
+              </Text>
+              <Text style={styles.txtCardTime}>
+                {convertToWITDate(new Date(item.waktu_submit))}
+              </Text>
+              <Text style={styles.txtCardStatus}>{item.status_laporan}</Text>
             </View>
-            {getStatusIcon(item.status)}
+            {getStatusIcon(item.status_laporan)}
           </View>
         ))}
         <Pressable style={styles.cardFooter}>
@@ -154,7 +204,7 @@ const HomePage = ({navigation, route}: any) => {
           Selamat Pagi,{'\n'}
           <Text style={styles.txtName}>{username}</Text>
         </Text>
-        {riwayat.length === 0 ? (
+        {latestLaporan && latestLaporan.length === 0 ? (
           <View style={styles.cardLaporanTerakhir}>
             <Text style={styles.txtLaporanTerakhir}>
               Anda belum membuat laporan apapun
@@ -173,28 +223,44 @@ const HomePage = ({navigation, route}: any) => {
             <Text style={styles.txtCardTitle}>
               Berikut laporan Anda yang terakhir
             </Text>
-            <View
-              style={[
-                styles.cardContent,
-                {
-                  backgroundColor: getStatusColor(sortedRiwayat[0].status),
-                },
-              ]}>
-              <Image source={Ilustrasi} />
-              <View>
-                <Text style={styles.txtCard}>{sortedRiwayat[0].jenis}</Text>
-                <Text style={styles.txtCardTime}>{sortedRiwayat[0].waktu}</Text>
-                <Text style={styles.txtCard}>{sortedRiwayat[0].tanggal}</Text>
-                <Text style={styles.txtCardStatus}>
-                  {sortedRiwayat[0].status}
-                </Text>
+            {latestLaporan && latestLaporan[0] && (
+              <View
+                style={[
+                  styles.cardContent,
+                  {
+                    backgroundColor: getStatusColor(
+                      latestLaporan[0].status_laporan,
+                    ),
+                  },
+                ]}>
+                <Image
+                  source={{uri: latestLaporan[0].url_gambar}}
+                  width={50}
+                  height={50}
+                />
+                <View>
+                  <Text style={styles.txtCard}>
+                    {latestLaporan[0].kategori_bidang}
+                  </Text>
+                  <Text style={styles.txtCardTime}>
+                    {convertToWITHour(new Date(latestLaporan[0].waktu_submit))}
+                  </Text>
+                  <Text style={styles.txtCard}>
+                    {convertToWITDate(new Date(latestLaporan[0].waktu_submit))}
+                  </Text>
+                  <Text style={styles.txtCardStatus}>
+                    {latestLaporan[0].status_laporan}
+                  </Text>
+                </View>
+                {getStatusIcon(latestLaporan[0].status_laporan)}
               </View>
-              {getStatusIcon(sortedRiwayat[0].status)}
-            </View>
+            )}
           </View>
         )}
         <Gap height={20} />
-        {sortedRiwayat.length > 1 ? renderRiwayatLaporan(sortedRiwayat) : null}
+        {latestLaporan && latestLaporan.length > 1
+          ? renderRiwayatLaporan(latestLaporan)
+          : null}
         <Gap height={20} />
         <View style={styles.card}>
           <Text style={styles.txtCardTitle}>Berita Kesehatan</Text>
@@ -251,6 +317,17 @@ const HomePage = ({navigation, route}: any) => {
         </View>
       </View>
     </ScrollView>
+    // <ScrollView>
+    //   <Text>halo world</Text>
+    //   <Text>
+    //     {latestLaporan &&
+    //       console.log(
+    //         'ini latest laporan didalam hp 2: ',
+    //         latestLaporan[0]?.id_laporan,
+    //       )}
+    //     {`${latestLaporan && latestLaporan[0]?.deskripsi} Yuhu`}
+    //   </Text>
+    // </ScrollView>
   );
 };
 

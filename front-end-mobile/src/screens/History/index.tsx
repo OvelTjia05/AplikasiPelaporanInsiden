@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Header from '../../components/molecules/Header';
 import {MyColor} from '../../components/atoms/MyColor';
 import {
@@ -19,17 +19,40 @@ import {
 import {Ilustrasi} from '../../assets/images';
 import {MyFont} from '../../components/atoms/MyFont';
 import Gap from '../../components/atoms/Gap';
+import axios from 'axios';
 
-const History = ({navigation}: any) => {
+const History = ({navigation, route}: any) => {
+  const [laporan, setLaporan] = useState([]);
+  const dataUser = route.params;
+
+  useEffect(() => {
+    getAllLaporan();
+  }, []);
+
+  const getAllLaporan = async () => {
+    if (dataUser.id_user) {
+      await axios
+        .get(
+          `https://backend-pelaporaninsiden.glitch.me/api/laporan/user/${dataUser.id_user}`,
+        )
+        .then(response => {
+          console.log('ini response data data: ', response.data.data);
+          setLaporan(response.data.data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  };
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Dalam Antrian':
+      case 'antrian':
         return MyColor.Primary;
-      case 'Sedang Ditindak':
+      case 'tindak':
         return '#A37F00';
-      case 'Laporan Selesai':
+      case 'selesai':
         return '#008656';
-      case 'Laporan Ditolak':
+      case 'tolak':
         return '#8D0000';
       default:
         return 'white';
@@ -38,51 +61,72 @@ const History = ({navigation}: any) => {
 
   const getStatusIcon = (status: any) => {
     switch (status) {
-      case 'Dalam Antrian':
+      case 'antrian':
         return <IconWaktu />;
-      case 'Sedang Ditindak':
+      case 'tindak':
         return <IconSedangDitindak />;
-      case 'Laporan Selesai':
+      case 'selesai':
         return <IconCentang />;
-      case 'Laporan Ditolak':
+      case 'tolak':
         return <IconTolak />;
       default:
         return null;
     }
   };
 
-  const riwayat = [
-    {
-      jenis: 'Radiologi',
-      waktu: '19:45',
-      tanggal: '6 September 2023',
-      status: 'Laporan Selesai',
-    },
-    {
-      jenis: 'Radiologi',
-      waktu: '19:45',
-      tanggal: '6 September 2023',
-      status: 'Sedang Ditindak',
-    },
-    {
-      jenis: 'Radiologi',
-      waktu: '19:45',
-      tanggal: '6 September 2023',
-      status: 'Dalam Antrian',
-    },
-    {
-      jenis: 'Radiologi',
-      waktu: '19:45',
-      tanggal: '6 September 2023',
-      status: 'Laporan Ditolak',
-    },
-    {
-      jenis: 'Radiologi',
-      waktu: '19:45',
-      tanggal: '6 September 2023',
-      status: 'Laporan Ditolak',
-    },
-  ];
+  // const riwayat = [
+  //   {
+  //     jenis: 'Radiologi',
+  //     waktu: '19:45',
+  //     tanggal: '6 September 2023',
+  //     status: 'Laporan Selesai',
+  //   },
+  //   {
+  //     jenis: 'Radiologi',
+  //     waktu: '19:45',
+  //     tanggal: '6 September 2023',
+  //     status: 'Sedang Ditindak',
+  //   },
+  //   {
+  //     jenis: 'Radiologi',
+  //     waktu: '19:45',
+  //     tanggal: '6 September 2023',
+  //     status: 'Dalam Antrian',
+  //   },
+  //   {
+  //     jenis: 'Radiologi',
+  //     waktu: '19:45',
+  //     tanggal: '6 September 2023',
+  //     status: 'Laporan Ditolak',
+  //   },
+  //   {
+  //     jenis: 'Radiologi',
+  //     waktu: '19:45',
+  //     tanggal: '6 September 2023',
+  //     status: 'Laporan Ditolak',
+  //   },
+  // ];
+
+  function convertToWITHour(utcDate: any) {
+    const offset = 7; // Offset waktu WIT dari UTC adalah +7 jam
+    const localTime = new Date(utcDate.getTime() + offset * 60 * 60 * 1000);
+
+    const hours = localTime.getUTCHours().toString().padStart(2, '0');
+    const minutes = localTime.getUTCMinutes().toString().padStart(2, '0');
+
+    return `${hours}:${minutes}`;
+  }
+
+  function convertToWITDate(utcDate: any) {
+    const offset = 7; // Offset waktu WIT dari UTC adalah +7 jam
+    const localTime = new Date(utcDate.getTime() + offset * 60 * 60 * 1000);
+
+    const year = localTime.getUTCFullYear().toString();
+    const month = (localTime.getUTCMonth() + 1).toString().padStart(2, '0'); // Bulan dimulai dari 0, tambahkan 1
+    const day = localTime.getUTCDate().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -98,7 +142,7 @@ const History = ({navigation}: any) => {
           Riwayat Laporan
         </Text>
         <Gap height={10} />
-        {riwayat.length === 0 ? (
+        {laporan.length === 0 ? (
           <View style={styles.cardTidakAdaLaporan}>
             <Text style={styles.txtLaporanTerakhir}>
               Anda belum membuat laporan apapun
@@ -116,26 +160,40 @@ const History = ({navigation}: any) => {
           <View style={styles.card}>
             <Text style={styles.txt}>Berikut adalah riwayat laporan anda</Text>
             <Gap height={10} />
-            {riwayat.map((item, index) => (
+            {laporan.map((item, index) => (
               <TouchableOpacity
                 style={[
                   styles.cardContent,
                   {
-                    backgroundColor: getStatusColor(item.status),
+                    backgroundColor: getStatusColor(item.status_laporan),
                   },
                 ]}
                 key={index}
-                onPress={() => navigation.navigate('DetailLaporan')}>
+                onPress={() =>
+                  navigation.navigate('DetailLaporan', {
+                    id_laporan: item.id_laporan,
+                  })
+                }>
                 <View style={{flexDirection: 'row', columnGap: 20}}>
-                  <Image source={Ilustrasi} />
+                  <Image
+                    source={{uri: item.url_gambar}}
+                    width={50}
+                    height={50}
+                  />
                   <View>
-                    <Text style={styles.txtCard}>{item.jenis}</Text>
-                    <Text style={styles.txtCardTime}>{item.waktu}</Text>
-                    <Text style={styles.txtCard}>{item.tanggal}</Text>
-                    <Text style={styles.txtCardStatus}>{item.status}</Text>
+                    <Text style={styles.txtCard}>{item.kategori_bidang}</Text>
+                    <Text style={styles.txtCardTime}>
+                      {convertToWITHour(new Date(item.waktu_submit))}
+                    </Text>
+                    <Text style={styles.txtCardTime}>
+                      {convertToWITDate(new Date(item.waktu_submit))}
+                    </Text>
+                    <Text style={styles.txtCardStatus}>
+                      {item.status_laporan}
+                    </Text>
                   </View>
                 </View>
-                {getStatusIcon(item.status)}
+                {getStatusIcon(item.status_laporan)}
               </TouchableOpacity>
             ))}
           </View>
