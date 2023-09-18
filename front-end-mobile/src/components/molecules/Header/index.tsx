@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     fontFamily: MyFont.Primary,
     fontSize: 11,
     marginBottom: 0,
+    color: 'grey',
   },
   txt: {
     marginTop: 0,
