@@ -66,6 +66,7 @@ const Navigation = ({navigation, route}: any) => {
       <Tab.Screen
         name="History"
         component={History}
+        initialParams={dataUser}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (
