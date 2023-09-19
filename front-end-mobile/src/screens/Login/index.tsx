@@ -83,7 +83,11 @@ const Login = ({navigation}: any) => {
       if (response.data.code == '200') {
         console.log('masuk sini');
         const dataUser = response.data.data;
+        console.log('ini di LOGIN: ', dataUser);
+        console.log('ini di LOGIN id user: ', dataUser.id_user);
         navigation.navigate('Navigation', dataUser);
+        setUsername('');
+        setPassword('');
       }
     } catch (error) {
       console.log(error);

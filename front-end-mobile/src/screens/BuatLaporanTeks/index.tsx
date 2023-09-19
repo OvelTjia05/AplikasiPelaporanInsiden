@@ -4,8 +4,9 @@ import {
   View,
   ScrollView,
   TextInput as Input,
+  Alert,
 } from 'react-native';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Header from '../../components/molecules/Header';
 import TextInput from '../../components/molecules/TextInput';
 import {MyFont} from '../../components/atoms/MyFont';
@@ -16,7 +17,33 @@ import Button from '../../components/atoms/Button';
 import {IconPanahKanan} from '../../assets/icons';
 import {MyColor} from '../../components/atoms/MyColor';
 
-const BuatLaporanTeks = ({navigation}: any) => {
+const BuatLaporanTeks = ({navigation, route}: any) => {
+  const data = route.params;
+  console.log('laporan teks: ', data);
+  console.log('laporan teks untuk data user: ', data.dataUser.dataUser.id_user);
+  const [kategori_bidang, set_kategori_bidang] = useState(
+    data.dataUser.kategori_bidang,
+  );
+  const [deskripsi, setDeskripsi] = useState('');
+  const [gambar, setGambar] = useState(data.imageCamera);
+
+  const klik = () => {
+    if (deskripsi === '') {
+      Alert.alert('Harap masukan deskripsi');
+    } else {
+      console.log('kategori bidang: ', kategori_bidang);
+      console.log('deskripsi: ', deskripsi);
+      console.log('gambar: ', gambar);
+
+      navigation.navigate('SubmitLaporan', {
+        data,
+        deskripsi,
+        setImageCamera: data.setImageCamera,
+        setDeskripsi,
+      });
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContent}>
       <Header />
@@ -25,14 +52,13 @@ const BuatLaporanTeks = ({navigation}: any) => {
         <Title label="Isi Laporan" />
         <Line height={2} />
         <Gap height={10} />
-        <Text style={styles.txt}>
-          Silahkan memasukkan foto yang bisa mendukung & berhubungan dengan
-          pelaporan Anda
-        </Text>
+        <Text style={styles.txt}>Silahkan ketikan isi laporan anda</Text>
         <Gap height={20} />
         <Input
           style={styles.txtInput}
           placeholder="Ketik disini..."
+          value={deskripsi}
+          onChangeText={text => setDeskripsi(text)}
           placeholderTextColor="#A9A9A9"
           textAlignVertical="top"
           multiline={true}
@@ -44,14 +70,24 @@ const BuatLaporanTeks = ({navigation}: any) => {
           width={150}
           backgroundColor="#efefef"
           textColor={MyColor.Primary}
-          onClick={() => navigation.navigate('BuatLaporanFoto')}
+          onClick={() =>
+            navigation.navigate('BuatLaporanFoto', {
+              dataUser: {
+                id_user: data.dataUser.dataUser.id_user,
+                username: data.dataUser.dataUser.username,
+                accessToken: data.dataUser.dataUser.accessToken,
+              },
+              kategori_bidang,
+            })
+          }
         />
         <Button
           label="Selanjutnya"
           width={150}
           backgroundColor={MyColor.Primary}
           textColor="#efefef"
-          onClick={() => navigation.navigate('SubmitLaporan')}
+          // onClick={() => navigation.navigate('SubmitLaporan')}
+          onClick={klik}
           icons={<IconPanahKanan />}
         />
       </View>

@@ -2,10 +2,12 @@ import {StyleSheet, Text, View} from 'react-native';
 import {useEffect} from 'react';
 import React from 'react';
 
-const RedirectPage = ({navigation}: any) => {
+const RedirectPage = ({navigation, route}: any) => {
+  const dataUser = route.params;
+
   useEffect(() => {
     const navigateToDashboard = setTimeout(() => {
-      navigation.replace('BuatLaporanFoto');
+      navigation.replace('KategoriBidang', dataUser);
     }, 0);
 
     return () => clearTimeout(navigateToDashboard);

@@ -83,6 +83,7 @@ const Navigation = ({navigation, route}: any) => {
       <Tab.Screen
         name="BuatLaporanFoto"
         component={RedirectPage}
+        initialParams={dataUser}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (

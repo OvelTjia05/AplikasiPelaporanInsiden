@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {ScrollView, StyleSheet, Text, View, Image} from 'react-native';
+import {ScrollView, StyleSheet, Text, View, Image, Alert} from 'react-native';
 import {
   launchCamera,
   launchImageLibrary,
@@ -18,8 +18,11 @@ interface ImageData {
   uri: string;
 }
 
-const BuatLaporanFoto = ({navigation}: any) => {
+const BuatLaporanFoto = ({navigation, route}: any) => {
   const [imageCamera, setImageCamera] = useState<ImageData | null>(null);
+  const dataUser = route.params;
+  console.log('ini di laporan foto: ', dataUser);
+  console.log('ini di laporan foto 2: ', dataUser.dataUser.id_user);
 
   const openCamera = () => {
     const options: any = {
@@ -58,6 +61,18 @@ const BuatLaporanFoto = ({navigation}: any) => {
         console.log(data);
       }
     });
+  };
+
+  const submitFoto = () => {
+    if (imageCamera == null) {
+      Alert.alert('Tolong masukkan foto');
+    } else {
+      navigation.navigate('BuatLaporanTeks', {
+        dataUser,
+        imageCamera,
+        setImageCamera,
+      });
+    }
   };
 
   return (
@@ -99,14 +114,21 @@ const BuatLaporanFoto = ({navigation}: any) => {
           width={150}
           backgroundColor="#efefef"
           textColor={MyColor.Primary}
-          onClick={() => navigation.navigate('Navigation')}
+          onClick={() =>
+            navigation.navigate('KategoriBidang', {
+              id_user: dataUser.dataUser.id_user,
+              username: dataUser.dataUser.username,
+              accessToken: dataUser.dataUser.accessToken,
+            })
+          }
         />
         <Button
           label="Selanjutnya"
           width={150}
           backgroundColor={MyColor.Primary}
           textColor="#efefef"
-          onClick={() => navigation.navigate('BuatLaporanTeks')}
+          // onClick={() => navigation.navigate('BuatLaporanTeks', dataUser)}
+          onClick={submitFoto}
           icons={<IconPanahKanan />}
         />
       </View>

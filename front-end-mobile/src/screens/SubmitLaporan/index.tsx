@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View, ScrollView, Image} from 'react-native';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Gap from '../../components/atoms/Gap';
 import {BackgroundRS, Ilustrasi} from '../../assets/images';
 import {MyColor} from '../../components/atoms/MyColor';
@@ -7,8 +7,71 @@ import {MyFont} from '../../components/atoms/MyFont';
 import Header from '../../components/molecules/Header';
 import Title from '../../components/atoms/Title';
 import Button from '../../components/atoms/Button';
+import axios from 'axios';
 
-const SubmitLaporan = ({navigation}: any) => {
+const SubmitLaporan = ({navigation, route}: any) => {
+  const data = route.params;
+  const {dataUser} = route.params;
+
+  const setImageCamera = data.data.setImageCamera;
+  const setDeskripsiPrev = data.data.setDeskripsi;
+  console.log('ini di submit laporan: ', data);
+  console.log(
+    'ini di submit laporan user 2: ',
+    data.data.dataUser.dataUser.id_user,
+  );
+  console.log('ini di submit laporan user: ', dataUser);
+
+  const [id_user, set_id_user] = useState(data.data.dataUser.dataUser.id_user);
+  const [kategori_bidang, set_kategori_bidang] = useState(
+    data.data.dataUser.kategori_bidang,
+  );
+  const [deskripsi, setDeskripsi] = useState(data.deskripsi);
+  const [gambar, setGambar] = useState(data.data.imageCamera);
+
+  const submit = async () => {
+    console.log('ini halaman submit laporan======\n');
+    console.log('ini id user: ', id_user);
+    console.log('kategori bidang: ', kategori_bidang);
+    console.log('deskripsi: ', deskripsi);
+    console.log('gambar: ', gambar);
+    console.log('ini gambar uri: ', gambar.uri);
+
+    const formData = new FormData();
+    formData.append('kategori_bidang', kategori_bidang);
+    formData.append('deskripsi', deskripsi);
+    formData.append('gambar', {
+      uri: gambar.uri,
+      type: gambar.type,
+      name: gambar.fileName,
+    });
+
+    console.log('ini username : ', data.data.dataUser.dataUser.username);
+    console.log('ini accessToken : ', data.data.dataUser.dataUser.accessToken);
+
+    try {
+      const response = await axios.post(
+        `https://backend-pelaporaninsiden.glitch.me/api/laporan/${id_user}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+
+      navigation.navigate('Navigation', {
+        id_user,
+        username: data.data.dataUser.dataUser.username,
+        accessToken: data.data.dataUser.dataUser.accessToken,
+      });
+      setImageCamera(null);
+      setDeskripsiPrev('');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Header />
@@ -20,36 +83,16 @@ const SubmitLaporan = ({navigation}: any) => {
         <Gap height={20} />
         <View style={styles.box}>
           <Title label="Foto Pendukung" />
-          <Image style={styles.img} source={Ilustrasi} />
+          <Image style={styles.img} source={{uri: gambar.uri}} />
         </View>
         <Gap height={30} />
         <View style={styles.box}>
+          <Title label="Kategori Bidang" />
+          <Text numberOfLines={undefined}>{kategori_bidang}</Text>
+        </View>
+        <View style={styles.box}>
           <Title label="Deskripsi" />
-          <Text numberOfLines={undefined}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi
-            debitis corrupti nam? Temporibus repellendus sint incidunt culpa
-            ullam recusandae ab sapiente dolorum magnam sunt, eos autem laborum
-            amet modi, similique illum rerum alias quae, at ad quis quidem
-            nostrum. Eius vero omnis fuga sint architecto ut odio asperiores
-            reprehenderit doloribus accusamus dignissimos culpa porro, quasi
-            nihil impedit corporis, fugit delectus, laborum iure soluta iste
-            minus ab optio quos. Perferendis, ipsam eos! Architecto libero
-            inventore ipsum maiores consequuntur sed quia, accusamus eius
-            deleniti cupiditate itaque soluta corrupti dolore officia quibusdam
-            magnam nobis quod id consectetur suscipit? Laborum qui natus maiores
-            ex consequatur recusandae excepturi exercitationem architecto.
-            Fugiat quaerat quos, minus necessitatibus facilis accusantium sunt
-            impedit velit incidunt nemo repellendus sapiente hic deserunt
-            voluptate vitae dolore placeat! Distinctio sunt quas, veniam nisi,
-            libero labore laboriosam dolore voluptates deserunt illo debitis
-            natus fugiat nulla maxime quidem facilis iste minus porro dolores!
-            Veritatis voluptate inventore dicta, delectus quos pariatur itaque
-            quasi nesciunt ex et totam dolore id aut? Animi odio maiores quis
-            tempore. Et, velit eius mollitia nam suscipit quibusdam dolorem
-            laborum quisquam hic. Corrupti consequuntur, atque dolore officia
-            sunt delectus aperiam obcaecati! Obcaecati deleniti voluptatum
-            officiis, perspiciatis quis quasi recusandae minus et enim!
-          </Text>
+          <Text numberOfLines={undefined}>{deskripsi}</Text>
         </View>
         <Gap height={50} />
       </View>
@@ -60,7 +103,18 @@ const SubmitLaporan = ({navigation}: any) => {
           backgroundColor={MyColor.Light}
           width={150}
           onClick={() => {
-            navigation.navigate('BuatLaporanTeks');
+            navigation.navigate('BuatLaporanTeks', {
+              dataUser: {
+                dataUser: {
+                  id_user: data.data.dataUser.dataUser.id_user,
+                  username: data.data.dataUser.dataUser.username,
+                  accessToken: data.data.dataUser.dataUser.accessToken,
+                },
+                kategori_bidang,
+              },
+              imageCamera: data.data.imageCamera,
+              setImageCamera: data.data.setImageCamera,
+            });
           }}
         />
         <Button
@@ -68,9 +122,10 @@ const SubmitLaporan = ({navigation}: any) => {
           textColor={MyColor.Light}
           backgroundColor={MyColor.Primary}
           width={150}
-          onClick={() => {
-            navigation.navigate('Navigation');
-          }}
+          // onClick={() => {
+          //   navigation.navigate('Navigation');
+          // }}
+          onClick={submit}
         />
       </View>
     </ScrollView>
@@ -93,7 +148,9 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   img: {
-    maxWidth: '100%',
+    // maxWidth: '100%',
+    height: 300,
+    width: 300,
     alignSelf: 'center',
     resizeMode: 'contain',
   },

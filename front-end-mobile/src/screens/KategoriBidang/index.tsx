@@ -7,6 +7,7 @@ import {
   ScrollView,
   LayoutAnimation,
   UIManager,
+  Alert,
 } from 'react-native';
 import {RadioButton} from 'react-native-paper';
 import {MyColor} from '../../components/atoms/MyColor';
@@ -14,14 +15,18 @@ import Header from '../../components/molecules/Header';
 import Line from '../../components/atoms/Line';
 import Title from '../../components/atoms/Title';
 import {MyFont} from '../../components/atoms/MyFont';
+import Button from '../../components/atoms/Button';
+import {IconPanahKanan} from '../../assets/icons';
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
 
 const KategoriBidang = ({navigation, route}: any) => {
-  const [checked, setChecked] = useState('first');
+  const dataUser = route.params;
+
+  const [checked, setChecked] = useState('Farmasi');
   const [isPoliExpanded, setIsPoliExpanded] = useState(false);
-  const [selectedPoli, setSelectedPoli] = useState('');
+  const [selectedPoli, setSelectedPoli] = useState('Farmasi');
 
   const togglePoliOptions = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -46,11 +51,23 @@ const KategoriBidang = ({navigation, route}: any) => {
 
   const handleRadioButtonChange = (value: string) => {
     setChecked(value);
-    setSelectedPoli('');
-    if (value === 'second') {
+    setSelectedPoli(value);
+    if (value === 'Poli') {
       togglePoliOptions();
     } else {
       setIsPoliExpanded(false);
+    }
+  };
+
+  const SubmitKategori = () => {
+    if (selectedPoli === 'Poli') {
+      Alert.alert('Harap pilih jenis poli');
+    } else {
+      console.log('kategori bidang: ', selectedPoli);
+      navigation.navigate('BuatLaporanFoto', {
+        dataUser,
+        kategori_bidang: selectedPoli,
+      });
     }
   };
 
@@ -65,7 +82,7 @@ const KategoriBidang = ({navigation, route}: any) => {
           onValueChange={handleRadioButtonChange}
           value={checked}>
           <View style={styles.radioButton}>
-            <RadioButton.Android value="first" color={MyColor.Primary} />
+            <RadioButton.Android value="Farmasi" color={MyColor.Primary} />
             <Text>Farmasi</Text>
           </View>
           <View
@@ -79,7 +96,7 @@ const KategoriBidang = ({navigation, route}: any) => {
               <TouchableOpacity
                 onPress={togglePoliOptions}
                 style={styles.accordionTitle}>
-                <RadioButton.Android value="second" color={MyColor.Primary} />
+                <RadioButton.Android value="Poli" color={MyColor.Primary} />
               </TouchableOpacity>
               <Text>Poli</Text>
             </View>
@@ -95,14 +112,32 @@ const KategoriBidang = ({navigation, route}: any) => {
             )}
           </View>
           <View style={styles.radioButton}>
-            <RadioButton.Android value="third" color={MyColor.Primary} />
+            <RadioButton.Android value="Staff" color={MyColor.Primary} />
             <Text>Staff</Text>
           </View>
           <View style={styles.radioButton}>
-            <RadioButton.Android value="fourth" color={MyColor.Primary} />
+            <RadioButton.Android value="Lainnya" color={MyColor.Primary} />
             <Text>Lainnya</Text>
           </View>
         </RadioButton.Group>
+      </View>
+      <View style={styles.footer}>
+        <Button
+          label="Kembali"
+          width={150}
+          backgroundColor="#efefef"
+          textColor={MyColor.Primary}
+          onClick={() => navigation.navigate('Navigation', dataUser)}
+        />
+        <Button
+          label="Selanjutnya"
+          width={150}
+          backgroundColor={MyColor.Primary}
+          textColor="#efefef"
+          // onClick={() => navigation.navigate('BuatLaporanTeks', dataUser)}
+          onClick={SubmitKategori}
+          icons={<IconPanahKanan />}
+        />
       </View>
     </ScrollView>
   );
@@ -149,5 +184,10 @@ const styles = StyleSheet.create({
     color: '#212121',
     marginVertical: 20,
     fontFamily: MyFont.Primary,
+  },
+  footer: {
+    alignSelf: 'center',
+    flexDirection: 'row',
+    gap: 10,
   },
 });
