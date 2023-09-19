@@ -1,4 +1,11 @@
-import {StyleSheet, Text, View, ScrollView, Image} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Image,
+  Dimensions,
+} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {
   IconCentang,
@@ -14,7 +21,9 @@ import {Ilustrasi} from '../../assets/images';
 import axios from 'axios';
 
 const DetailLaporan = ({navigation, route}: any) => {
-  const [laporanDetail, setLaporanDetail] = useState(null);
+  const windowWidth = Dimensions.get('window').width;
+
+  const [laporanDetail, setLaporanDetail] = useState<any | null>(null);
   const {id_laporan} = route.params;
   console.log('ini page detail laporan: ', id_laporan);
 
@@ -23,16 +32,15 @@ const DetailLaporan = ({navigation, route}: any) => {
   }, []);
 
   const getLaporan = async () => {
-    await axios
-      .get(
+    try {
+      const response = await axios.get(
         `https://backend-pelaporaninsiden.glitch.me/api/laporan/${id_laporan}`,
-      )
-      .then(response => {
-        setLaporanDetail(response.data.data);
-      })
-      .catch(error => {
-        console.log(error.message);
-      });
+      );
+      setLaporanDetail(response.data.data);
+      console.log('ini response.data.data', response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -56,7 +64,7 @@ const DetailLaporan = ({navigation, route}: any) => {
       //   case 'Sedang Ditindak':
       //     return null;
       case 'selesai':
-        return 'Kronologi';
+        return 'Kronologi:';
       case 'tolak':
         return 'Alasan Ditolak:';
       default:
@@ -64,15 +72,30 @@ const DetailLaporan = ({navigation, route}: any) => {
     }
   };
 
+  const convertStatus = (status: any) => {
+    switch (status) {
+      case 'antrian':
+        return 'Dalam Antrian';
+      case 'tindak':
+        return 'Sedang Ditindak';
+      case 'selesai':
+        return 'Laporan Selesai';
+      case 'tolak':
+        return 'Laporan Ditolak';
+      default:
+        return null;
+    }
+  };
+
   const getStatusIcon = (status: any) => {
     switch (status) {
-      case 'Dalam Antrian':
+      case 'antrian':
         return <IconWaktu />;
-      case 'Sedang Ditindak':
+      case 'tindak':
         return <IconSedangDitindak />;
-      case 'Laporan Selesai':
+      case 'selesai':
         return <IconCentang />;
-      case 'Laporan Ditolak':
+      case 'tolak':
         return <IconTolak />;
       default:
         return null;
@@ -92,7 +115,7 @@ const DetailLaporan = ({navigation, route}: any) => {
   // ];
 
   function convertToWITHour(utcDate: any) {
-    const offset = 7; // Offset waktu WIT dari UTC adalah +7 jam
+    const offset = 8; // Offset waktu WIT dari UTC adalah +7 jam
     const localTime = new Date(utcDate.getTime() + offset * 60 * 60 * 1000);
 
     const hours = localTime.getUTCHours().toString().padStart(2, '0');
@@ -102,33 +125,36 @@ const DetailLaporan = ({navigation, route}: any) => {
   }
 
   function convertToWITDate(utcDate: any) {
-    const offset = 7; // Offset waktu WIT dari UTC adalah +7 jam
+    const offset = 8; // Offset waktu WIT dari UTC adalah +7 jam
     const localTime = new Date(utcDate.getTime() + offset * 60 * 60 * 1000);
 
     const year = localTime.getUTCFullYear().toString();
-    const month = (localTime.getUTCMonth() + 1).toString().padStart(2, '0'); // Bulan dimulai dari 0, tambahkan 1
-    const day = localTime.getUTCDate().toString().padStart(2, '0');
+    const month = getMonthName(localTime.getUTCMonth());
+    const day = localTime.getUTCDate().toString();
 
-    return `${year}-${month}-${day}`;
+    return `${day} ${month} ${year}`;
+  }
+
+  function getMonthName(monthIndex: number) {
+    const monthNames = [
+      'Januari',
+      'Februari',
+      'Maret',
+      'April',
+      'Mei',
+      'Juni',
+      'Juli',
+      'Agustus',
+      'September',
+      'Oktober',
+      'November',
+      'Desember',
+    ];
+    return monthNames[monthIndex];
   }
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Header />
-      {/* {laporan.map((item, index) => (
-        <View
-          key={index}
-          style={[
-            styles.statusLaporan,
-            {backgroundColor: getStatusColor(item.status)},
-          ]}>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={styles.txtCardStatus}>{item.status}</Text>
-            <View>{getStatusIcon(item.status)}</View>
-          </View>
-          <Text style={styles.txtCard}>{getStatusHeader(item.status)}</Text>
-          <Text style={styles.txtCard}>{item.desc}</Text>
-        </View>
-      ))} */}
       {laporanDetail && (
         <View
           key={laporanDetail.id_laporan}
@@ -138,14 +164,14 @@ const DetailLaporan = ({navigation, route}: any) => {
           ]}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={styles.txtCardStatus}>
-              {laporanDetail.status_laporan}
+              {convertStatus(laporanDetail.status_laporan)}
             </Text>
             <View>{getStatusIcon(laporanDetail.status_laporan)}</View>
           </View>
           <Text style={styles.txtCard}>
             {getStatusHeader(laporanDetail.status_laporan)}
           </Text>
-          <Text style={styles.txtCard}>{laporanDetail.deskripsi}</Text>
+          <Text style={styles.txtCard}>{laporanDetail.pesan_dari_admin}</Text>
         </View>
       )}
       <View style={styles.container1}>
@@ -161,16 +187,21 @@ const DetailLaporan = ({navigation, route}: any) => {
           {laporanDetail &&
             convertToWITHour(new Date(laporanDetail.waktu_submit))}
         </Text>
-        <View
-          style={{
-            backgroundColor: MyColor.Light,
-            padding: 10,
-            alignItems: 'center',
-            width: '90%',
-            borderRadius: 20,
-          }}>
-          <Text>Foto Pendukung</Text>
-          {/* <Image source={{uri: laporanDetail.url_gambar}} /> */}
+        <View style={styles.box}>
+          <Text style={styles.txtLaporanTitle}>Foto Pendukung</Text>
+          {laporanDetail && (
+            <Image
+              source={{uri: laporanDetail.url_gambar}}
+              style={styles.img}
+            />
+          )}
+        </View>
+        <Gap height={40} />
+        <View style={styles.box}>
+          <Text style={styles.txtLaporanTitle}>Isi Laporan</Text>
+          {laporanDetail && (
+            <Text style={styles.txtIsiLaporan}>{laporanDetail.deskripsi}</Text>
+          )}
         </View>
       </View>
     </ScrollView>
@@ -185,6 +216,7 @@ const styles = StyleSheet.create({
   },
   container1: {
     alignItems: 'center',
+    paddingBottom: 30,
   },
   statusLaporan: {
     maxHeight: 'auto',
@@ -209,5 +241,29 @@ const styles = StyleSheet.create({
     fontFamily: MyFont.Primary,
     fontSize: 17,
     color: MyColor.Light,
+  },
+  txtIsiLaporan: {
+    fontFamily: MyFont.Primary,
+    fontSize: 14,
+    color: 'black',
+  },
+  box: {
+    backgroundColor: MyColor.Light,
+    padding: 10,
+    width: '90%',
+    borderRadius: 20,
+    gap: 10,
+  },
+  img: {
+    width: '100%',
+    aspectRatio: 1,
+    // borderRadius: 20,
+    resizeMode: 'contain',
+    backgroundColor: 'black',
+  },
+  txtLaporanTitle: {
+    fontFamily: 'Poppins-Bold',
+    fontSize: 21,
+    color: MyColor.Primary,
   },
 });

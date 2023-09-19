@@ -96,7 +96,7 @@ const SignUp = ({navigation}: any) => {
         backgroundColor="#efefef"
         textColor={MyColor.Primary}
         onClick={() => {
-          navigation.navigate('SplashScreen');
+          navigation.navigate('Login');
         }}
       />
     </ScrollView>
