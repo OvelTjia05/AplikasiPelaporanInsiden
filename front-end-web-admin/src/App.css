@@ -1,0 +1,13 @@
+/* login */
+.hero {
+  background-image: url("./assets/images/background.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.table th,
+.table td {
+  border: 1px solid;
+  /* border-color: blue; */
+}
