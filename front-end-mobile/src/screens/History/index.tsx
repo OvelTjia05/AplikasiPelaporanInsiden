@@ -21,8 +21,16 @@ import {MyFont} from '../../components/atoms/MyFont';
 import Gap from '../../components/atoms/Gap';
 import axios from 'axios';
 
+interface Laporan {
+  id_laporan: string;
+  kategori_bidang: string;
+  waktu_submit: string;
+  url_gambar: string;
+  status_laporan: string;
+}
+
 const History = ({navigation, route}: any) => {
-  const [laporan, setLaporan] = useState([]);
+  const [laporan, setLaporan] = useState<Laporan[]>([]);
   const dataUser = route.params;
 
   useEffect(() => {
@@ -31,19 +39,33 @@ const History = ({navigation, route}: any) => {
 
   const getAllLaporan = async () => {
     if (dataUser.id_user) {
-      await axios
-        .get(
+      try {
+        const response = await axios.get(
           `https://backend-pelaporaninsiden.glitch.me/api/laporan/user/${dataUser.id_user}`,
-        )
-        .then(response => {
-          console.log('ini response data data: ', response.data.data);
-          setLaporan(response.data.data);
-        })
-        .catch(error => {
-          console.log(error);
-        });
+        );
+        setLaporan(response.data.data);
+        console.log('Ini response.data.data: ', response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
+
+  const convertStatus = (status: any) => {
+    switch (status) {
+      case 'antrian':
+        return 'Dalam Antrian';
+      case 'tindak':
+        return 'Sedang Ditindak';
+      case 'selesai':
+        return 'Laporan Selesai';
+      case 'tolak':
+        return 'Laporan Ditolak';
+      default:
+        return null;
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'antrian':
@@ -73,6 +95,35 @@ const History = ({navigation, route}: any) => {
         return null;
     }
   };
+
+  function convertToWITDate(utcDate: any) {
+    const offset = 8; // Offset waktu WIT dari UTC adalah +7 jam
+    const localTime = new Date(utcDate.getTime() + offset * 60 * 60 * 1000);
+
+    const year = localTime.getUTCFullYear().toString();
+    const month = getMonthName(localTime.getUTCMonth());
+    const day = localTime.getUTCDate().toString();
+
+    return `${day} ${month} ${year}`;
+  }
+
+  function getMonthName(monthIndex: number) {
+    const monthNames = [
+      'Januari',
+      'Februari',
+      'Maret',
+      'April',
+      'Mei',
+      'Juni',
+      'Juli',
+      'Agustus',
+      'September',
+      'Oktober',
+      'November',
+      'Desember',
+    ];
+    return monthNames[monthIndex];
+  }
 
   // const riwayat = [
   //   {
@@ -108,24 +159,13 @@ const History = ({navigation, route}: any) => {
   // ];
 
   function convertToWITHour(utcDate: any) {
-    const offset = 7; // Offset waktu WIT dari UTC adalah +7 jam
+    const offset = 8; // Offset waktu WIT dari UTC adalah +7 jam
     const localTime = new Date(utcDate.getTime() + offset * 60 * 60 * 1000);
 
     const hours = localTime.getUTCHours().toString().padStart(2, '0');
     const minutes = localTime.getUTCMinutes().toString().padStart(2, '0');
 
     return `${hours}:${minutes}`;
-  }
-
-  function convertToWITDate(utcDate: any) {
-    const offset = 7; // Offset waktu WIT dari UTC adalah +7 jam
-    const localTime = new Date(utcDate.getTime() + offset * 60 * 60 * 1000);
-
-    const year = localTime.getUTCFullYear().toString();
-    const month = (localTime.getUTCMonth() + 1).toString().padStart(2, '0'); // Bulan dimulai dari 0, tambahkan 1
-    const day = localTime.getUTCDate().toString().padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
   }
 
   return (
@@ -177,8 +217,7 @@ const History = ({navigation, route}: any) => {
                 <View style={{flexDirection: 'row', columnGap: 20}}>
                   <Image
                     source={{uri: item.url_gambar}}
-                    width={50}
-                    height={50}
+                    style={styles.cardImage}
                   />
                   <View>
                     <Text style={styles.txtCard}>{item.kategori_bidang}</Text>
@@ -189,7 +228,7 @@ const History = ({navigation, route}: any) => {
                       {convertToWITDate(new Date(item.waktu_submit))}
                     </Text>
                     <Text style={styles.txtCardStatus}>
-                      {item.status_laporan}
+                      {convertStatus(item.status_laporan)}
                     </Text>
                   </View>
                 </View>
@@ -210,10 +249,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   container1: {
-    alignSelf: 'center',
+    paddingHorizontal: 30,
     paddingBottom: 80,
   },
-  card: {},
+  card: {
+    width: '100%',
+  },
   cardTidakAdaLaporan: {
     flexWrap: 'wrap',
     minHeight: 119,
@@ -224,12 +265,16 @@ const styles = StyleSheet.create({
   cardContent: {
     padding: 20,
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    columnGap: 20,
     height: 120,
     marginBottom: 20,
     borderRadius: 20,
+  },
+  cardImage: {
+    resizeMode: 'cover',
+    width: 80,
+    height: 80,
+    borderRadius: 10,
   },
   createReportButton: {
     flexDirection: 'row',
