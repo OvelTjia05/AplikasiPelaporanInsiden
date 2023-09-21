@@ -8,21 +8,30 @@ const User = db.define(
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
+      unique: true,
       primaryKey: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     username: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    tanggal_pembuatan_akun: {
-      type: DataTypes.DATE,
+    role: {
+      type: DataTypes.ENUM("user", "admin"),
       allowNull: false,
+      validate: {
+        isIn: [["user", "admin"]],
+      },
     },
-    refresh_token: {
+    token: {
       type: DataTypes.TEXT,
       allowNull: true,
     },

@@ -4,7 +4,7 @@ const { dbName, dbUsername, dbPassword, dbHostname } = require("../config/index.
 const db = new Sequelize(dbName, dbUsername, dbPassword, {
   host: dbHostname,
   port: 3307,
-  dialect: "mysql",
+  dialect: "mariadb",
   // timezone: "Asia/Makassar",
 });
 

@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
-const { accessTokenSecret } = require("../config");
+const { tokenSecret } = require("../config");
+const User = require("../app/User/model");
 
 const VerifyTokenUser = async (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -9,13 +10,27 @@ const VerifyTokenUser = async (req, res, next) => {
     return res.status(400).json({
       code: "400",
       status: "BAD_REQUEST",
-      errors: "No Access Token",
+      errors: "No Token",
     });
 
   try {
-    const decoded = jwt.verify(token, accessTokenSecret);
+    const user = await User.findOne({
+      where: {
+        token,
+      },
+    });
 
-    if (!decoded.id_user)
+    if (!user) {
+      return res.status(403).json({
+        code: "403",
+        status: "FORBIDEN",
+        errors: "Authentication required. Please login to access this resource.",
+      });
+    }
+
+    const decoded = jwt.verify(token, tokenSecret);
+
+    if (!decoded)
       return res.status(401).json({
         code: "401",
         status: "UNAUTHORIZED",
@@ -24,11 +39,19 @@ const VerifyTokenUser = async (req, res, next) => {
 
     next();
   } catch (error) {
-    res.status(400).json({
-      code: "400",
-      status: "BAD_REQUEST",
-      errors: error.message,
-    });
+    if (error.message === "jwt expired") {
+      return res.status(401).json({
+        code: "401",
+        status: "UNAUTHORIZED",
+        errors: "Your session has ended. Please login again!!",
+      });
+    } else {
+      return res.status(400).json({
+        code: "400",
+        status: "BAD_REQUEST",
+        errors: error.message,
+      });
+    }
   }
 };
 

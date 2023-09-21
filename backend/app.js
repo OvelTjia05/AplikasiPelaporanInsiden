@@ -8,13 +8,8 @@ const cors = require("cors");
 var laporan = require("./app/Laporan/router");
 var user = require("./app/user/router");
 var authUser = require("./app/AuthUser/router");
-var authAdmin = require("./app/AuthAdmin/router");
 
 var app = express();
-
-// view engine setup
-// app.set("views", path.join(__dirname, "views"));
-// app.set("view engine", "ejs");
 
 // atur cors
 app.use(
@@ -29,13 +24,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-// app.use(express.static("public"));
 
 app.use("/api", laporan);
 app.use("/api", user);
 
 app.use("/auth", authUser);
-app.use("/auth", authAdmin);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

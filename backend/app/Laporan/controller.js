@@ -259,4 +259,37 @@ const updateStatusLaporanTolak = async (req, res) => {
   }
 };
 
-module.exports = { getAllLaporan, postLaporan, updateStatusLaporanSelesai, updateStatusLaporanTindak, updateStatusLaporanTolak };
+//@description     Get Laporan User By Id User desc order
+//@route           GET /api/laporan/user/:id_user
+//@access          Public
+const getLaporanByUserId = async (req, res, next) => {
+  try {
+    const id_user = req.params.id_user;
+    const laporan = await Laporan.findAll({
+      attributes: ["id_laporan", "kategori_bidang", "deskripsi", "nama_file_gambar", "url_gambar", "waktu_submit", "status_laporan", "tingkat_prioritas", "pesan_dari_admin"],
+      where: {
+        id_user,
+      },
+      order: [["waktu_submit", "DESC"]],
+    });
+
+    res.status(200).json({
+      code: "200",
+      status: "OK",
+      data: laporan,
+    });
+  } catch (error) {
+    console.log(error.message);
+    req.status(500).json({
+      code: "500",
+      status: "INTERNAL_SERVER_ERROR",
+      errors: error.message,
+    });
+  }
+};
+
+//@description     Get Laporan User By Id User dengan jumlah 3 terbaru
+//@route           GET /api/laporan/:id_user
+//@access          Public
+
+module.exports = { getAllLaporan, postLaporan, updateStatusLaporanSelesai, updateStatusLaporanTindak, updateStatusLaporanTolak, getLaporanByUserId };
