@@ -8,6 +8,7 @@ const cors = require("cors");
 var laporan = require("./app/Laporan/router");
 var user = require("./app/user/router");
 var authUser = require("./app/AuthUser/router");
+var jenisPasien = require("./app/JenisPasien/router");
 
 var app = express();
 
@@ -27,6 +28,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api", laporan);
 app.use("/api", user);
+app.use("/api", jenisPasien);
 
 app.use("/auth", authUser);
 

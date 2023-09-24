@@ -37,6 +37,8 @@ const VerifyTokenAdmin = async (req, res, next) => {
         errors: "Please Login as Admin!!",
       });
 
+    req.id_user = decoded.id_user;
+
     next();
   } catch (error) {
     if (error.message === "jwt expired") {
