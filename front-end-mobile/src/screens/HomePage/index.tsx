@@ -56,22 +56,6 @@ const HomePage = ({navigation, route}: any) => {
     }
   };
 
-  // const getLatestLaporan = async () => {
-  //   if (dataUser.id_user) {
-  //     await axios
-  //       .get(
-  //         `https://backend-pelaporaninsiden.glitch.me/api/laporan/user/latest/${dataUser.id_user}`,
-  //       )
-  //       .then(response => {
-  //         console.log('ini response data data: ', response.data.data);
-  //         setLatestLaporan(response.data.data);
-  //       })
-  //       .catch(error => {
-  //         console.log(error);
-  //       });
-  //   }
-  // };
-
   const getStatusColor = (status_laporan: any) => {
     switch (status_laporan) {
       case 'antrian':
@@ -174,7 +158,7 @@ const HomePage = ({navigation, route}: any) => {
 
   const laporanTerakhir = () => {
     return (
-      <>
+      <View>
         {latestLaporan && latestLaporan.length === 0 ? (
           <View style={styles.cardLaporanTerakhir}>
             <Text style={styles.txtLaporanTerakhir}>
@@ -191,9 +175,7 @@ const HomePage = ({navigation, route}: any) => {
           </View>
         ) : (
           <View style={styles.card}>
-            <Text style={styles.txtCardTitle}>
-              Berikut laporan Anda yang terakhir
-            </Text>
+            <Text style={styles.txtCardTitle}>Laporan Terakhir Anda</Text>
             {latestLaporan && latestLaporan[0] && (
               <View
                 style={[
@@ -233,7 +215,7 @@ const HomePage = ({navigation, route}: any) => {
             )}
           </View>
         )}
-      </>
+      </View>
     );
   };
 
@@ -273,7 +255,11 @@ const HomePage = ({navigation, route}: any) => {
             {getStatusIcon(item.status_laporan)}
           </View>
         ))}
-        <Pressable style={styles.cardFooter}>
+        <Pressable
+          style={styles.cardFooter}
+          onPress={() => {
+            navigation.navigate('History');
+          }}>
           <Text
             style={{
               fontFamily: MyFont.Primary,
@@ -370,6 +356,7 @@ const styles = StyleSheet.create({
     paddingBottom: 80,
   },
   cardLaporanTerakhir: {
+    borderRadius: 20,
     flexWrap: 'wrap',
     minHeight: 119,
     backgroundColor: MyColor.Primary,

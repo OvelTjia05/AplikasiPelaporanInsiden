@@ -17,6 +17,7 @@ import Title from '../../components/atoms/Title';
 import {MyFont} from '../../components/atoms/MyFont';
 import Button from '../../components/atoms/Button';
 import {IconPanahKanan} from '../../assets/icons';
+import Gap from '../../components/atoms/Gap';
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -27,6 +28,7 @@ const KategoriBidang = ({navigation, route}: any) => {
   const [checked, setChecked] = useState('Farmasi');
   const [isPoliExpanded, setIsPoliExpanded] = useState(false);
   const [selectedPoli, setSelectedPoli] = useState('Farmasi');
+  console.log('ini di kategori bidang', dataUser);
 
   const togglePoliOptions = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -43,7 +45,11 @@ const KategoriBidang = ({navigation, route}: any) => {
         },
       ]}
       onPress={() => setSelectedPoli(poliName)}>
-      <Text style={{color: selectedPoli === poliName ? '#efefef' : '#212121'}}>
+      <Text
+        style={{
+          color: selectedPoli === poliName ? '#efefef' : '#212121',
+          fontFamily: MyFont.Primary,
+        }}>
         {poliName}
       </Text>
     </TouchableOpacity>
@@ -72,18 +78,19 @@ const KategoriBidang = ({navigation, route}: any) => {
   };
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={styles.container}>
       <Header />
-      <View style={styles.container}>
+      <View style={styles.container1}>
         <Text style={styles.txtBuatLaporan}>Buat Laporan</Text>
         <Title label="Kategori Bidang" />
         <Line height={2} />
+        <Gap height={30} />
         <RadioButton.Group
           onValueChange={handleRadioButtonChange}
           value={checked}>
           <View style={styles.radioButton}>
             <RadioButton.Android value="Farmasi" color={MyColor.Primary} />
-            <Text>Farmasi</Text>
+            <Text style={styles.txtKategori}>Farmasi</Text>
           </View>
           <View
             style={{
@@ -98,7 +105,7 @@ const KategoriBidang = ({navigation, route}: any) => {
                 style={styles.accordionTitle}>
                 <RadioButton.Android value="Poli" color={MyColor.Primary} />
               </TouchableOpacity>
-              <Text>Poli</Text>
+              <Text style={styles.txtKategori}>Poli</Text>
             </View>
             {isPoliExpanded && (
               <View style={styles.poliOptionsContainer}>
@@ -113,11 +120,11 @@ const KategoriBidang = ({navigation, route}: any) => {
           </View>
           <View style={styles.radioButton}>
             <RadioButton.Android value="Staff" color={MyColor.Primary} />
-            <Text>Staff</Text>
+            <Text style={styles.txtKategori}>Staff</Text>
           </View>
           <View style={styles.radioButton}>
             <RadioButton.Android value="Lainnya" color={MyColor.Primary} />
-            <Text>Lainnya</Text>
+            <Text style={styles.txtKategori}>Lainnya</Text>
           </View>
         </RadioButton.Group>
       </View>
@@ -147,9 +154,11 @@ export default KategoriBidang;
 
 const styles = StyleSheet.create({
   container: {
+    flexGrow: 1,
+  },
+  container1: {
     flex: 1,
-    width: '85%',
-    alignSelf: 'center',
+    padding: 20,
   },
   radioButton: {
     flexDirection: 'row',
@@ -166,11 +175,12 @@ const styles = StyleSheet.create({
     backgroundColor: MyColor.Light,
     borderRadius: 10,
     justifyContent: 'center',
+    paddingBottom: 10,
   },
   btnPoliOptions: {
     alignItems: 'center',
     backgroundColor: '#efefef',
-    width: 100,
+    width: 90,
     borderRadius: 10,
     paddingVertical: 10,
   },
@@ -185,9 +195,14 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     fontFamily: MyFont.Primary,
   },
+  txtKategori: {
+    fontFamily: MyFont.Primary,
+    color: 'black',
+  },
   footer: {
     alignSelf: 'center',
     flexDirection: 'row',
     gap: 10,
+    padding: 20,
   },
 });

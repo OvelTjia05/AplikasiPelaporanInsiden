@@ -88,11 +88,15 @@ const SubmitLaporan = ({navigation, route}: any) => {
         <Gap height={30} />
         <View style={styles.box}>
           <Title label="Kategori Bidang" />
-          <Text numberOfLines={undefined}>{kategori_bidang}</Text>
+          <Text numberOfLines={undefined} style={styles.txt}>
+            {kategori_bidang}
+          </Text>
         </View>
         <View style={styles.box}>
           <Title label="Deskripsi" />
-          <Text numberOfLines={undefined}>{deskripsi}</Text>
+          <Text numberOfLines={undefined} style={styles.txt}>
+            {deskripsi}
+          </Text>
         </View>
         <Gap height={50} />
       </View>

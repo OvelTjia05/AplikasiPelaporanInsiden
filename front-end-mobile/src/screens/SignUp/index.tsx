@@ -7,6 +7,7 @@ import {
   TextInput as Input,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import Gap from '../../components/atoms/Gap';
 import {Logo} from '../../assets/images';
@@ -48,9 +49,26 @@ const SignUp = ({navigation}: any) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  const Register = () => {
+    if (!username || !password || !confirmPassword) {
+      Alert.alert('Harap isi semua field');
+    } else if (password !== confirmPassword) {
+      Alert.alert(
+        'Password Tidak Cocok',
+        'Password dan konfirmasi password harus sama.',
+      );
+    }
+    // else if( username === data.username){
+    //   Alert.alert('Username sudah pernah digunakan')
+    // }
+    else {
+      navigation.navigate('Login');
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Gap height={110} />
+      <Gap height={90} />
       <View style={styles.logoContainer}>
         <Image source={Logo} resizeMode="contain" style={styles.logo} />
         <Text style={styles.txtLogo}>RSUD Dr.Sam Ratulangi{'\n'}Tondano</Text>
@@ -74,7 +92,7 @@ const SignUp = ({navigation}: any) => {
       />
       <Gap height={10} />
       <PasswordInput
-        placeholder={`Masukan lagi password${'\n'}Anda yang sama`}
+        placeholder={`Masukan lagi password yang sama`}
         onChangeText={setConfirmPassword}
         value={confirmPassword}
       />
@@ -84,9 +102,7 @@ const SignUp = ({navigation}: any) => {
         width={193}
         backgroundColor={MyColor.Primary}
         textColor="#efefef"
-        onClick={() => {
-          navigation.navigate('Login');
-        }}
+        onClick={Register}
         icons={<IconPanahKanan />}
       />
       <Gap height={10} />

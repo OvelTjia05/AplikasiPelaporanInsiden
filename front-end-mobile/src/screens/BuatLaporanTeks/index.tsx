@@ -5,10 +5,11 @@ import {
   ScrollView,
   TextInput as Input,
   Alert,
+  Keyboard,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Header from '../../components/molecules/Header';
-import TextInput from '../../components/molecules/TextInput';
+
 import {MyFont} from '../../components/atoms/MyFont';
 import Title from '../../components/atoms/Title';
 import Line from '../../components/atoms/Line';
@@ -55,6 +56,7 @@ const BuatLaporanTeks = ({navigation, route}: any) => {
         <Text style={styles.txt}>Silahkan ketikan isi laporan anda</Text>
         <Gap height={20} />
         <Input
+          inputMode="text"
           style={styles.txtInput}
           placeholder="Ketik disini..."
           value={deskripsi}
@@ -86,7 +88,6 @@ const BuatLaporanTeks = ({navigation, route}: any) => {
           width={150}
           backgroundColor={MyColor.Primary}
           textColor="#efefef"
-          // onClick={() => navigation.navigate('SubmitLaporan')}
           onClick={klik}
           icons={<IconPanahKanan />}
         />
@@ -104,8 +105,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 30,
-    width: '85%',
-    alignSelf: 'center',
+    paddingHorizontal: 20,
   },
   txt: {
     fontFamily: MyFont.Primary,
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     paddingStart: 10,
     width: '100%',
     minHeight: 200,
-    height: 'auto',
+    maxHeight: 300,
     // paddingVertical: 20,
     color: 'black',
   },

@@ -224,7 +224,7 @@ const History = ({navigation, route}: any) => {
                     <Text style={styles.txtCardTime}>
                       {convertToWITHour(new Date(item.waktu_submit))}
                     </Text>
-                    <Text style={styles.txtCardTime}>
+                    <Text style={styles.txtCard}>
                       {convertToWITDate(new Date(item.waktu_submit))}
                     </Text>
                     <Text style={styles.txtCardStatus}>
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   container1: {
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
     paddingBottom: 80,
   },
   card: {

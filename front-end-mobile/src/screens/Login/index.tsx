@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,6 +7,8 @@ import {
   TextInput as Input,
   ScrollView,
   TouchableOpacity,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import Gap from '../../components/atoms/Gap';
 import {Logo} from '../../assets/images';
@@ -20,6 +22,10 @@ import {
 import Button from '../../components/atoms/Button';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import PushNotification from 'react-native-push-notification';
+import {io} from 'socket.io-client';
+
+const socket = io('https://backend-pelaporaninsiden.glitch.me');
 
 const PasswordInput = ({placeholder, onChangeText, value}: any) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
@@ -48,8 +54,35 @@ const PasswordInput = ({placeholder, onChangeText, value}: any) => {
 const Login = ({navigation}: any) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const login = async () => {
+  useEffect(() => {
+    socket.on('pesan', data => {
+      console.log('Pesan diterima dari server:', data);
+      // Tampilkan notifikasi push
+      PushNotification.localNotification({
+        channelId: 'tes-channel1',
+        title: 'test title server',
+        message: 'test body',
+      });
+    });
+  }, []);
+
+  const triggerNotification = () => {
+    PushNotification.localNotification({
+      channelId: 'tes-channel1',
+      title: 'Notifikasi Test',
+      message: 'Ini adalah notifikasi test.',
+    });
+  };
+
+  const handleLogin = async () => {
+    if (!username || !password) {
+      Alert.alert('Harap isi username dan password.');
+      return;
+    }
+    setIsLoading(true);
+
     try {
       const response = await axios.post(
         'https://backend-pelaporaninsiden.glitch.me/auth/user/login',
@@ -59,7 +92,7 @@ const Login = ({navigation}: any) => {
         },
       );
       console.log('ini response: ', response.data);
-      const cookies = response.headers['set-cookie'];
+      const cookies = response.headers['set-cookie'] as string[];
       console.log('ini cookies: ', cookies);
       const cookiesValue = cookies[0];
 
@@ -89,14 +122,29 @@ const Login = ({navigation}: any) => {
         setUsername('');
         setPassword('');
       }
-    } catch (error) {
+
+      // Lanjutkan dengan langkah-langkah berikutnya setelah berhasil login
+      setIsLoading(false);
+    } catch (error: any) {
+      setIsLoading(false);
       console.log(error);
+      if (error.response) {
+        Alert.alert(
+          'Login Gagal',
+          'Username tidak ditemukan atau password salah.',
+        );
+      } else if (error.request) {
+        Alert.alert(
+          'Kesalahan Jaringan',
+          'Pastikan anda telah terhubung ke internet',
+        );
+      }
     }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Gap height={110} />
+      <Gap height={90} />
       <View style={styles.logoContainer}>
         <Image source={Logo} resizeMode="contain" style={styles.logo} />
         <Text style={styles.txtLogo}>RSUD Dr.Sam Ratulangi{'\n'}Tondano</Text>
@@ -119,17 +167,21 @@ const Login = ({navigation}: any) => {
         value={password}
       />
       <TouchableOpacity onPress={() => navigation.navigate('ForgetPass')}>
-        <Text style={styles.txtLupaPass}>Tolong, saya lupa password</Text>
+        <Text style={styles.txtLupaPass}>Lupa password</Text>
       </TouchableOpacity>
       <Gap height={40} />
-      <Button
-        label="Masuk"
-        width={193}
-        backgroundColor={MyColor.Primary}
-        textColor="#efefef"
-        onClick={login}
-        icons={<IconPanahKanan />}
-      />
+      {isLoading ? (
+        <ActivityIndicator size="large" color={MyColor.Primary} />
+      ) : (
+        <Button
+          label="Masuk"
+          width={193}
+          backgroundColor={MyColor.Primary}
+          textColor="#efefef"
+          onClick={handleLogin}
+          icons={<IconPanahKanan />}
+        />
+      )}
       <Gap height={10} />
       <Button
         label="Belum punya akun"
@@ -140,6 +192,13 @@ const Login = ({navigation}: any) => {
           navigation.navigate('SignUp');
         }}
       />
+      <TouchableOpacity
+        style={{width: 100, height: 30, backgroundColor: 'pink'}}
+        onPress={() => {
+          triggerNotification();
+        }}>
+        <Text style={{color: 'black'}}>Trigger Notifikasi</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -196,6 +255,7 @@ const styles = StyleSheet.create({
   },
   txtLupaPass: {
     fontFamily: MyFont.Primary,
+    color: 'grey',
     textDecorationLine: 'underline',
     marginVertical: 10,
   },
