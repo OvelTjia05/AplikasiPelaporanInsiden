@@ -81,7 +81,7 @@ const Navigation = ({navigation, route}: any) => {
         }}
       />
       <Tab.Screen
-        name="BuatLaporanFoto"
+        name="Redirect"
         component={RedirectPage}
         initialParams={dataUser}
         options={{

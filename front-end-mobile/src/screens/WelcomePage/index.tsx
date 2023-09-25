@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Image,
   ImageBackground,
@@ -13,8 +13,29 @@ import {BackgroundRS1, Logo} from '../../assets/images';
 import {MyFont} from '../../components/atoms/MyFont';
 import {IconBuatLaporan, IconBuatLaporanAnonim} from '../../assets/icons';
 import LinearGradient from 'react-native-linear-gradient';
+import PushNotification from 'react-native-push-notification';
 
 const WelcomePage = ({navigation}: any) => {
+  const createChannel = () => {
+    PushNotification.createChannel(
+      {
+        channelId: 'tes-channel1', // Ganti dengan ID kanal yang Anda inginkan
+        channelName: 'myChannel', // Ganti dengan nama kanal yang Anda inginkan
+      },
+      created => {
+        if (created) {
+          console.log(`Channel created successfully: ${created}`);
+        } else {
+          console.error('Failed to create channe');
+        }
+      },
+    );
+  };
+
+  useEffect(() => {
+    createChannel();
+  }, []);
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -25,7 +46,7 @@ const WelcomePage = ({navigation}: any) => {
           colors={['rgba(255, 255, 255, 0.62)', '#efefef']}
           style={styles.overlay}></LinearGradient>
         <View style={styles.content}>
-          <Gap height={130} />
+          <Gap height={110} />
           <View style={styles.logoContainer}>
             <Image source={Logo} resizeMode="contain" style={styles.logo} />
             <Text style={styles.txt}>RSUD Dr.Sam Ratulangi{'\n'}Tondano</Text>
@@ -53,7 +74,7 @@ const WelcomePage = ({navigation}: any) => {
           <Gap height={20} />
           <TouchableOpacity
             style={[styles.btn, {backgroundColor: 'transparent'}]}
-            onPress={() => navigation.navigate('SplashScreen')}>
+            onPress={() => navigation.navigate('KategoriBidang')}>
             <Text style={[styles.btnTxt, {color: MyColor.Primary}]}>
               Buat Laporan{'\n'}
               <Text style={{fontFamily: 'Poppins-Bold'}}>secara anonim</Text>
@@ -91,7 +112,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     alignItems: 'center',
-    width: '90%',
+    padding: 20,
   },
   btn: {
     justifyContent: 'center',
@@ -99,7 +120,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     columnGap: 25,
     backgroundColor: MyColor.Primary,
-    width: '90%',
+    width: 320,
     height: 73,
     borderRadius: 27,
     borderColor: '#007FA4',
