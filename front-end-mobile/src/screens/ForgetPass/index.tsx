@@ -24,28 +24,29 @@ const ForgetPass = ({navigation}: any) => {
         <Image source={Logo} resizeMode="contain" style={styles.logo} />
         <Text style={styles.txtLogo}>RSUD Dr.Sam Ratulangi{'\n'}Tondano</Text>
       </View>
-      <Gap height={40} />
-      <Text style={styles.txt}>Buat Laporan dengan Akun{'\n'}</Text>
-      <Text style={styles.txtBold}>Silahkan masukan username Anda{'\n'}</Text>
-      <Gap height={30} />
-      <Input
-        style={styles.txtInput}
-        placeholder="Masukan username Anda"
-        placeholderTextColor="#787878"
-        onChangeText={setUsername}
-        value={username}
-      />
-      <Gap height={30} />
-      <Button
-        label="Lanjut"
-        width={193}
-        backgroundColor={MyColor.Primary}
-        textColor="#efefef"
-        onClick={() => {
-          navigation.navigate('CreatePass');
-        }}
-        icons={<IconPanahKanan />}
-      />
+      <Gap height={110} />
+      <View style={styles.content}>
+        <Text style={styles.txt}>
+          Jika Anda lupa password akun, silahkan menghubungi bagian admin IT di
+          nomor yang ada dibawah ini
+        </Text>
+        <Gap height={30} />
+        <Text style={styles.txtPhoneNumber}>0812-3456-7890</Text>
+        <View style={{flexDirection: 'row', columnGap: 30, marginTop: 10}}>
+          <Button
+            label="Telepon"
+            width={110}
+            backgroundColor="transparent"
+            textColor={MyColor.Primary}
+          />
+          <Button
+            label="Whatsapp"
+            width={110}
+            backgroundColor="transparent"
+            textColor={MyColor.Primary}
+          />
+        </View>
+      </View>
     </ScrollView>
   );
 };
@@ -55,6 +56,10 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'center',
     padding: 20,
+  },
+  content: {
+    alignItems: 'center',
+    paddingHorizontal: 40,
   },
   logo: {
     width: 33,
@@ -70,26 +75,17 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   txt: {
+    textAlign: 'center',
     fontFamily: MyFont.Primary,
-    fontSize: 15,
-    color: 'black',
-  },
-  txtBold: {
-    fontFamily: 'Poppins-Bold',
     fontSize: 17,
-    color: MyColor.Primary,
-  },
-  txtInput: {
-    fontSize: 14,
-    fontFamily: MyFont.Primary,
-    borderWidth: 1,
-    borderColor: 'grey',
-    backgroundColor: 'white',
-    borderRadius: 10,
-    paddingStart: 10,
-    width: '100%',
-    marginBottom: 20,
     color: 'black',
+  },
+
+  txtPhoneNumber: {
+    fontFamily: 'Poppins-Bold',
+    fontSize: 22,
+    textAlign: 'center',
+    color: MyColor.Primary,
   },
 });
 

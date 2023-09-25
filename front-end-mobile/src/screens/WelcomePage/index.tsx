@@ -6,6 +6,8 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Dimensions,
+  ScrollView,
 } from 'react-native';
 import Gap from '../../components/atoms/Gap';
 import {MyColor} from '../../components/atoms/MyColor';
@@ -15,6 +17,9 @@ import {IconBuatLaporan, IconBuatLaporanAnonim} from '../../assets/icons';
 import LinearGradient from 'react-native-linear-gradient';
 import PushNotification from 'react-native-push-notification';
 
+const screenWidth = Dimensions.get('window').width;
+const w = screenWidth * 0.85;
+
 const WelcomePage = ({navigation}: any) => {
   const createChannel = () => {
     PushNotification.createChannel(
@@ -22,13 +27,7 @@ const WelcomePage = ({navigation}: any) => {
         channelId: 'tes-channel1', // Ganti dengan ID kanal yang Anda inginkan
         channelName: 'myChannel', // Ganti dengan nama kanal yang Anda inginkan
       },
-      created => {
-        if (created) {
-          console.log(`Channel created successfully: ${created}`);
-        } else {
-          console.error('Failed to create channe');
-        }
-      },
+      created => {},
     );
   };
 
@@ -37,7 +36,7 @@ const WelcomePage = ({navigation}: any) => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <ImageBackground
         source={BackgroundRS1}
         resizeMode="cover"
@@ -85,9 +84,17 @@ const WelcomePage = ({navigation}: any) => {
             Identitas tidak akan tersimpan, dan laporan{'\n'}akan dikirim tanpa
             identitas maupun riwayat apapun.
           </Text>
+          <Gap height={30} />
+          <TouchableOpacity
+            style={[styles.btn, {backgroundColor: 'transparent', height: 38}]}
+            onPress={() => navigation.navigate('LoginAdmin')}>
+            <Text style={[styles.btnTxt, {color: MyColor.Primary}]}>
+              Masuk sebagai petugas
+            </Text>
+          </TouchableOpacity>
         </View>
       </ImageBackground>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -95,7 +102,7 @@ export default WelcomePage;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
   },
   bg: {
     flex: 1,
@@ -118,14 +125,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    columnGap: 25,
+    columnGap: 30,
     backgroundColor: MyColor.Primary,
-    width: 320,
+    width: 303,
     height: 73,
     borderRadius: 27,
     borderColor: '#007FA4',
     borderWidth: 2,
   },
+
   btnTxt: {
     fontFamily: MyFont.Primary,
     color: '#fff',

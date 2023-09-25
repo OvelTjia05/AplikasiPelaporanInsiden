@@ -114,7 +114,7 @@ const DetailLaporan = ({navigation, route}: any) => {
   //   },
   // ];
 
-  function convertToWITHour(utcDate: any) {
+  function convertToWITAHour(utcDate: any) {
     const offset = 8; // Offset waktu WIT dari UTC adalah +7 jam
     const localTime = new Date(utcDate.getTime() + offset * 60 * 60 * 1000);
 
@@ -124,7 +124,7 @@ const DetailLaporan = ({navigation, route}: any) => {
     return `${hours}:${minutes}`;
   }
 
-  function convertToWITDate(utcDate: any) {
+  function convertToWITADate(utcDate: any) {
     const offset = 8; // Offset waktu WIT dari UTC adalah +7 jam
     const localTime = new Date(utcDate.getTime() + offset * 60 * 60 * 1000);
 
@@ -182,13 +182,15 @@ const DetailLaporan = ({navigation, route}: any) => {
         <Gap height={20} />
         <Text style={styles.txtTime}>
           {laporanDetail &&
-            convertToWITDate(new Date(laporanDetail.waktu_submit))}
+            convertToWITADate(new Date(laporanDetail.waktu_submit))}
           /
           {laporanDetail &&
-            convertToWITHour(new Date(laporanDetail.waktu_submit))}
+            convertToWITAHour(new Date(laporanDetail.waktu_submit))}
         </Text>
+        <Gap height={20} />
+
         <View style={styles.box}>
-          <Text style={styles.txtLaporanTitle}>Foto Pendukung</Text>
+          <Text style={styles.txtBox}>Foto Pendukung</Text>
           {laporanDetail && (
             <Image
               source={{uri: laporanDetail.url_gambar}}
@@ -198,7 +200,16 @@ const DetailLaporan = ({navigation, route}: any) => {
         </View>
         <Gap height={40} />
         <View style={styles.box}>
-          <Text style={styles.txtLaporanTitle}>Isi Laporan</Text>
+          <Text style={styles.txtBox}>Kategori Bidang</Text>
+          {laporanDetail && (
+            <Text style={[styles.txt, {fontSize: 22}]}>
+              {laporanDetail.kategori_bidang}
+            </Text>
+          )}
+        </View>
+        <Gap height={40} />
+        <View style={styles.box}>
+          <Text style={styles.txtBox}>Isi Laporan</Text>
           {laporanDetail && (
             <Text style={styles.txtIsiLaporan}>{laporanDetail.deskripsi}</Text>
           )}
@@ -247,9 +258,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'black',
   },
+  txtBox: {
+    fontFamily: 'Poppins-Bold',
+    fontSize: 16,
+    color: 'black',
+  },
   box: {
     backgroundColor: MyColor.Light,
-    padding: 10,
+    padding: 18,
     width: '90%',
     borderRadius: 20,
     gap: 10,
@@ -260,10 +276,5 @@ const styles = StyleSheet.create({
     // borderRadius: 20,
     resizeMode: 'contain',
     backgroundColor: 'black',
-  },
-  txtLaporanTitle: {
-    fontFamily: 'Poppins-Bold',
-    fontSize: 21,
-    color: MyColor.Primary,
   },
 });

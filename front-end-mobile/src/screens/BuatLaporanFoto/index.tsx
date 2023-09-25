@@ -22,7 +22,7 @@ const BuatLaporanFoto = ({navigation, route}: any) => {
   const [imageCamera, setImageCamera] = useState<ImageData | null>(null);
   const dataUser = route.params;
   console.log('ini di laporan foto: ', dataUser);
-  console.log('ini di laporan foto 2: ', dataUser.dataUser.id_user);
+  // console.log('ini di laporan foto 2: ', dataUser.dataUser.id_user);
 
   const openCamera = () => {
     const options: any = {

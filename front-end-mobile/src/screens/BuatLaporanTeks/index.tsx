@@ -21,7 +21,7 @@ import {MyColor} from '../../components/atoms/MyColor';
 const BuatLaporanTeks = ({navigation, route}: any) => {
   const data = route.params;
   console.log('laporan teks: ', data);
-  console.log('laporan teks untuk data user: ', data.dataUser.dataUser.id_user);
+  // console.log('laporan teks untuk data user: ', data.dataUser.dataUser.id_user);
   const [kategori_bidang, set_kategori_bidang] = useState(
     data.dataUser.kategori_bidang,
   );

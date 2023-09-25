@@ -1,11 +1,8 @@
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-
 import React from 'react';
 import HomePage from '../screens/HomePage';
 import History from '../screens/History';
-import BuatLaporanFoto from '../screens/BuatLaporanFoto';
 import News from '../screens/News';
 import Settings from '../screens/Settings';
 import {
@@ -44,7 +41,7 @@ const Navigation = ({navigation, route}: any) => {
       initialRouteName="HomePage"
       screenOptions={{
         tabBarShowLabel: false,
-        tabBarStyle: style.tabContainer,
+        tabBarStyle: styles.tabContainer,
       }}>
       <Tab.Screen
         name="HomePage"
@@ -137,7 +134,7 @@ const Navigation = ({navigation, route}: any) => {
 
 export default Navigation;
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   tabContainer: {
     backgroundColor: 'white',
     borderRadius: 50,

@@ -46,6 +46,6 @@ const styles = StyleSheet.create({
   label: {
     textAlign: 'center',
     fontFamily: MyFont.Primary,
-    fontSize: 18,
+    fontSize: 16,
   },
 });
