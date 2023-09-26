@@ -6,7 +6,7 @@ const path = require("path");
 const db = require("../../database");
 const JenisPasien = require("../JenisPasien/model");
 
-//@description     Get All Laporan User
+//@description     Get All Laporan User Latest Order
 //@route           GET /api/laporan
 //@access          Public
 const getAllLaporan = async (req, res, next) => {
@@ -54,6 +54,7 @@ const getAllLaporan = async (req, res, next) => {
         "tanggal_laporan_dikirim",
         "gambar",
       ],
+      order: [["tanggal_laporan_dikirim", "DESC"]],
       include: [
         {
           model: User,
@@ -64,6 +65,181 @@ const getAllLaporan = async (req, res, next) => {
           attributes: ["id_jenis_pasien", "nama_jenis_pasien"],
         },
       ],
+    });
+
+    res.status(200).json({
+      code: "200",
+      status: "OK",
+      data: laporan,
+    });
+  } catch (error) {
+    console.log("Ini error: ", error);
+    res.status(500).json({
+      code: "500",
+      status: "INTERNAL_SERVER_ERROR",
+      errors: error.message,
+    });
+  }
+};
+
+//@description     Get Laporan By Id Laporan
+//@route           GET /api/laporan/:id_laporan
+//@access          Public
+const getLaporanByIdLaporan = async (req, res, next) => {
+  try {
+    const id_laporan = req.params.id_laporan;
+
+    const laporan = await Laporan.findOne({
+      where: {
+        id_laporan,
+      },
+      attributes: [
+        "id_laporan",
+        "nama_pasien",
+        "no_rekam_medis",
+        "ruangan",
+        "umur",
+        "asuransi",
+        "jenis_kelamin_pasien",
+        "waktu_mendapatkan_pelayanan",
+        "waktu_kejadian_insiden",
+        "insiden",
+        "kronologis_insiden",
+        "insiden_terjadi_pada_pasien",
+        "dampak_insiden_terhadap_pasien",
+        "probabilitas",
+        "orang_pertama_melaporkan_insiden",
+        // jenis pasien
+        "tempat_insiden",
+        "departement_penyebab_insiden",
+        "tindak_lanjut_setelah_kejadian_dan_hasil",
+        "yang_melakukan_tindak_lanjut_setelah_insiden",
+        "kejadian_sama_pernah_terjadi_di_unit_lain",
+        "status",
+        "tanggal_laporan_dikirim",
+        "gambar",
+      ],
+      include: [
+        {
+          model: User,
+          attributes: ["username", "id_user"],
+        },
+        {
+          model: JenisPasien,
+          attributes: ["id_jenis_pasien", "nama_jenis_pasien"],
+        },
+      ],
+    });
+
+    res.status(200).json({
+      code: "200",
+      status: "OK",
+      data: laporan,
+    });
+  } catch (error) {
+    console.log("Ini error: ", error);
+    res.status(500).json({
+      code: "500",
+      status: "INTERNAL_SERVER_ERROR",
+      errors: error.message,
+    });
+  }
+};
+
+//@description     Get Laporan User By Id User desc order (Latest)
+//@route           GET /api/laporan/user/:id_user
+//@access          Public
+const getLaporanByUserId = async (req, res, next) => {
+  try {
+    const id_user = req.params.id_user;
+    console.log("ini id user: ", id_user);
+    const laporan = await Laporan.findAll({
+      attributes: [
+        "id_laporan",
+        "nama_pasien",
+        "no_rekam_medis",
+        "ruangan",
+        "umur",
+        "asuransi",
+        "jenis_kelamin_pasien",
+        "waktu_mendapatkan_pelayanan",
+        "waktu_kejadian_insiden",
+        "insiden",
+        "kronologis_insiden",
+        "insiden_terjadi_pada_pasien",
+        "dampak_insiden_terhadap_pasien",
+        "probabilitas",
+        "orang_pertama_melaporkan_insiden",
+        // jenis pasien
+        "tempat_insiden",
+        "departement_penyebab_insiden",
+        "tindak_lanjut_setelah_kejadian_dan_hasil",
+        "yang_melakukan_tindak_lanjut_setelah_insiden",
+        "kejadian_sama_pernah_terjadi_di_unit_lain",
+        "status",
+        "tanggal_laporan_dikirim",
+        "gambar",
+      ],
+      where: {
+        id_user,
+      },
+      order: [["tanggal_laporan_dikirim", "DESC"]],
+    });
+
+    res.status(200).json({
+      code: "200",
+      status: "OK",
+      data: laporan,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({
+      code: "500",
+      status: "INTERNAL_SERVER_ERROR",
+      errors: error.message,
+    });
+  }
+};
+
+//@description     Get Laporan User By Id User dengan jumlah 3 terbaru
+//@route           GET /api/laporan/user/latest/:id_user
+//@access          Public
+const getLatestThreeLaporanByUserId = async (req, res, next) => {
+  try {
+    const id_user = req.params.id_user;
+
+    const laporan = await Laporan.findAll({
+      attributes: [
+        "id_laporan",
+        "nama_pasien",
+        "no_rekam_medis",
+        "ruangan",
+        "umur",
+        "asuransi",
+        "jenis_kelamin_pasien",
+        "waktu_mendapatkan_pelayanan",
+        "waktu_kejadian_insiden",
+        "insiden",
+        "kronologis_insiden",
+        "insiden_terjadi_pada_pasien",
+        "dampak_insiden_terhadap_pasien",
+        "probabilitas",
+        "orang_pertama_melaporkan_insiden",
+        // jenis pasien
+        "tempat_insiden",
+        "departement_penyebab_insiden",
+        "tindak_lanjut_setelah_kejadian_dan_hasil",
+        "yang_melakukan_tindak_lanjut_setelah_insiden",
+        "kejadian_sama_pernah_terjadi_di_unit_lain",
+        "status",
+        "tanggal_laporan_dikirim",
+        "gambar",
+      ],
+      where: {
+        id_user,
+      },
+      order: [["tanggal_laporan_dikirim", "DESC"]],
+      limit: 3,
     });
 
     res.status(200).json({
@@ -557,13 +733,11 @@ const updateStatusLaporanSelesai = async (req, res) => {
 //@access          Public
 const updateStatusLaporanTolak = async (req, res) => {
   const id_laporan = req.params.id_laporan;
-  const pesan_dari_admin = req.body.pesan_dari_admin;
 
   try {
     const laporan = await Laporan.update(
       {
-        status_laporan: "tolak",
-        pesan_dari_admin,
+        status: "laporan ditolak",
       },
       {
         where: {
@@ -586,37 +760,16 @@ const updateStatusLaporanTolak = async (req, res) => {
   }
 };
 
-//@description     Get Laporan User By Id User desc order (Latest)
-//@route           GET /api/laporan/user/:id_user
-//@access          Public
-const getLaporanByUserId = async (req, res, next) => {
-  try {
-    const id_user = req.params.id_user;
-    const laporan = await Laporan.findAll({
-      attributes: ["id_laporan", "kategori_bidang", "deskripsi", "nama_file_gambar", "url_gambar", "waktu_submit", "status_laporan", "tingkat_prioritas", "pesan_dari_admin"],
-      where: {
-        id_user,
-      },
-      order: [["waktu_submit", "DESC"]],
-    });
+module.exports = {
+  getAllLaporan,
+  getLaporanByIdLaporan,
+  getLaporanByUserId,
+  getLatestThreeLaporanByUserId,
 
-    res.status(200).json({
-      code: "200",
-      status: "OK",
-      data: laporan,
-    });
-  } catch (error) {
-    console.log(error.message);
-    req.status(500).json({
-      code: "500",
-      status: "INTERNAL_SERVER_ERROR",
-      errors: error.message,
-    });
-  }
+  postLaporanByUser,
+  postLaporanByAnonim,
+
+  updateStatusLaporanInvestigasi,
+  updateStatusLaporanSelesai,
+  updateStatusLaporanTolak,
 };
-
-//@description     Get Laporan User By Id User dengan jumlah 3 terbaru
-//@route           GET /api/laporan/:id_user
-//@access          Public
-
-module.exports = { getAllLaporan, postLaporanByUser, updateStatusLaporanInvestigasi, updateStatusLaporanSelesai, updateStatusLaporanTolak, getLaporanByUserId, postLaporanByAnonim };
