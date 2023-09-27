@@ -1,0 +1,353 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "API Aplikai Pelaporan Insiden",
+    "description": "OpenAPI for Aplikasi Pelaporan Insiden RESTful API",
+    "contact": {
+      "name": "Jerico Katong",
+      "email": "jericokatong@gmail.com"
+    },
+    "version": "1.0"
+  },
+  "servers": [{ "url": "http://localhost:5000" }],
+  "paths": {
+    "/auth/user/register": {
+      "post": {
+        "tags": ["Authentikasi User"],
+        "summary": "Register user",
+        "description": "Register user dengan role user biasa",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "konfirmasi_password": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "username", "password"]
+              },
+              "example": {
+                "name": "Hendra Luntungan",
+                "username": "hendra1",
+                "password": "123456",
+                "konfirmasi_password": "123456",
+                "role": "user"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success Register",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "password": {
+                          "type": "string"
+                        },
+                        "role": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "code": "201",
+                  "status": "CREATED",
+                  "data": {
+                    "name": "Hendra Luntungan",
+                    "username": "hendra1",
+                    "password": "123456",
+                    "role": "user"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralError"
+                },
+                "examples": {
+                  "password do not match": {
+                    "value": {
+                      "code": "400",
+                      "status": "BAD_REQUEST",
+                      "errors": "Password and confirmation password do not match"
+                    }
+                  },
+                  "Empty Field": {
+                    "value": {
+                      "code": "400",
+                      "status": "BAD_REQUEST",
+                      "errors": "Name, Username, Password and password confirmation Fields Are Required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Failed: username alread exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralError"
+                },
+                "example": {
+                  "code": "409",
+                  "status": "CONFLICT",
+                  "errors": "Username already exists"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/user/login": {
+      "post": {
+        "tags": ["Authentikasi User"],
+        "summary": "Login User",
+        "description": "Login user untuk admin dan user biasa",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "username": "hendra1",
+                  "password": "123456"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success Login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id_user": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "role": {
+                          "type": "string"
+                        },
+                        "token": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "code": "200",
+                  "status": "OK",
+                  "data": {
+                    "id_user": "21dab398-7fd2-4d4a-80ac-5b3eea6e",
+                    "username": "hendra1",
+                    "role": "user",
+                    "token": "ajfoapfijaofjifjaofjpaiofjaofjaopfjapofjaofjjeriqroiojafoiaj"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralError"
+                },
+                "examples": {
+                  "User Not Found": {
+                    "value": {
+                      "code": "400",
+                      "status": "BAD_REQUEST",
+                      "errors": "User Not Found"
+                    }
+                  },
+                  "Incorrect Password": {
+                    "value": {
+                      "code": "400",
+                      "status": "BAD_REQUEST",
+                      "errors": "Incorrect Password"
+                    }
+                  },
+                  "Empty Field": {
+                    "value": {
+                      "code": "400",
+                      "status": "BAD_REQUEST",
+                      "errors": "Username and Password Fields Are Required"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/user/logout": {
+      "delete": {
+        "tags": ["Authentikasi User"],
+        "summary": "Logout User",
+        "description": "User melakukan Logout",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "token": "afjaofjiapfjapfjojrqorjqoienviqnvqopijqrpvnqppqrijqporjj"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Succes Logout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "success": {
+                      "type": "boolean"
+                    }
+                  },
+                  "example": {
+                    "code": "200",
+                    "status": "OK",
+                    "success": true
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User belum login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralError"
+                },
+                "example": {
+                  "code": "401",
+                  "status": "UNAUTHORIZED",
+                  "errors": "User hasn't login yet"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralError"
+                },
+                "example": {
+                  "code": "404",
+                  "status": "NOT_FOUND",
+                  "errors": "User is not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "GeneralError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "errors": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

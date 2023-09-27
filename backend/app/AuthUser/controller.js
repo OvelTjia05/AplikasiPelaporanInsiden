@@ -29,7 +29,7 @@ const registerUser = async (req, res) => {
         return res.status(400).json({
           code: "400",
           status: "BAD_REQUEST",
-          errors: "Password and confirmation do not match",
+          errors: "Password and confirmation password do not match",
         });
 
       // Enkripsi password
@@ -173,7 +173,7 @@ const logoutUser = async (req, res) => {
     return res.status(401).json({
       code: "401",
       status: "UNAUTHORIZED",
-      errors: "Please Login",
+      errors: "User hasn't login yet",
     });
   }
   try {
@@ -205,7 +205,7 @@ const logoutUser = async (req, res) => {
     return res.status(200).json({
       code: "200",
       status: "OK",
-      data: update,
+      success: true,
     });
   } catch (error) {
     res.status(500).json({
