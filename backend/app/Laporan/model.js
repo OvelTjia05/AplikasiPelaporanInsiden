@@ -109,10 +109,10 @@ const Laporan = db.define(
       allowNull: false,
     },
     status: {
-      type: DataTypes.ENUM("laporan masuk", "investigasi", "laporan selesai", "laporan ditolak"),
+      type: DataTypes.ENUM("dalam antrian", "investigasi", "laporan selesai", "laporan ditolak"),
       allowNull: false,
       validate: {
-        isIn: [["laporan masuk", "investigasi", "laporan selesai", "laporan ditolak"]],
+        isIn: [["dalam antrian", "investigasi", "laporan selesai", "laporan ditolak"]],
       },
     },
     tanggal_laporan_dikirim: {
