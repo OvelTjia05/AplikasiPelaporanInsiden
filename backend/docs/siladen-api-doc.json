@@ -330,6 +330,298 @@
           }
         }
       }
+    },
+    "/api/user/{id_user}": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get user by ID",
+        "description": "Get detail user by ID",
+        "parameters": [
+          {
+            "name": "id_user",
+            "description": "Mendapatkan detail user berdasarkan id user",
+            "required": true,
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success get user by ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id_user": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "role": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "example": {
+                    "code": "200",
+                    "status": "OK",
+                    "data": {
+                      "id_user": "21dab398-7fd2-4d4a-80ac-5b3eea6e",
+                      "name": "hendra luntungan",
+                      "username": "hendra1",
+                      "role": "user"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralError"
+                },
+                "example": {
+                  "code": "404",
+                  "status": "NOT_FOUND",
+                  "errors": "User is not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get All User",
+        "description": "Get All Detail User",
+        "responses": {
+          "200": {
+            "description": "Success Get All User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id_user": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "username": {
+                            "type": "string"
+                          },
+                          "role": {
+                            "type": "string"
+                          },
+                          "token": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "code": "200",
+                  "status": "OK",
+                  "data": [
+                    {
+                      "id_user": "21dab398-7fd2-4d4a-80ac-5b3eea6e",
+                      "name": "hendra luntungan",
+                      "username": "hendra1",
+                      "role": "admin",
+                      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoiMjFkYWIzOTgtN2ZkMi00ZDRhLTgwYWMtNWIzZWVhNmUiLCJ1c2VybmFtZSI6ImhlbmRyYTEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2OTU3Nzc2NDMsImV4cCI6MTY5NTg2NDA0M30.A0rbFDHya8qoNj1BAYraxu-4fT3dP8iVpqXyrrO1Jo0"
+                    },
+                    {
+                      "id_user": "2e4d4319-56c8-4c43-a298-cebb3501",
+                      "name": "Ovel Tjia",
+                      "username": "ovel1",
+                      "role": "user",
+                      "token": null
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/jenis_pasien": {
+      "get": {
+        "tags": ["Jenis Pasien"],
+        "summary": "Get All Jenis Pasien",
+        "description": "Get All nama jenis pasien untuk kebutuhan input laporan",
+        "responses": {
+          "200": {
+            "description": "Success Get All Jenis Pasien",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id_jenis_pasien": {
+                            "type": "integer"
+                          },
+                          "nama_jenis_pasien": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "code": "200",
+                  "status": "OK",
+                  "data": [
+                    {
+                      "id_jenis_pasien": 1,
+                      "nama_jenis_pasien": "Pasien rawat inap"
+                    },
+                    {
+                      "id_jenis_pasien": 2,
+                      "nama_jenis_pasien": "Pasien rawat jalan"
+                    },
+                    {
+                      "id_jenis_pasien": 3,
+                      "nama_jenis_pasien": "Pasien UGD"
+                    },
+                    {
+                      "id_jenis_pasien": 4,
+                      "nama_jenis_pasien": "Lain-lain"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Data jenis pasien tidak ditemukan / tidak ada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralError"
+                },
+                "example": {
+                  "code": "404",
+                  "status": "NOT_FOUND",
+                  "errors": "No Data Jenis Pasien Found"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Jenis Pasien"],
+        "summary": "Post Jenis Pasien",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nama_jenis_pasien": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "nama_jenis_pasien": "Pasien rawat inap"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success Post Jenis Pasien",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id_jenis_pasien": {
+                          "type": "integer"
+                        },
+                        "nama_jenis_pasien": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "code": "200",
+                  "status": "OK",
+                  "data": {
+                    "id_jenis_pasien": 1,
+                    "nama_jenis_pasien": "Pasien rawat inap"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/laporan": {
+      "get": {
+        "tags": ["Laporan"],
+        "responses": {}
+      }
     }
   },
   "components": {

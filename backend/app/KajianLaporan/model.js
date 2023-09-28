@@ -48,16 +48,18 @@ const KajianLaporan = db.define(
   }
 );
 
-Laporan.hasOne(KajianLaporan, {
-  foreignKey: "id_laporan",
-});
-KajianLaporan.belongsTo(Laporan);
-
 User.hasMany(KajianLaporan, {
   foreignKey: "id_user",
 });
 KajianLaporan.belongsTo(User, {
   foreignKey: "id_user",
+});
+
+Laporan.hasOne(KajianLaporan, {
+  foreignKey: "id_laporan",
+});
+KajianLaporan.belongsTo(Laporan, {
+  foreignKey: "id_laporan",
 });
 
 module.exports = KajianLaporan;
