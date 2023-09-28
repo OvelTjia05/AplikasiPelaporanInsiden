@@ -6,7 +6,7 @@ import SplashScreen from './src/screens/SplashScreen';
 
 import KategoriBidang from './src/screens/KategoriBidang';
 import Login from './src/screens/Login';
-import BuatLaporanFoto from './src/screens/BuatLaporanFoto';
+
 import BuatLaporanTeks from './src/screens/BuatLaporanTeks';
 import WelcomePage from './src/screens/WelcomePage';
 import SignUp from './src/screens/SignUp';
@@ -80,18 +80,8 @@ const App = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="BuatLaporanFoto"
-          component={BuatLaporanFoto}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
           name="DetailLaporan"
           component={DetailLaporan}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="SubmitLaporan"
-          component={SubmitLaporan}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

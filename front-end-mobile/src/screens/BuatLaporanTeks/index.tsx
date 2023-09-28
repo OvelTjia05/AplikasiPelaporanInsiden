@@ -73,7 +73,7 @@ const BuatLaporanTeks = ({navigation, route}: any) => {
           backgroundColor="#efefef"
           textColor={MyColor.Primary}
           onClick={() =>
-            navigation.navigate('BuatLaporanFoto', {
+            navigation.navigate('FotoPendukung', {
               dataUser: {
                 id_user: data.dataUser.dataUser.id_user,
                 username: data.dataUser.dataUser.username,

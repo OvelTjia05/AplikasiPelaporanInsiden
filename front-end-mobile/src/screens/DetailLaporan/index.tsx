@@ -19,6 +19,7 @@ import {MyFont} from '../../components/atoms/MyFont';
 import Gap from '../../components/atoms/Gap';
 import {Ilustrasi} from '../../assets/images';
 import axios from 'axios';
+import Title from '../../components/atoms/Title';
 
 const DetailLaporan = ({navigation, route}: any) => {
   const windowWidth = Dimensions.get('window').width;
@@ -53,22 +54,19 @@ const DetailLaporan = ({navigation, route}: any) => {
         return '#008656';
       case 'tolak':
         return '#8D0000';
-      default:
-        return 'white';
     }
   };
-  const getStatusHeader = (status: string) => {
-    switch (status) {
-      //   case 'Dalam Antrian':
-      //     return null;
-      //   case 'Sedang Ditindak':
-      //     return null;
-      case 'selesai':
-        return 'Kronologi:';
-      case 'tolak':
-        return 'Alasan Ditolak:';
-      default:
-        return null;
+
+  const getGradingColor = (grade: string) => {
+    switch (grade) {
+      case 'biru':
+        return MyColor.Primary;
+      case 'kuning':
+        return '#A37F00';
+      case 'hijau':
+        return '#008656';
+      case 'merah':
+        return '#8D0000';
     }
   };
 
@@ -102,35 +100,21 @@ const DetailLaporan = ({navigation, route}: any) => {
     }
   };
 
-  // const laporan = [
-  //   {
-  //     status: 'Laporan Ditolak',
-  //     desc: `Laporan yang Anda kirimkan telah kami tindak, dan kami dapati bahwa data laporan yang Anda tidak sesuai yang terjadi di lapangan, mohon untuk memberikan data yang terjadi sebenarnya. Terima kaih.`,
-  //     waktu: '19:45',
-  //     tanggal: '6 September 2023',
-  //     gambar: require('../../assets/images/ilustrasi.png'),
-  //     kategoriBidang: 'Poli (Poli Mata)',
-  //     isi: 'loremipsum',
-  //   },
-  // ];
+  function formatHour(date: Date) {
+    const localTime = new Date(date.getTime());
 
-  function convertToWITAHour(utcDate: any) {
-    const offset = 8; // Offset waktu WIT dari UTC adalah +7 jam
-    const localTime = new Date(utcDate.getTime() + offset * 60 * 60 * 1000);
-
-    const hours = localTime.getUTCHours().toString().padStart(2, '0');
-    const minutes = localTime.getUTCMinutes().toString().padStart(2, '0');
+    const hours = localTime.getHours().toString().padStart(2, '0');
+    const minutes = localTime.getMinutes().toString().padStart(2, '0');
 
     return `${hours}:${minutes}`;
   }
 
-  function convertToWITADate(utcDate: any) {
-    const offset = 8; // Offset waktu WIT dari UTC adalah +7 jam
-    const localTime = new Date(utcDate.getTime() + offset * 60 * 60 * 1000);
+  function formatDate(date: Date) {
+    const localTime = new Date(date.getTime());
 
-    const year = localTime.getUTCFullYear().toString();
-    const month = getMonthName(localTime.getUTCMonth());
-    const day = localTime.getUTCDate().toString();
+    const year = localTime.getFullYear().toString();
+    const month = getMonthName(localTime.getMonth());
+    const day = localTime.getDate().toString();
 
     return `${day} ${month} ${year}`;
   }
@@ -152,6 +136,13 @@ const DetailLaporan = ({navigation, route}: any) => {
     ];
     return monthNames[monthIndex];
   }
+
+  const dataDummy = {
+    jenis_insiden: 'Kejadian Tidak Diharapkan / KTD (Adverse Event)',
+    grading_risiko_kejadian: 'kuning',
+    tanggal_laporan_diterima: '2023-09-18T05:08:52.000Z',
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Header />
@@ -162,30 +153,52 @@ const DetailLaporan = ({navigation, route}: any) => {
             styles.statusLaporan,
             {backgroundColor: getStatusColor(laporanDetail.status_laporan)},
           ]}>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={styles.txtCardStatus}>
-              {convertStatus(laporanDetail.status_laporan)}
-            </Text>
-            <View>{getStatusIcon(laporanDetail.status_laporan)}</View>
-          </View>
-          <Text style={styles.txtCard}>
-            {getStatusHeader(laporanDetail.status_laporan)}
+          <Text style={styles.txtCardStatus}>
+            {convertStatus(laporanDetail.status_laporan)}
           </Text>
-          <Text style={styles.txtCard}>{laporanDetail.pesan_dari_admin}</Text>
+          <View>{getStatusIcon(laporanDetail.status_laporan)}</View>
+        </View>
+      )}
+      {laporanDetail && (
+        <View style={styles.detailLaporan}>
+          <Text style={styles.txtCard}>Jenis Insiden</Text>
+          {/* dari api */}
+          <Text style={[styles.txtCard, {fontFamily: 'Poppins-Bold'}]}>
+            {dataDummy && dataDummy.jenis_insiden}
+          </Text>
+          <Gap height={10} />
+          <View
+            style={{
+              alignItems: 'center',
+              flexDirection: 'row',
+              justifyContent: 'space-evenly',
+              columnGap: 20,
+            }}>
+            <Text style={styles.txtCard}>Grading Laporan</Text>
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: getGradingColor(
+                  dataDummy.grading_risiko_kejadian,
+                ),
+                height: 30,
+                width: 'auto',
+                paddingHorizontal: 10,
+              }}>
+              <Text style={styles.txtGrading}>
+                {dataDummy.grading_risiko_kejadian}
+              </Text>
+            </View>
+          </View>
         </View>
       )}
       <View style={styles.container1}>
         <Gap height={40} />
-        <Text style={styles.txt}>
-          Berikut adalah laporan yang Anda kirimkan
-        </Text>
+        <Title label="Data Karakteristik Pasien" />
         <Gap height={20} />
         <Text style={styles.txtTime}>
-          {laporanDetail &&
-            convertToWITADate(new Date(laporanDetail.waktu_submit))}
-          /
-          {laporanDetail &&
-            convertToWITAHour(new Date(laporanDetail.waktu_submit))}
+          {laporanDetail && formatDate(new Date(laporanDetail.waktu_submit))}/
+          {laporanDetail && formatHour(new Date(laporanDetail.waktu_submit))}
         </Text>
         <Gap height={20} />
 
@@ -226,23 +239,31 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   container1: {
-    alignItems: 'center',
-    paddingBottom: 30,
+    padding: 20,
   },
   statusLaporan: {
-    maxHeight: 'auto',
+    height: 91,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 30,
+  },
+  detailLaporan: {
     padding: 20,
+    backgroundColor: MyColor.Light,
   },
   txt: {
     fontFamily: MyFont.Primary,
     fontSize: 14,
     color: 'black',
   },
+  txtSection: {},
   txtTime: {
     fontFamily: 'Poppins-Bold',
     fontSize: 17,
     color: 'black',
   },
+  txtGrading: {fontFamily: 'Poppins-Bold', fontSize: 17, color: MyColor.Light},
   txtCardStatus: {
     fontFamily: 'Poppins-Bold',
     fontSize: 17,
@@ -251,7 +272,7 @@ const styles = StyleSheet.create({
   txtCard: {
     fontFamily: MyFont.Primary,
     fontSize: 17,
-    color: MyColor.Light,
+    color: 'black',
   },
   txtIsiLaporan: {
     fontFamily: MyFont.Primary,

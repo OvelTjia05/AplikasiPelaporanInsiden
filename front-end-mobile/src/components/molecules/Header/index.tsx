@@ -2,6 +2,7 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {Logo} from '../../../assets/images';
 import {MyFont} from '../../atoms/MyFont';
+import {MyColor} from '../../atoms/MyColor';
 
 const Header = () => {
   return (
@@ -26,6 +27,7 @@ const styles = StyleSheet.create({
     columnGap: 20,
     flexDirection: 'row',
     paddingHorizontal: 30,
+    backgroundColor: MyColor.Light,
   },
   logo: {
     height: 50,

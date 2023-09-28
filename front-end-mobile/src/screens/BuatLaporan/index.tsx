@@ -1,180 +1,163 @@
-import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  StyleSheet,
-  ScrollView,
-  Alert,
-} from 'react-native';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {NavigationContainer} from '@react-navigation/native';
+import React, {useState, useEffect} from 'react';
+import {View, Text, StyleSheet, ScrollView, Alert} from 'react-native';
 import Header from '../../components/molecules/Header';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import DataKarakteristikPasien from '../DataKarakteristikPasien';
+import {MyColor} from '../../components/atoms/MyColor';
+import {MyFont} from '../../components/atoms/MyFont';
+import Gap from '../../components/atoms/Gap';
+import {useNavigationState, useRoute} from '@react-navigation/native';
+import RincianKejadian from '../RincianKejadian';
+import FotoPendukung from '../FotoPendukung';
+import SubmitLaporan from '../SubmitLaporan';
 
-const Tab = createMaterialTopTabNavigator();
+const Stack = createNativeStackNavigator();
 
-const BuatLaporan = ({navigation}: any) => {
-  const [description, setDescription] = useState('');
-  const [dangerLevel, setDangerLevel] = useState('');
-  const [currentStep, setCurrentStep] = useState(0);
-  const [name, setName] = useState('');
-  const [address, setAddress] = useState('');
-  const [age, setAge] = useState('');
-
-  const isStep1Valid = name && address && age;
-  const isStep2Valid = description;
-  const isStep3Valid = dangerLevel;
-
-  const handleStep1Next = () => {
-    if (isStep1Valid) {
-      setCurrentStep(1);
-    } else {
-      Alert.alert('Error', 'Please fill in all fields for Step 1.');
-    }
-  };
-
-  const handleStep2Next = () => {
-    if (isStep2Valid) {
-      setCurrentStep(2);
-    } else {
-      Alert.alert('Error', 'Please fill in all fields for Step 2.');
-    }
-  };
-
-  const handleSubmit = () => {
-    if (isStep3Valid) {
-      // Handle submission logic here
-      Alert.alert('Success', 'Report submitted successfully.');
-    } else {
-      Alert.alert('Error', 'Please fill in all fields for Step 3.');
-    }
-  };
-
-  const Step1 = ({route}: any) => {
-    const {
-      name,
-      address,
-      age,
-      setName,
-      setAddress,
-      setAge,
-      handleNext,
-      isValid,
-      isActive,
-    } = route.params;
-
-    return (
-      <View style={styles.container}>
-        <Text>Input Biodata</Text>
-        <TextInput
-          placeholder="Name"
-          value={name}
-          onChangeText={text => setName(text)}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Address"
-          value={address}
-          onChangeText={text => setAddress(text)}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Age"
-          value={age}
-          onChangeText={text => setAge(text)}
-          style={styles.input}
-        />
-        <View style={isActive ? styles.activeTab : null}>
-          <Button title="Next" onPress={handleNext} disabled={!isValid} />
-        </View>
-      </View>
-    );
-  };
-
-  const Step2 = ({route}: any) => {
-    const {description, setDescription, handleNext, isValid, isActive} =
-      route.params;
-
-    return (
-      <View style={styles.container}>
-        <Text>Input Deskripsi Laporan</Text>
-        <TextInput
-          placeholder="Description"
-          value={description}
-          onChangeText={text => setDescription(text)}
-          style={styles.input}
-          multiline
-        />
-        <View style={isActive ? styles.activeTab : null}>
-          <Button title="Next" onPress={handleNext} disabled={!isValid} />
-        </View>
-      </View>
-    );
-  };
-
-  const Step3 = ({route}: any) => {
-    const {dangerLevel, setDangerLevel, handleSubmit, isValid, isActive} =
-      route.params;
-
-    return (
-      <View style={styles.container}>
-        <Text>Input Tingkat Bahaya</Text>
-        <TextInput
-          placeholder="Danger Level"
-          value={dangerLevel}
-          onChangeText={text => setDangerLevel(text)}
-          style={styles.input}
-        />
-        <View style={isActive ? styles.activeTab : null}>
-          <Button title="Submit" onPress={handleSubmit} disabled={!isValid} />
-        </View>
-      </View>
-    );
+const BuatLaporan = () => {
+  const navigationState = useNavigationState(state => state);
+  const [activeStep, setActiveStep]: any = useState(1);
+  const stepDone = {
+    1: activeStep > 1 ? [styles.doneStep, styles.txtActiveStep] : {},
+    2: activeStep > 2 ? [styles.doneStep, styles.txtActiveStep] : {},
+    3:
+      activeStep !== 1 && activeStep !== 2 && activeStep !== 3
+        ? [styles.doneStep, styles.txtActiveStep]
+        : {},
   };
 
   return (
     <ScrollView contentContainerStyle={{flex: 1}}>
       <Header />
-      <Tab.Navigator>
-        <Tab.Screen
-          name="Step1"
-          component={Step1}
-          initialParams={{
-            name,
-            address,
-            age,
-            setName,
-            setAddress,
-            setAge,
-            handleNext: handleStep1Next,
-            isValid: isStep1Valid,
-            isActive: currentStep === 0,
-          }}
+      <Gap height={20} />
+      <Text
+        style={{
+          fontFamily: MyFont.Primary,
+          fontSize: 18,
+          color: 'black',
+          paddingHorizontal: 30,
+        }}>
+        Buat Laporan
+      </Text>
+      <Gap height={10} />
+      <View
+        style={{
+          flexDirection: 'row',
+          height: 58,
+          backgroundColor: MyColor.Light,
+          alignItems: 'center',
+        }}>
+        <View
+          style={[
+            styles.step,
+            activeStep === 1 && styles.activeStep,
+            stepDone[1],
+          ]}>
+          <Text
+            style={[
+              styles.txtStep,
+              activeStep === 1 && styles.txtActiveStep,
+              stepDone[1],
+            ]}>
+            Langkah 1
+          </Text>
+          <Text
+            style={[
+              styles.txt,
+              activeStep === 1 && styles.txtActiveStep,
+              stepDone[1],
+            ]}>
+            Data karakteristik pasien
+          </Text>
+        </View>
+        <View
+          style={[
+            styles.step,
+            activeStep === 2 && styles.activeStep,
+            stepDone[2],
+          ]}>
+          <Text
+            style={[
+              styles.txtStep,
+              activeStep === 2 && styles.txtActiveStep,
+              stepDone[2],
+            ]}>
+            Langkah 2
+          </Text>
+          <Text
+            style={[
+              styles.txt,
+              activeStep === 2 && styles.txtActiveStep,
+              stepDone[2],
+            ]}>
+            Rincian kejadian
+          </Text>
+        </View>
+        <View
+          style={[
+            styles.step,
+            activeStep === 3 && styles.activeStep,
+            stepDone[3],
+          ]}>
+          <Text
+            style={[
+              styles.txtStep,
+              activeStep === 3 && styles.txtActiveStep,
+              stepDone[3],
+            ]}>
+            Langkah 3
+          </Text>
+          <Text
+            style={[
+              styles.txt,
+              activeStep === 3 && styles.txtActiveStep,
+              stepDone[3],
+            ]}>
+            Foto pendukung
+          </Text>
+        </View>
+      </View>
+      <Stack.Navigator
+        initialRouteName="DataKarakteristikPasien"
+        screenOptions={() => ({
+          headerShown: false,
+        })}>
+        <Stack.Screen
+          name="DataKarakteristikPasien"
+          component={DataKarakteristikPasien}
+          listeners={({route}) => ({
+            focus: () => {
+              setActiveStep(1);
+            },
+          })}
         />
-        <Tab.Screen
-          name="Step2"
-          component={Step2}
-          initialParams={{
-            description,
-            setDescription,
-            handleNext: handleStep2Next,
-            isValid: isStep2Valid,
-            isActive: currentStep === 1,
-          }}
+        <Stack.Screen
+          name="RincianKejadian"
+          component={RincianKejadian}
+          listeners={({route}) => ({
+            focus: () => {
+              setActiveStep(2);
+            },
+          })}
         />
-        <Tab.Screen
-          name="Step3"
-          component={Step3}
-          initialParams={{
-            dangerLevel,
-            setDangerLevel,
-            handleSubmit,
-            isValid: isStep3Valid,
-            isActive: currentStep === 2,
-          }}
+        <Stack.Screen
+          name="FotoPendukung"
+          component={FotoPendukung}
+          listeners={({route}) => ({
+            focus: () => {
+              setActiveStep(3);
+            },
+          })}
         />
-      </Tab.Navigator>
+        <Stack.Screen
+          name="SubmitLaporan"
+          component={SubmitLaporan}
+          listeners={({route}) => ({
+            focus: () => {
+              setActiveStep(4);
+            },
+          })}
+        />
+      </Stack.Navigator>
     </ScrollView>
   );
 };
@@ -186,15 +169,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
   },
-  input: {
-    width: '80%',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 8,
-    marginVertical: 8,
+  step: {
+    flex: 1,
+    padding: 10,
   },
-  activeTab: {
+  activeStep: {
+    backgroundColor: MyColor.Primary, // Warna biru saat aktif
+  },
+  doneStep: {
     backgroundColor: 'green',
+  },
+  txtStep: {
+    color: MyColor.Primary, // Warna teks putih
+    fontSize: 18,
+  },
+  txtActiveStep: {
+    color: MyColor.Light,
+  },
+  txt: {
+    color: MyColor.Primary, // Warna teks putih
+    fontSize: 8,
   },
 });
 
