@@ -5,8 +5,9 @@ const User = require("./model");
 //@access          Protected
 const getAllUser = async (req, res) => {
   try {
-    const users = await User.findAll();
-    console.log(users);
+    const users = await User.findAll({
+      attributes: ["id_user", "name", "username", "role", "token"],
+    });
 
     res.status(200).json({
       code: "200",
