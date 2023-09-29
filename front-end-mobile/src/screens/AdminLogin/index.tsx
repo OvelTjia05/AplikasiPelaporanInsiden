@@ -51,7 +51,7 @@ const PasswordInput = ({placeholder, onChangeText, value}: any) => {
   );
 };
 
-const LoginAdmin = ({navigation}: any) => {
+const AdminLogin = ({navigation}: any) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -97,7 +97,7 @@ const LoginAdmin = ({navigation}: any) => {
         const dataUser = response.data.data;
         console.log('ini di LOGIN: ', dataUser);
         console.log('ini di LOGIN id user: ', dataUser.id_user);
-        navigation.navigate('NavigationAdmin', dataUser);
+        navigation.navigate('AdminHomepage');
         setUsername('');
         setPassword('');
       }
@@ -128,10 +128,9 @@ const LoginAdmin = ({navigation}: any) => {
         <Text style={styles.txtLogo}>RSUD Dr.Sam Ratulangi{'\n'}Tondano</Text>
       </View>
       <Gap height={40} />
-      <Text style={styles.txt}>Buat Laporan dengan Akun{'\n'}</Text>
-      <Text style={styles.txtBold}>
-        Silahkan masuk dengan akun petugas{'\n'}
-      </Text>
+      <Text style={styles.txt}>Buat Laporan dengan Akun</Text>
+      <Gap height={10} />
+      <Text style={styles.txtBold}>Silahkan masuk dengan akun petugas</Text>
       <Gap height={40} />
       <Input
         style={styles.txtInput}
@@ -191,6 +190,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   txtBold: {
+    textAlign: 'center',
     fontFamily: 'Poppins-Bold',
     fontSize: 17,
     color: MyColor.Primary,
@@ -233,4 +233,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginAdmin;
+export default AdminLogin;
