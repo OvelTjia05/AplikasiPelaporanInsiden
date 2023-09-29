@@ -11,6 +11,7 @@ import IconHome from './home.png';
 import IconRiwayat from './riwayat.png';
 import IconLaporan from './buatLaporan.png';
 import IconSetting from './settings.png';
+import IconSettings from './IconSetting.svg';
 import iconNews from './news.png';
 import IconGaleri from './gallery-wide-svgrepo-com.svg';
 import IconCamera from './camera-svgrepo-com.svg';
@@ -32,4 +33,5 @@ export {
   iconNews,
   IconGaleri,
   IconCamera,
+  IconSettings,
 };

@@ -14,9 +14,13 @@ import ForgetPass from './src/screens/ForgetPass';
 import Navigation from './src/Navigation';
 import DetailLaporan from './src/screens/DetailLaporan';
 import SubmitLaporan from './src/screens/SubmitLaporan';
-import LoginAdmin from './src/screens/LoginAdmin';
+import AdminLogin from './src/screens/AdminLogin';
 import NavigationAdmin from './src/NavigationAdmin';
 import BuatLaporan from './src/screens/BuatLaporan';
+import AdminHomepage from './src/screens/AdminHomepage';
+import AdminHistory from './src/screens/AdminHistory';
+import AdminHistoryItems from './src/screens/AdminHistoryItems';
+import AdminHistoryDetail from './src/screens/AdminHistoryDetail';
 
 const Stack = createNativeStackNavigator();
 
@@ -45,8 +49,8 @@ const App = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="LoginAdmin"
-          component={LoginAdmin}
+          name="AdminLogin"
+          component={AdminLogin}
           options={{headerShown: false}}
         />
         <Stack.Screen
@@ -82,6 +86,26 @@ const App = () => {
         <Stack.Screen
           name="DetailLaporan"
           component={DetailLaporan}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AdminHomepage"
+          component={AdminHomepage}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AdminHistory"
+          component={AdminHistory}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AdminHistoryItems"
+          component={AdminHistoryItems}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AdminHistoryDetail"
+          component={AdminHistoryDetail}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

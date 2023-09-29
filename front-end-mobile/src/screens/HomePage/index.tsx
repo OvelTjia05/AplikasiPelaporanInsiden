@@ -117,23 +117,21 @@ const HomePage = ({navigation, route}: any) => {
     sumber: 'sehatnegeriku.kemkes.go.id',
   };
 
-  function convertToWITHour(utcDate: any) {
-    const offset = 8; // Offset waktu WIT dari UTC adalah +7 jam
-    const localTime = new Date(utcDate.getTime() + offset * 60 * 60 * 1000);
+  function formatHour(date: any) {
+    const localTime = new Date(date.getTime());
 
-    const hours = localTime.getUTCHours().toString().padStart(2, '0');
-    const minutes = localTime.getUTCMinutes().toString().padStart(2, '0');
+    const hours = localTime.getHours().toString().padStart(2, '0');
+    const minutes = localTime.getMinutes().toString().padStart(2, '0');
 
     return `${hours}:${minutes}`;
   }
 
-  function convertToWITDate(utcDate: any) {
-    const offset = 8; // Offset waktu WIT dari UTC adalah +7 jam
-    const localTime = new Date(utcDate.getTime() + offset * 60 * 60 * 1000);
+  function formatDate(date: any) {
+    const localTime = new Date(date.getTime());
 
-    const year = localTime.getUTCFullYear().toString();
-    const month = getMonthName(localTime.getUTCMonth());
-    const day = localTime.getUTCDate().toString();
+    const year = localTime.getFullYear().toString();
+    const month = getMonthName(localTime.getMonth());
+    const day = localTime.getDate().toString();
 
     return `${day} ${month} ${year}`;
   }
@@ -196,14 +194,10 @@ const HomePage = ({navigation, route}: any) => {
                       {latestLaporan[0].kategori_bidang}
                     </Text>
                     <Text style={styles.txtCardTime}>
-                      {convertToWITHour(
-                        new Date(latestLaporan[0].waktu_submit),
-                      )}
+                      {formatHour(new Date(latestLaporan[0].waktu_submit))}
                     </Text>
                     <Text style={styles.txtCard}>
-                      {convertToWITDate(
-                        new Date(latestLaporan[0].waktu_submit),
-                      )}
+                      {formatDate(new Date(latestLaporan[0].waktu_submit))}
                     </Text>
                     <Text style={styles.txtCardStatus}>
                       {convertStatus(latestLaporan[0].status_laporan)}
@@ -242,10 +236,10 @@ const HomePage = ({navigation, route}: any) => {
               <View>
                 <Text style={styles.txtCard}>{item.kategori_bidang}</Text>
                 <Text style={styles.txtCardTime}>
-                  {convertToWITHour(new Date(item.waktu_submit))}
+                  {formatHour(new Date(item.waktu_submit))}
                 </Text>
-                <Text style={styles.txtCardTime}>
-                  {convertToWITDate(new Date(item.waktu_submit))}
+                <Text style={styles.txtCard}>
+                  {formatDate(new Date(item.waktu_submit))}
                 </Text>
                 <Text style={styles.txtCardStatus}>
                   {convertStatus(item.status_laporan)}

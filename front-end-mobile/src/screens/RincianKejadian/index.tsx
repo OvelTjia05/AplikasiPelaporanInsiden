@@ -56,7 +56,7 @@ const RincianKejadian = ({navigation}: any) => {
     return (
       <View>
         <TouchableOpacity
-          style={[styles.button, {height: 40, width: 'auto'}]}
+          style={[styles.button, {height: 40, width: '100%'}]}
           onPress={showDateTimePicker}>
           <Text style={styles.txtButton}>
             {formatDateTime(selectedDateTime)}

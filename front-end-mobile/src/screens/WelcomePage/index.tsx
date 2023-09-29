@@ -87,7 +87,7 @@ const WelcomePage = ({navigation}: any) => {
           <Gap height={30} />
           <TouchableOpacity
             style={[styles.btn, {backgroundColor: 'transparent', height: 38}]}
-            onPress={() => navigation.navigate('LoginAdmin')}>
+            onPress={() => navigation.navigate('AdminLogin')}>
             <Text style={[styles.btnTxt, {color: MyColor.Primary}]}>
               Masuk sebagai petugas
             </Text>

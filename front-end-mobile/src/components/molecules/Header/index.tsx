@@ -4,9 +4,17 @@ import {Logo} from '../../../assets/images';
 import {MyFont} from '../../atoms/MyFont';
 import {MyColor} from '../../atoms/MyColor';
 
-const Header = () => {
+const Header = ({backgroundTransparent}: {backgroundTransparent?: boolean}) => {
   return (
-    <View style={styles.heading}>
+    <View
+      style={[
+        styles.heading,
+        {
+          backgroundColor: backgroundTransparent
+            ? 'transparent'
+            : MyColor.Light,
+        },
+      ]}>
       <Image source={Logo} style={styles.logo} />
       <View>
         <Text style={styles.txtRSUD}>
@@ -27,7 +35,6 @@ const styles = StyleSheet.create({
     columnGap: 20,
     flexDirection: 'row',
     paddingHorizontal: 30,
-    backgroundColor: MyColor.Light,
   },
   logo: {
     height: 50,
