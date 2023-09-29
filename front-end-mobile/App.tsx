@@ -6,15 +6,17 @@ import SplashScreen from './src/screens/SplashScreen';
 
 import KategoriBidang from './src/screens/KategoriBidang';
 import Login from './src/screens/Login';
-import BuatLaporanFoto from './src/screens/BuatLaporanFoto';
+
 import BuatLaporanTeks from './src/screens/BuatLaporanTeks';
 import WelcomePage from './src/screens/WelcomePage';
 import SignUp from './src/screens/SignUp';
 import ForgetPass from './src/screens/ForgetPass';
-import CreatePass from './src/screens/CreatePass';
 import Navigation from './src/Navigation';
 import DetailLaporan from './src/screens/DetailLaporan';
 import SubmitLaporan from './src/screens/SubmitLaporan';
+import LoginAdmin from './src/screens/LoginAdmin';
+import NavigationAdmin from './src/NavigationAdmin';
+import BuatLaporan from './src/screens/BuatLaporan';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,8 +45,18 @@ const App = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
+          name="LoginAdmin"
+          component={LoginAdmin}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
           name="Navigation"
           component={Navigation}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="NavigationAdmin"
+          component={NavigationAdmin}
           options={{headerShown: false}}
         />
         <Stack.Screen
@@ -58,8 +70,8 @@ const App = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="CreatePass"
-          component={CreatePass}
+          name="BuatLaporan"
+          component={BuatLaporan}
           options={{headerShown: false}}
         />
         <Stack.Screen
@@ -68,18 +80,8 @@ const App = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="BuatLaporanFoto"
-          component={BuatLaporanFoto}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
           name="DetailLaporan"
           component={DetailLaporan}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="SubmitLaporan"
-          component={SubmitLaporan}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

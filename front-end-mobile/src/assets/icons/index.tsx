@@ -12,6 +12,8 @@ import IconRiwayat from './riwayat.png';
 import IconLaporan from './buatLaporan.png';
 import IconSetting from './settings.png';
 import iconNews from './news.png';
+import IconGaleri from './gallery-wide-svgrepo-com.svg';
+import IconCamera from './camera-svgrepo-com.svg';
 
 export {
   IconPanahKanan,
@@ -28,4 +30,6 @@ export {
   IconLaporan,
   IconSetting,
   iconNews,
+  IconGaleri,
+  IconCamera,
 };

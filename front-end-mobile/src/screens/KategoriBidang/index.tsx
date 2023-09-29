@@ -70,7 +70,7 @@ const KategoriBidang = ({navigation, route}: any) => {
       Alert.alert('Harap pilih jenis poli');
     } else {
       console.log('kategori bidang: ', selectedPoli);
-      navigation.navigate('BuatLaporanFoto', {
+      navigation.navigate('FotoPendukung', {
         dataUser,
         kategori_bidang: selectedPoli,
       });

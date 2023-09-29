@@ -7,7 +7,7 @@ const RedirectPage = ({navigation, route}: any) => {
 
   useEffect(() => {
     const navigateToDashboard = setTimeout(() => {
-      navigation.replace('KategoriBidang', dataUser);
+      navigation.replace('BuatLaporan', dataUser);
     }, 0);
 
     return () => clearTimeout(navigateToDashboard);

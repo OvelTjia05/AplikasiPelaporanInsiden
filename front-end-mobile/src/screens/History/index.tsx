@@ -189,7 +189,7 @@ const History = ({navigation, route}: any) => {
             </Text>
             <TouchableOpacity
               style={styles.createReportButton}
-              onPress={() => navigation.navigate('BuatLaporanFoto')}>
+              onPress={() => navigation.navigate('FotoPendukung')}>
               <Text style={styles.createReportButtonText}>
                 Tekan disini untuk {'\n'}membuat laporan baru!
               </Text>
