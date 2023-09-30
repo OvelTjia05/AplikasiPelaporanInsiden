@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "API Aplikai Pelaporan Insiden",
+    "title": "API Aplikasi Pelaporan Insiden",
     "description": "OpenAPI for Aplikasi Pelaporan Insiden RESTful API. API ini menggunakan Authentikasi JWT.",
     "contact": {
       "name": "Jerico Katong",
