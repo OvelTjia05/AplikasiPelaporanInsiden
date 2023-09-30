@@ -9,7 +9,16 @@
     },
     "version": "1.0"
   },
-  "servers": [{ "url": "http://localhost:5000" }],
+  "servers": [
+    {
+      "url": "http://localhost:5000",
+      "description": "Development Server"
+    },
+    {
+      "url": "https://backend-pelaporan-final.glitch.me",
+      "description": "Staging Server"
+    }
+  ],
   "paths": {
     "/auth/user/register": {
       "post": {
