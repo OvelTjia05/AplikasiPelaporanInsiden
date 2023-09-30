@@ -327,6 +327,10 @@ const getLaporanByIdLaporan = async (req, res, next) => {
         status: laporan.status,
         tanggal_laporan_dikirim: formatTime(laporan.tanggal_laporan_dikirim),
         gambar: laporan.gambar,
+        id_kajian_laporan: null,
+        jenis_insiden: null,
+        grading_risiko_kejadian: null,
+        tanggal_laporan_diterima: null,
       };
 
       res.status(200).json({
@@ -1041,7 +1045,7 @@ const postLaporanByAnonim = async (req, res) => {
     kejadian_sama_pernah_terjadi_di_unit_lain,
   } = req.body;
 
-  const status = "laporan masuk";
+  const status = "dalam antrian";
 
   if (
     (nama_pasien,
@@ -1267,29 +1271,76 @@ const updateStatusLaporanSelesai = async (req, res) => {
 //@access          Public
 const updateStatusLaporanTolak = async (req, res) => {
   const id_laporan = req.params.id_laporan;
+  const { jenis_insiden, grading_risiko_kejadian } = req.body;
 
-  try {
-    const laporan = await Laporan.update(
-      {
-        status: "laporan ditolak",
-      },
-      {
-        where: {
-          id_laporan,
+  const date = new Date();
+  const options = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  };
+
+  const witaTime = date.toLocaleTimeString("en-US", {
+    timeZone: "Asia/Makassar",
+    ...options,
+  });
+
+  const dateMoUbah = witaTime;
+  const tanggal = dateMoUbah.split(", ")[0].split("/");
+  const waktu = dateMoUbah.split(", ")[1];
+
+  const tahun = tanggal[2];
+  const bulan = tanggal[0];
+  const day = tanggal[1];
+  const tanggal_laporan_diterima = `${tahun}-${bulan}-${day}:${waktu}`;
+
+  if (jenis_insiden && grading_risiko_kejadian) {
+    try {
+      await KajianLaporan.update(
+        {
+          jenis_insiden,
+          grading_risiko_kejadian,
+          tanggal_laporan_diterima,
         },
-      }
-    );
+        {
+          where: {
+            id_laporan,
+          },
+        }
+      );
 
-    res.status(200).json({
-      code: "200",
-      status: "OK",
-      success: laporan ? true : false,
-    });
-  } catch (error) {
-    res.status(500).json({
-      code: "500",
-      status: "INTERNAL_SERVER_ERROR",
-      errors: error.message,
+      const laporan = await Laporan.update(
+        {
+          status: "laporan ditolak",
+        },
+        {
+          where: {
+            id_laporan,
+          },
+        }
+      );
+
+      res.status(200).json({
+        code: "200",
+        status: "OK",
+        success: laporan ? true : false,
+      });
+    } catch (error) {
+      res.status(500).json({
+        code: "500",
+        status: "INTERNAL_SERVER_ERROR",
+        errors: error.message,
+      });
+    }
+  } else {
+    res.status(400).json({
+      code: "400",
+      status: "BAD_REQUEST",
+      errors: "jenis_insiden and grading_risiko_kejadian are required",
     });
   }
 };

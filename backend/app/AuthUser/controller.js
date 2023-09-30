@@ -106,6 +106,7 @@ const loginUser = async (req, res) => {
 
       const id_user = user.id_user;
       const role = user.role;
+      const name = user.name;
 
       const token = jwt.sign({ id_user, username, role }, tokenSecret, {
         expiresIn: "1d",
@@ -144,6 +145,7 @@ const loginUser = async (req, res) => {
         status: "OK",
         data: {
           id_user,
+          name,
           username,
           role,
           token,
@@ -167,7 +169,8 @@ const loginUser = async (req, res) => {
 };
 
 const logoutUser = async (req, res) => {
-  const token = req.body.token;
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
     return res.status(401).json({
@@ -205,7 +208,7 @@ const logoutUser = async (req, res) => {
     return res.status(200).json({
       code: "200",
       status: "OK",
-      success: true,
+      success: update ? true : false,
     });
   } catch (error) {
     res.status(500).json({
