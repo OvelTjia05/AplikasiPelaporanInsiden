@@ -25,7 +25,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import PushNotification from 'react-native-push-notification';
 import {io} from 'socket.io-client';
 
-const socket = io('https://backend-pelaporaninsiden.glitch.me');
+const socket = io('https://backend-pelaporan-final.glitch.me.glitch.me');
 
 const PasswordInput = ({placeholder, onChangeText, value}: any) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
@@ -65,41 +65,31 @@ const AdminLogin = ({navigation}: any) => {
 
     try {
       const response = await axios.post(
-        'https://backend-pelaporaninsiden.glitch.me/auth/user/login',
+        'https://backend-pelaporan-final.glitch.me/auth/user/login',
         {
           username,
           password,
         },
       );
       console.log('ini response: ', response.data);
-      const cookies = response.headers['set-cookie'] as string[];
-      console.log('ini cookies: ', cookies);
-      const cookiesValue = cookies[0];
+      const token = response.data.data.token;
+      console.log('ini token: ', token);
 
-      const cookieArray = cookiesValue.split(';');
-      let refreshToken = '';
+      await AsyncStorage.setItem('token', token);
 
-      for (const cookie of cookieArray) {
-        if (cookie.trim().startsWith('refresh_token=')) {
-          refreshToken = cookie.trim().substring('refresh_token='.length);
-          break;
-        }
-      }
-
-      console.log('ini refresh token jadi: ', refreshToken);
-
-      await AsyncStorage.setItem('refresh_token', refreshToken);
-
-      const value = await AsyncStorage.getItem('refresh_token');
-      console.log('ini adalah value:::::: ', value);
+      const value = await AsyncStorage.getItem('token');
+      console.log('ini adalah value: ', value);
       if (response.data.code == '200') {
-        console.log('masuk sini');
         const dataUser = response.data.data;
-        console.log('ini di LOGIN: ', dataUser);
-        console.log('ini di LOGIN id user: ', dataUser.id_user);
-        navigation.navigate('AdminHomepage');
-        setUsername('');
-        setPassword('');
+        if (dataUser.role === 'admin') {
+          console.log('ini di LOGIN: ', dataUser);
+          console.log('ini di LOGIN id user: ', dataUser.id_user);
+          navigation.navigate('AdminHomepage', dataUser);
+          setUsername('');
+          setPassword('');
+        } else {
+          Alert.alert('Akun anda tidak terdaftar sebagai admin');
+        }
       }
 
       setIsLoading(false);

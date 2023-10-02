@@ -6,7 +6,7 @@ import {
   View,
   TextInput as Input,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect, useReducer} from 'react';
 import Title from '../../components/atoms/Title';
 import {MyFont} from '../../components/atoms/MyFont';
 import {MyColor} from '../../components/atoms/MyColor';
@@ -14,20 +14,50 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Gap from '../../components/atoms/Gap';
 import Button from '../../components/atoms/Button';
 import {IconPanahKanan} from '../../assets/icons';
+import axios from 'axios';
 
-const RincianKejadian = ({navigation}: any) => {
+interface JenisPasien {
+  id_jenis_pasien: number;
+  nama_jenis_pasien: string;
+}
+
+const RincianKejadian = ({navigation, route}: any) => {
+  const dataUser = route.params;
   const [isDateTimePickerVisible, setDateTimePickerVisible] = useState(false);
-  const [selectedDateTime, setSelectedDateTime] = useState(new Date());
+  const [waktuInsiden, setWaktuInsiden] = useState(new Date());
   const [insiden, setInsiden] = useState('');
   const [kronologiInsiden, setKronologiInsiden] = useState('');
   const [pelaporPertama, setPelaporPertama] = useState('');
-  const [pasienTerkait, setPasienTerkait] = useState('');
+  const [jenisPasien, setJenisPasien] = useState<JenisPasien[]>([]);
+  const [pasienTerkait, setPasienTerkait] = useState(0);
+  const [dampakInsiden, setDampakInsiden] = useState('');
   const [lokasiInsiden, setLokasiInsiden] = useState('');
   const [unitTerkait, setUnitTerkait] = useState('');
   const [tindakLanjut, setTindakLanjut] = useState('');
   const [tindakLanjutOleh, setTindakLanjutOleh] = useState('');
   const [isPernahTerjadi, setIsPernahTerjadi]: any = useState(undefined);
   const [deskripsiPernahTerjadi, setDeskripsiPernahTerjadi] = useState('');
+  // let pernahTerjadi = '';
+  const [pernahTerjadi, setPernahTerjadi] = useState('');
+
+  const [idJenisPasienSelected, setIdJenisPasienSelected] = useState(null);
+
+  useEffect(() => {}, [idJenisPasienSelected]);
+
+  useEffect(() => {
+    console.log('pas klik lanjut: ', isPernahTerjadi);
+    if (isPernahTerjadi === true) {
+      console.log('true masuk sini');
+      setPernahTerjadi(`Ya , ${deskripsiPernahTerjadi}`);
+      console.log('true pernah terjadi', isPernahTerjadi);
+    } else {
+      setPernahTerjadi(`Tidak`);
+    }
+  }, [isPernahTerjadi, deskripsiPernahTerjadi]);
+
+  useEffect(() => {
+    getJenisPasien();
+  }, []);
 
   const datePick = () => {
     const showDateTimePicker = () => {
@@ -39,7 +69,7 @@ const RincianKejadian = ({navigation}: any) => {
     };
 
     const handleDateConfirm = (date: Date) => {
-      setSelectedDateTime(date);
+      setWaktuInsiden(date);
       hideDateTimePicker();
       console.log(date);
     };
@@ -58,9 +88,7 @@ const RincianKejadian = ({navigation}: any) => {
         <TouchableOpacity
           style={[styles.button, {height: 40, width: '100%'}]}
           onPress={showDateTimePicker}>
-          <Text style={styles.txtButton}>
-            {formatDateTime(selectedDateTime)}
-          </Text>
+          <Text style={styles.txtButton}>{formatDateTime(waktuInsiden)}</Text>
         </TouchableOpacity>
 
         <DateTimePickerModal
@@ -182,54 +210,141 @@ const RincianKejadian = ({navigation}: any) => {
     );
   };
 
+  const getJenisPasien = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${dataUser.dataUser.token}`, // Tambahkan token ke header dengan format Bearer
+      };
+      console.log('ini headers: ', dataUser.dataUser.token);
+      const response = await axios.get(
+        `https://backend-pelaporan-final.glitch.me/api/jenis_pasien`,
+        {headers},
+      );
+      console.log('ini response data: ', response.data.data);
+      setJenisPasien(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const btnPasienTerkait = () => {
-    const handlePasienTerkait = (option: string) => {
+    const handlePasienTerkait = (option: number) => {
       setPasienTerkait(option);
       console.log('pasien terkait: ', option);
     };
 
     return (
       <View style={styles.containerBtn}>
+        {jenisPasien?.map((item: any, index) => (
+          <TouchableOpacity
+            key={item.id_jenis_pasien}
+            style={[
+              styles.button,
+              idJenisPasienSelected === item.id_jenis_pasien &&
+                styles.selectedButton,
+            ]}
+            onPress={() => {
+              handlePasienTerkait(item.id_jenis_pasien);
+              setIdJenisPasienSelected(item.id_jenis_pasien);
+            }}>
+            <Text
+              style={[
+                styles.txtButton,
+                idJenisPasienSelected === item.id_jenis_pasien &&
+                  styles.txtBtnActive,
+              ]}>
+              {item.nama_jenis_pasien}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    );
+  };
+
+  const btnDampakInsiden = () => {
+    const handleDampakInsiden = (option: string) => {
+      setDampakInsiden(option);
+      console.log('ini dampak insiden: ', option);
+    };
+    return (
+      <View style={styles.containerBtn}>
         <TouchableOpacity
           style={[
             styles.button,
-            pasienTerkait === 'Pasien rawat inap' && styles.selectedButton,
+            dampakInsiden === 'Kematian' && styles.selectedButton,
           ]}
-          onPress={() => handlePasienTerkait('Pasien rawat inap')}>
+          onPress={() => handleDampakInsiden('Kematian')}>
           <Text
             style={[
               styles.txtButton,
-              pasienTerkait === 'Pasien rawat inap' && styles.txtBtnActive,
+              dampakInsiden === 'Kematian' && styles.txtBtnActive,
             ]}>
-            Pasien rawat inap
+            Kematian
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
             styles.button,
-            pasienTerkait === 'Pasien rawat jalan' && styles.selectedButton,
+            dampakInsiden === 'Cedera Irreversibel / Cedera Berat' &&
+              styles.selectedButton,
           ]}
-          onPress={() => handlePasienTerkait('Pasien rawat jalan')}>
+          onPress={() =>
+            handleDampakInsiden('Cedera Irreversibel / Cedera Berat')
+          }>
           <Text
             style={[
               styles.txtButton,
-              pasienTerkait === 'Pasien rawat jalan' && styles.txtBtnActive,
+              dampakInsiden === 'Cedera Irreversibel / Cedera Berat' &&
+                styles.txtBtnActive,
             ]}>
-            Pasien rawat jalan
+            Cedera Berat
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
             styles.button,
-            pasienTerkait === 'Pasien UGD' && styles.selectedButton,
+            dampakInsiden === 'Cedera Reversibel / Cedera Sedang' &&
+              styles.selectedButton,
           ]}
-          onPress={() => handlePasienTerkait('Pasien UGD')}>
+          onPress={() =>
+            handleDampakInsiden('Cedera Reversibel / Cedera Sedang')
+          }>
           <Text
             style={[
               styles.txtButton,
-              pasienTerkait === 'Pasien UGD' && styles.txtBtnActive,
+              dampakInsiden === 'Cedera Reversibel / Cedera Sedang' &&
+                styles.txtBtnActive,
             ]}>
-            Pasien UGD
+            Cedera Sedang
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            dampakInsiden === 'Cedera Ringan' && styles.selectedButton,
+          ]}
+          onPress={() => handleDampakInsiden('Cedera Ringan')}>
+          <Text
+            style={[
+              styles.txtButton,
+              dampakInsiden === 'Cedera Ringan' && styles.txtBtnActive,
+              {marginRight: 0},
+            ]}>
+            Cedera Ringan
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            dampakInsiden === 'Tidak ada cedera' && styles.selectedButton,
+          ]}
+          onPress={() => handleDampakInsiden('Tidak ada cedera')}>
+          <Text
+            style={[
+              styles.txtButton,
+              dampakInsiden === 'Tidak ada cedera' && styles.txtBtnActive,
+            ]}>
+            Tidak ada cedera
           </Text>
         </TouchableOpacity>
       </View>
@@ -290,12 +405,11 @@ const RincianKejadian = ({navigation}: any) => {
     );
   };
 
+  const handlePernahTerjadi = (option: boolean) => {
+    setIsPernahTerjadi(option);
+  };
+  // console.log('desc', deskripsiPernahTerjadi);
   const btnPernahTerjadi = () => {
-    const handlePernahTerjadi = (option: boolean) => {
-      setIsPernahTerjadi(option);
-      console.log('pernah terjadi: ', option);
-    };
-    console.log('desc', deskripsiPernahTerjadi);
     return (
       <View>
         <View style={[styles.containerBtn, {columnGap: 20}]}>
@@ -408,6 +522,8 @@ const RincianKejadian = ({navigation}: any) => {
           value={unitTerkait}
           multiline={true}
         />
+        <Text style={styles.txtSection}>Dampak Insiden Terhadap Pasien</Text>
+        {btnDampakInsiden()}
         <Text style={styles.txtSection}>
           Tindak lanjut yang dilakukan segera setelah kejadian, dan hasilnya
         </Text>
@@ -446,7 +562,20 @@ const RincianKejadian = ({navigation}: any) => {
           width={173}
           icons={<IconPanahKanan />}
           onClick={() => {
-            navigation.navigate('FotoPendukung');
+            navigation.navigate('FotoPendukung', {
+              ...dataUser,
+
+              waktuInsiden: waktuInsiden.toISOString(),
+              insiden,
+              kronologiInsiden,
+              pelaporPertama,
+              pasienTerkait,
+              lokasiInsiden,
+              unitTerkait,
+              tindakLanjut,
+              tindakLanjutOleh,
+              pernahTerjadi,
+            });
           }}
         />
       </View>

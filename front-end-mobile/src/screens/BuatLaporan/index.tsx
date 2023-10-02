@@ -13,8 +13,8 @@ import SubmitLaporan from '../SubmitLaporan';
 
 const Stack = createNativeStackNavigator();
 
-const BuatLaporan = () => {
-  const navigationState = useNavigationState(state => state);
+const BuatLaporan = ({route}: any) => {
+  const dataUser = route.params;
   const [activeStep, setActiveStep]: any = useState(1);
   const stepDone = {
     1: activeStep > 1 ? [styles.doneStep, styles.txtActiveStep] : {},
@@ -124,6 +124,7 @@ const BuatLaporan = () => {
         <Stack.Screen
           name="DataKarakteristikPasien"
           component={DataKarakteristikPasien}
+          initialParams={dataUser}
           listeners={({route}) => ({
             focus: () => {
               setActiveStep(1);

@@ -1,12 +1,14 @@
 import {StyleSheet, Text, View, Alert} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {MyFont} from '../../components/atoms/MyFont';
 import {MyColor} from '../../components/atoms/MyColor';
 import Button from '../../components/atoms/Button';
 import {IconPanahKanan} from '../../assets/icons';
 import {Checkbox} from 'react-native-paper';
+import axios from 'axios';
 
-const SubmitLaporan = ({navigation}: any) => {
+const SubmitLaporan = ({navigation, route}: any) => {
+  const dataUser = route.params;
   const [checked, setChecked] = useState(false);
 
   const handleCheckboxToggle = () => {
@@ -14,15 +16,45 @@ const SubmitLaporan = ({navigation}: any) => {
     console.log(checked);
   };
 
-  const handleSubmit = () => {
+  useEffect(() => {
+    console.log('Ini di langkah 4', dataUser);
+  }, []);
+
+  const handleSubmit = async () => {
     if (!checked) {
       Alert.alert(
         'Peringatan',
         'Anda harus menyetujui pernyataan sebelum mengirim laporan.',
       );
     } else {
-      // Lanjutkan dengan mengirim laporan jika checkbox telah dicentang
-      // navigation.navigate('FotoPendukung');
+      console.log(dataUser);
+      try {
+        const response = await axios.post(
+          `https://backend-pelaporan-final.glitch.me/api/laporan/user/${dataUser.id_user}`,
+          {
+            nama_pasien: dataUser.name,
+            no_rekam_medis: dataUser.nomorMR,
+            ruangan: dataUser.lokasiInsiden,
+            umur: dataUser.age,
+            asuransi: dataUser.insurance,
+            jenis_kelamin_pasien: dataUser.gender,
+            waktu_mendapatkan_pelayanan: dataUser.selectedDateTime,
+            waktu_kejadian_insiden: dataUser.waktuInsiden,
+            insiden: dataUser.insiden,
+            kronologis_insiden: dataUser.kronologiInsiden,
+            insiden_terjadi_pada_pasien: dataUser.pasienTerkait,
+            // dampak_insiden_terhadap_pasien: dataUser.
+          },
+        );
+        console.log('ini response: ', response.data);
+        const token = response.data.data.token;
+        console.log('ini token: ', token);
+
+        if (response.data.code == '200') {
+          // navigation.navigate('Navigation', dataUser);
+          console.log('Laporan Terkirim');
+        }
+      } catch {}
     }
   };
 

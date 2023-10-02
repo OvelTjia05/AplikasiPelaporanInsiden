@@ -15,15 +15,19 @@ import {MyFont} from '../../components/atoms/MyFont';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Gap from '../../components/atoms/Gap';
 
-const DataKarakteristikPasien = ({navigation}: any) => {
+const DataKarakteristikPasien = ({navigation, route}: any) => {
+  const dataUser = route.params;
   const [name, setName] = useState('');
   const [nomorMR, setNomorMR] = useState('');
+  const [age, setAge] = useState('');
   const [ageNo, setAgeNo] = useState('');
   const [selectedAgeType, setSelectedAgeType] = useState('');
   const [insurance, setInsurance] = useState('');
   const [gender, setGender] = useState('');
   const [isDateTimePickerVisible, setDateTimePickerVisible] = useState(false);
-  const [selectedDateTime, setSelectedDateTime] = useState(new Date());
+  const [waktuMendapatPelayanan, setWaktuMendapatPelayanan] = useState(
+    new Date(),
+  );
 
   const isBulanDisabled = Number(ageNo) > 11;
   const isHariDisabled = Number(ageNo) > 30;
@@ -33,10 +37,14 @@ const DataKarakteristikPasien = ({navigation}: any) => {
     }
   }, [isBulanDisabled, isHariDisabled]);
 
+  useEffect(() => {
+    setAge(`${ageNo} ${selectedAgeType}`);
+  }, [ageNo, selectedAgeType]);
+
   const btnUmur = () => {
     const handleAge = (option: string) => {
       setSelectedAgeType(option);
-      const age = `${ageNo} ${option}`;
+
       console.log(age);
     };
 
@@ -266,7 +274,7 @@ const DataKarakteristikPasien = ({navigation}: any) => {
     };
 
     const handleDateConfirm = (date: Date) => {
-      setSelectedDateTime(date);
+      setWaktuMendapatPelayanan(date);
       hideDateTimePicker();
       console.log(date);
     };
@@ -284,7 +292,7 @@ const DataKarakteristikPasien = ({navigation}: any) => {
       <View>
         <TouchableOpacity style={styles.button} onPress={showDateTimePicker}>
           <Text style={styles.txtButton}>
-            {formatDateTime(selectedDateTime)}
+            {formatDateTime(waktuMendapatPelayanan)}
           </Text>
         </TouchableOpacity>
 
@@ -361,7 +369,28 @@ const DataKarakteristikPasien = ({navigation}: any) => {
           textColor={MyColor.Light}
           width={173}
           onClick={() => {
-            navigation.navigate('RincianKejadian');
+            navigation.navigate(
+              'RincianKejadian',
+              {
+                dataUser,
+                name,
+                nomorMR,
+                age,
+                insurance,
+                gender,
+                waktuMendapatPelayanan: waktuMendapatPelayanan.toISOString(),
+              },
+              console.log(
+                'ini data karakteristik pasien: ',
+                dataUser,
+                name,
+                nomorMR,
+                age,
+                insurance,
+                gender,
+                waktuMendapatPelayanan,
+              ),
+            );
           }}
         />
       </View>

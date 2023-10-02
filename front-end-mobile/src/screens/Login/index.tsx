@@ -85,45 +85,33 @@ const Login = ({navigation}: any) => {
 
     try {
       const response = await axios.post(
-        'https://backend-pelaporaninsiden.glitch.me/auth/user/login',
+        'https://backend-pelaporan-final.glitch.me/auth/user/login',
         {
           username,
           password,
         },
       );
       console.log('ini response: ', response.data);
-      const cookies = response.headers['set-cookie'] as string[];
-      console.log('ini cookies: ', cookies);
-      const cookiesValue = cookies[0];
+      const token = response.data.data.token;
+      console.log('ini token: ', token);
 
-      const cookieArray = cookiesValue.split(';');
-      let refreshToken = '';
+      await AsyncStorage.setItem('token', token);
 
-      // Loop melalui array cookies untuk mencari nilai 'refresh_token'
-      for (const cookie of cookieArray) {
-        if (cookie.trim().startsWith('refresh_token=')) {
-          refreshToken = cookie.trim().substring('refresh_token='.length); // Mengambil nilai refresh_token
-          break; // Keluar dari loop setelah nilai ditemukan
+      const value = await AsyncStorage.getItem('token');
+      console.log('ini adalah value: ', value);
+      if (response.data.code == '200') {
+        const dataUser = response.data.data;
+        if (dataUser.role !== 'admin') {
+          console.log('ini di LOGIN: ', dataUser);
+          console.log('ini di LOGIN id user: ', dataUser.id_user);
+          navigation.navigate('Navigation', dataUser);
+          setUsername('');
+          setPassword('');
+        } else {
+          Alert.alert('Peringatan', 'Gunakan akun lainnya!');
         }
       }
 
-      console.log('ini refresh token jadi: ', refreshToken);
-
-      await AsyncStorage.setItem('refresh_token', refreshToken);
-
-      const value = await AsyncStorage.getItem('refresh_token');
-      console.log('ini adalah value:::::: ', value);
-      if (response.data.code == '200') {
-        console.log('masuk sini');
-        const dataUser = response.data.data;
-        console.log('ini di LOGIN: ', dataUser);
-        console.log('ini di LOGIN id user: ', dataUser.id_user);
-        navigation.navigate('Navigation', dataUser);
-        setUsername('');
-        setPassword('');
-      }
-
-      // Lanjutkan dengan langkah-langkah berikutnya setelah berhasil login
       setIsLoading(false);
     } catch (error: any) {
       setIsLoading(false);

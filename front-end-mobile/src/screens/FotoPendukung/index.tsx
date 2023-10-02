@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -28,10 +28,15 @@ interface ImageData {
 }
 
 const FotoPendukung = ({navigation, route}: any) => {
+  const dataUser = route.params;
   const [imageCamera, setImageCamera] = useState<ImageData | null>(null);
   // const dataUser = route.params;
   // console.log('ini di laporan foto: ', dataUser);
   // console.log('ini di laporan foto 2: ', dataUser.dataUser.id_user);
+
+  useEffect(() => {
+    console.log('masuk di foto: ', dataUser);
+  }, []);
 
   const openCamera = () => {
     const options: any = {
@@ -81,7 +86,7 @@ const FotoPendukung = ({navigation, route}: any) => {
       } else {
         console.log(fileSizeInMB);
         // navigation.navigate('BuatLaporan', { dataUser, imageCamera, setImageCamera });
-        navigation.navigate('SubmitLaporan');
+        navigation.navigate('SubmitLaporan', {...dataUser, imageCamera});
       }
     }
   };
