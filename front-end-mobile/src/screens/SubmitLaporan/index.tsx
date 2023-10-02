@@ -27,34 +27,66 @@ const SubmitLaporan = ({navigation, route}: any) => {
         'Anda harus menyetujui pernyataan sebelum mengirim laporan.',
       );
     } else {
-      console.log(dataUser);
+      console.log('tes satu-satuu: ', dataUser.insurance);
+      console.log('ini headers: ', dataUser.dataUser.token);
       try {
+        const headers = {
+          Authorization: `Bearer ${dataUser.dataUser.token}`, // Tambahkan token ke header dengan format Beare
+        };
+
         const response = await axios.post(
-          `https://backend-pelaporan-final.glitch.me/api/laporan/user/${dataUser.id_user}`,
+          `https://backend-pelaporan-final.glitch.me/api/laporan/user/${dataUser.dataUser.id_user}`,
           {
             nama_pasien: dataUser.name,
             no_rekam_medis: dataUser.nomorMR,
-            ruangan: dataUser.lokasiInsiden,
+            ruangan: dataUser.ruangan,
             umur: dataUser.age,
             asuransi: dataUser.insurance,
             jenis_kelamin_pasien: dataUser.gender,
-            waktu_mendapatkan_pelayanan: dataUser.selectedDateTime,
+            waktu_mendapatkan_pelayanan: dataUser.waktuMendapatPelayanan,
             waktu_kejadian_insiden: dataUser.waktuInsiden,
             insiden: dataUser.insiden,
             kronologis_insiden: dataUser.kronologiInsiden,
-            insiden_terjadi_pada_pasien: dataUser.pasienTerkait,
-            // dampak_insiden_terhadap_pasien: dataUser.
+            insiden_terjadi_pada_pasien: dataUser.insidenTerjadiPadaPasien,
+            dampak_insiden_terhadap_pasien: dataUser.dampakInsiden,
+            probabilitas: dataUser.probabilitas,
+            orang_pertama_melaporkan_insiden: dataUser.pelaporPertama,
+            id_jenis_pasien: dataUser.pasienTerkait,
+            tempat_insiden: dataUser.lokasiInsiden,
+            departement_penyebab_insiden: dataUser.unitTerkait,
+            tindak_lanjut_setelah_kejadian_dan_hasil: dataUser.tindakLanjut,
+            yang_melakukan_tindak_lanjut_setelah_insiden:
+              dataUser.tindakLanjutOleh,
+            kejadian_sama_pernah_terjadi_di_unit_lain: dataUser.pernahTerjadi,
+            gambar: dataUser.imageCamera,
           },
+          {headers},
         );
-        console.log('ini response: ', response.data);
+        console.log('ini respon post: ', response.data);
+        console.log('ini response: ', response.data.data);
         const token = response.data.data.token;
         console.log('ini token: ', token);
 
-        if (response.data.code == '200') {
+        if (response.data.code == '201') {
           // navigation.navigate('Navigation', dataUser);
           console.log('Laporan Terkirim');
         }
-      } catch {}
+      } catch (error: any) {
+        if (error.response) {
+          console.log('ini dari post', error);
+          // if (error.response.data.code == '400') {
+          //   Alert.alert('isi semua field');
+          //   console.log('yuhu', error.message);
+          // } else {
+          //   Alert.alert('gagal');
+          // }
+        } else if (error.request) {
+          Alert.alert(
+            'Kesalahan Jaringan',
+            'Pastikan anda telah terhubung ke internet',
+          );
+        }
+      }
     }
   };
 

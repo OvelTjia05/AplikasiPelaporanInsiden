@@ -27,11 +27,13 @@ const RincianKejadian = ({navigation, route}: any) => {
   const [waktuInsiden, setWaktuInsiden] = useState(new Date());
   const [insiden, setInsiden] = useState('');
   const [kronologiInsiden, setKronologiInsiden] = useState('');
+  const [insidenTerjadiPadaPasien, setInsidenTerjadiPadaPasien] = useState('');
   const [pelaporPertama, setPelaporPertama] = useState('');
   const [jenisPasien, setJenisPasien] = useState<JenisPasien[]>([]);
   const [pasienTerkait, setPasienTerkait] = useState(0);
   const [dampakInsiden, setDampakInsiden] = useState('');
   const [lokasiInsiden, setLokasiInsiden] = useState('');
+  const [probabilitas, setProbabilitas] = useState('');
   const [unitTerkait, setUnitTerkait] = useState('');
   const [tindakLanjut, setTindakLanjut] = useState('');
   const [tindakLanjutOleh, setTindakLanjutOleh] = useState('');
@@ -40,18 +42,16 @@ const RincianKejadian = ({navigation, route}: any) => {
   // let pernahTerjadi = '';
   const [pernahTerjadi, setPernahTerjadi] = useState('');
 
-  const [idJenisPasienSelected, setIdJenisPasienSelected] = useState(null);
-
-  useEffect(() => {}, [idJenisPasienSelected]);
+  useEffect(() => {}, [pasienTerkait]);
 
   useEffect(() => {
-    console.log('pas klik lanjut: ', isPernahTerjadi);
     if (isPernahTerjadi === true) {
       console.log('true masuk sini');
       setPernahTerjadi(`Ya , ${deskripsiPernahTerjadi}`);
-      console.log('true pernah terjadi', isPernahTerjadi);
+      console.log('true pernah terjadi: ', pernahTerjadi);
     } else {
       setPernahTerjadi(`Tidak`);
+      console.log('false pernah terjad: ', pernahTerjadi);
     }
   }, [isPernahTerjadi, deskripsiPernahTerjadi]);
 
@@ -240,18 +240,15 @@ const RincianKejadian = ({navigation, route}: any) => {
             key={item.id_jenis_pasien}
             style={[
               styles.button,
-              idJenisPasienSelected === item.id_jenis_pasien &&
-                styles.selectedButton,
+              pasienTerkait === item.id_jenis_pasien && styles.selectedButton,
             ]}
             onPress={() => {
               handlePasienTerkait(item.id_jenis_pasien);
-              setIdJenisPasienSelected(item.id_jenis_pasien);
             }}>
             <Text
               style={[
                 styles.txtButton,
-                idJenisPasienSelected === item.id_jenis_pasien &&
-                  styles.txtBtnActive,
+                pasienTerkait === item.id_jenis_pasien && styles.txtBtnActive,
               ]}>
               {item.nama_jenis_pasien}
             </Text>
@@ -267,11 +264,12 @@ const RincianKejadian = ({navigation, route}: any) => {
       console.log('ini dampak insiden: ', option);
     };
     return (
-      <View style={styles.containerBtn}>
+      <View style={[styles.containerBtn, {justifyContent: 'center'}]}>
         <TouchableOpacity
           style={[
             styles.button,
             dampakInsiden === 'Kematian' && styles.selectedButton,
+            {marginRight: 0},
           ]}
           onPress={() => handleDampakInsiden('Kematian')}>
           <Text
@@ -287,6 +285,7 @@ const RincianKejadian = ({navigation, route}: any) => {
             styles.button,
             dampakInsiden === 'Cedera Irreversibel / Cedera Berat' &&
               styles.selectedButton,
+            {marginRight: 0},
           ]}
           onPress={() =>
             handleDampakInsiden('Cedera Irreversibel / Cedera Berat')
@@ -305,6 +304,7 @@ const RincianKejadian = ({navigation, route}: any) => {
             styles.button,
             dampakInsiden === 'Cedera Reversibel / Cedera Sedang' &&
               styles.selectedButton,
+            {marginRight: 0},
           ]}
           onPress={() =>
             handleDampakInsiden('Cedera Reversibel / Cedera Sedang')
@@ -322,6 +322,7 @@ const RincianKejadian = ({navigation, route}: any) => {
           style={[
             styles.button,
             dampakInsiden === 'Cedera Ringan' && styles.selectedButton,
+            {marginRight: 0},
           ]}
           onPress={() => handleDampakInsiden('Cedera Ringan')}>
           <Text
@@ -337,6 +338,7 @@ const RincianKejadian = ({navigation, route}: any) => {
           style={[
             styles.button,
             dampakInsiden === 'Tidak ada cedera' && styles.selectedButton,
+            {marginRight: 0},
           ]}
           onPress={() => handleDampakInsiden('Tidak ada cedera')}>
           <Text
@@ -345,6 +347,93 @@ const RincianKejadian = ({navigation, route}: any) => {
               dampakInsiden === 'Tidak ada cedera' && styles.txtBtnActive,
             ]}>
             Tidak ada cedera
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  const btnProbabilitas = () => {
+    const handleProbabilitas = (option: string) => {
+      setProbabilitas(option);
+      console.log('ini probabilitas: ', option);
+    };
+    return (
+      <View style={[styles.containerBtn, {justifyContent: 'center'}]}>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            probabilitas === 'Sangat jarang' && styles.selectedButton,
+            {marginRight: 0},
+          ]}
+          onPress={() => handleProbabilitas('Sangat jarang')}>
+          <Text
+            style={[
+              styles.txtButton,
+              probabilitas === 'Sangat jarang' && styles.txtBtnActive,
+            ]}>
+            Sangat jarang
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            probabilitas === 'Jarang' && styles.selectedButton,
+            {marginRight: 0},
+          ]}
+          onPress={() => handleProbabilitas('Jarang')}>
+          <Text
+            style={[
+              styles.txtButton,
+              probabilitas === 'Jarang' && styles.txtBtnActive,
+            ]}>
+            Jarang
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            probabilitas === 'Mungkin' && styles.selectedButton,
+            {marginRight: 0},
+          ]}
+          onPress={() => handleProbabilitas('Mungkin')}>
+          <Text
+            style={[
+              styles.txtButton,
+              probabilitas === 'Mungkin' && styles.txtBtnActive,
+            ]}>
+            Mungkin
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            probabilitas === 'Sering' && styles.selectedButton,
+            {marginRight: 0},
+          ]}
+          onPress={() => handleProbabilitas('Sering')}>
+          <Text
+            style={[
+              styles.txtButton,
+              probabilitas === 'Sering' && styles.txtBtnActive,
+              {marginRight: 0},
+            ]}>
+            Sering
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            probabilitas === 'Sangat sering' && styles.selectedButton,
+            {marginRight: 0},
+          ]}
+          onPress={() => handleProbabilitas('Sangat sering')}>
+          <Text
+            style={[
+              styles.txtButton,
+              probabilitas === 'Sangat sering' && styles.txtBtnActive,
+            ]}>
+            Sangat sering
           </Text>
         </TouchableOpacity>
       </View>
@@ -408,7 +497,7 @@ const RincianKejadian = ({navigation, route}: any) => {
   const handlePernahTerjadi = (option: boolean) => {
     setIsPernahTerjadi(option);
   };
-  // console.log('desc', deskripsiPernahTerjadi);
+
   const btnPernahTerjadi = () => {
     return (
       <View>
@@ -496,6 +585,19 @@ const RincianKejadian = ({navigation, route}: any) => {
           value={kronologiInsiden}
           multiline={true}
         />
+        <Text style={styles.txtSection}>Insiden yang terjadi pada pasien</Text>
+        <Input
+          style={styles.inputBox}
+          placeholder="Penyakit dalam dan Subspesialisasinya"
+          placeholderTextColor="#787878"
+          onChangeText={setInsidenTerjadiPadaPasien}
+          value={insidenTerjadiPadaPasien}
+          multiline={true}
+        />
+        <Text style={styles.txtSection}>Dampak Insiden Terhadap Pasien</Text>
+        {btnDampakInsiden()}
+        <Text style={styles.txtSection}>Probabilitas</Text>
+        {btnProbabilitas()}
         <Text style={styles.txtSection}>
           Orang Pertama Yang Melaporkan Insiden
         </Text>
@@ -522,8 +624,7 @@ const RincianKejadian = ({navigation, route}: any) => {
           value={unitTerkait}
           multiline={true}
         />
-        <Text style={styles.txtSection}>Dampak Insiden Terhadap Pasien</Text>
-        {btnDampakInsiden()}
+
         <Text style={styles.txtSection}>
           Tindak lanjut yang dilakukan segera setelah kejadian, dan hasilnya
         </Text>
@@ -568,6 +669,7 @@ const RincianKejadian = ({navigation, route}: any) => {
               waktuInsiden: waktuInsiden.toISOString(),
               insiden,
               kronologiInsiden,
+              insidenTerjadiPadaPasien,
               pelaporPertama,
               pasienTerkait,
               lokasiInsiden,
@@ -575,6 +677,8 @@ const RincianKejadian = ({navigation, route}: any) => {
               tindakLanjut,
               tindakLanjutOleh,
               pernahTerjadi,
+              dampakInsiden,
+              probabilitas,
             });
           }}
         />

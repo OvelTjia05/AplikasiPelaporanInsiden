@@ -14,8 +14,6 @@ import {MyColor} from '../../components/atoms/MyColor';
 import Gap from '../../components/atoms/Gap';
 import {Ilustrasi, Ilustrasi1} from '../../assets/images';
 import {
-  IconBuatLaporan,
-  IconBuatLaporanAnonim,
   IconCentang,
   IconLaporan,
   IconPanahKanan,
@@ -26,7 +24,7 @@ import {
 import axios from 'axios';
 
 interface Laporan {
-  tanggal_laporan_dikirim: string;
+  tanggal_laporan_dikirim: Date;
   gambar: string;
   status: string;
 }
@@ -45,8 +43,13 @@ const HomePage = ({navigation, route}: any) => {
   const getLatestLaporan = async () => {
     if (dataUser.id_user) {
       try {
+        console.log(dataUser.token);
+        const headers = {
+          Authorization: `Bearer ${dataUser.token}`,
+        };
         const response = await axios.get(
-          `https://backend-pelaporan-final.glitch.me/api/laporan/${dataUser.id_user}`,
+          `https://backend-pelaporan-final.glitch.me/api/laporan/user/latest/${dataUser.id_user}`,
+          {headers},
         );
         setLatestLaporan(response.data.data);
         console.log('ini response.data.data: ', response.data.data);
@@ -58,28 +61,28 @@ const HomePage = ({navigation, route}: any) => {
 
   const getStatusColor = (status: any) => {
     switch (status) {
-      case 'antrian':
+      case 'dalam antrian':
         return MyColor.Primary;
-      case 'tindak':
+      case 'investigasi':
         return '#A37F00';
-      case 'selesai':
+      case 'laporan selesai':
         return '#008656';
-      case 'tolak':
+      case 'laporan ditolak':
         return '#8D0000';
       default:
-        return 'pink';
+        return 'transparent';
     }
   };
 
   const convertStatus = (status: any) => {
     switch (status) {
-      case 'antrian':
+      case 'dalam antrian':
         return 'Dalam Antrian';
-      case 'tindak':
-        return 'Sedang Ditindak';
-      case 'selesai':
+      case 'investigasi':
+        return 'Sedang Di Investigasi';
+      case 'laporan selesai':
         return 'Laporan Selesai';
-      case 'tolak':
+      case 'laporan ditolak':
         return 'Laporan Ditolak';
       default:
         return null;
@@ -88,13 +91,13 @@ const HomePage = ({navigation, route}: any) => {
 
   const getStatusIcon = (status: any) => {
     switch (status) {
-      case 'antrian':
+      case 'dalam antrian':
         return <IconWaktu />;
-      case 'tindak':
+      case 'investigasi':
         return <IconSedangDitindak />;
-      case 'selesai':
+      case 'laporan selesai':
         return <IconCentang />;
-      case 'tolak':
+      case 'laporan ditolak':
         return <IconTolak />;
       default:
         return '';
@@ -252,7 +255,7 @@ const HomePage = ({navigation, route}: any) => {
                   {formatHour(new Date(item.tanggal_laporan_dikirim))}
                 </Text>
                 <Text style={styles.txtCard}>
-                  {formatDate(new Date(item.waktu_submit))}
+                  {formatDate(new Date(item.tanggal_laporan_dikirim))}
                 </Text>
                 <Text style={styles.txtCardStatus}>
                   {convertStatus(item.status)}

@@ -19,6 +19,7 @@ const DataKarakteristikPasien = ({navigation, route}: any) => {
   const dataUser = route.params;
   const [name, setName] = useState('');
   const [nomorMR, setNomorMR] = useState('');
+  const [ruangan, setRuangan] = useState('');
   const [age, setAge] = useState('');
   const [ageNo, setAgeNo] = useState('');
   const [selectedAgeType, setSelectedAgeType] = useState('');
@@ -328,6 +329,14 @@ const DataKarakteristikPasien = ({navigation, route}: any) => {
           onChangeText={setNomorMR}
           value={nomorMR}
         />
+        <Text style={styles.txtSection}>Ruangan</Text>
+        <Input
+          style={styles.inputBox}
+          placeholder=""
+          placeholderTextColor="#787878"
+          onChangeText={setRuangan}
+          value={ruangan}
+        />
         <Text style={styles.txtSection}>Umur</Text>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <Input
@@ -375,6 +384,7 @@ const DataKarakteristikPasien = ({navigation, route}: any) => {
                 dataUser,
                 name,
                 nomorMR,
+                ruangan,
                 age,
                 insurance,
                 gender,
@@ -385,6 +395,7 @@ const DataKarakteristikPasien = ({navigation, route}: any) => {
                 dataUser,
                 name,
                 nomorMR,
+                ruangan,
                 age,
                 insurance,
                 gender,

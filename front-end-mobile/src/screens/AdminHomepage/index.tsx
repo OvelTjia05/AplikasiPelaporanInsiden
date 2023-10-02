@@ -103,7 +103,7 @@ const AdminHomepage = ({navigation, route}: any) => {
         return <IconWaktu />;
       case 'investigasi':
         return <IconSedangDitindak />;
-      case 'laporan elesai':
+      case 'laporan selesai':
         return <IconCentang />;
       case 'laporan ditolak':
         return <IconTolak />;
