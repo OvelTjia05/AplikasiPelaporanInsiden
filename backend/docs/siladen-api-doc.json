@@ -1245,7 +1245,7 @@
         }
       }
     },
-    "/api/laporan/{id_laporan}": {
+    "/api/laporan/detail/{id_laporan}": {
       "get": {
         "security": [
           {
@@ -1541,181 +1541,6 @@
         }
       }
     },
-    "/api/laporan/{id_user}": {
-      "get": {
-        "security": [
-          {
-            "siladenAuth": []
-          }
-        ],
-        "tags": ["Laporan"],
-        "summary": "Get All Laporan By User ID",
-        "description": "get semua laporan milik user tertentu",
-        "parameters": [
-          {
-            "name": "id_user",
-            "description": "parameter path untuk id user",
-            "required": true,
-            "in": "path"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success Get All Laporan By User ID",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "string"
-                    },
-                    "status": {
-                      "type": "string"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id_laporan": {
-                            "type": "integer"
-                          },
-                          "nama_pasien": {
-                            "type": "string"
-                          },
-                          "ruangan": {
-                            "type": "string"
-                          },
-                          "umur": {
-                            "type": "string"
-                          },
-                          "asuransi": {
-                            "type": "string"
-                          },
-                          "jenis_kelamin_pasien": {
-                            "type": "string"
-                          },
-                          "waktu_mendapatkan_pelayanan": {
-                            "type": "string"
-                          },
-                          "waktu_kejadian_insiden": {
-                            "type": "string"
-                          },
-                          "insiden": {
-                            "type": "string"
-                          },
-                          "kronologis_insiden": {
-                            "type": "string"
-                          },
-                          "insiden_terjadi_pada_pasien": {
-                            "type": "string"
-                          },
-                          "dampak_insiden_terhadap_pasien": {
-                            "type": "string"
-                          },
-                          "probabilitas": {
-                            "type": "string"
-                          },
-                          "orang_pertama_melaporkan_insiden": {
-                            "type": "string"
-                          },
-                          "jenis_pasien": {
-                            "type": "string"
-                          },
-                          "tempat_insiden": {
-                            "type": "string"
-                          },
-                          "departement_penyebab_insiden": {
-                            "type": "string"
-                          },
-                          "tindak_lanjut_setelah_kejadian_dan_hasil": {
-                            "type": "string"
-                          },
-                          "yang_melakukan_tindak_lanjut_setelah_insiden": {
-                            "type": "string"
-                          },
-                          "kejadian_sama_pernah_terjadi_di_unit_lain": {
-                            "type": "string"
-                          },
-                          "status": {
-                            "type": "string"
-                          },
-                          "tanggal_laporan_dikirim": {
-                            "type": "string"
-                          },
-                          "gambar": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "example": {
-                  "code": "200",
-                  "status": "OK",
-                  "data": [
-                    {
-                      "id_laporan": 19,
-                      "nama_pasien": "Josua Wuisan",
-                      "no_rekam_medis": "123458",
-                      "ruangan": "Poli umum",
-                      "umur": "20 tahun",
-                      "asuransi": "BPJS",
-                      "jenis_kelamin_pasien": "Laki-laki",
-                      "waktu_mendapatkan_pelayanan": "2023-09-22 13:48:52",
-                      "waktu_kejadian_insiden": "2023-09-22 14:48:52",
-                      "insiden": "Pasien jatuh",
-                      "kronologis_insiden": "pada waktu pagi pasien jatuh di kamar mandi akibat lantai licin",
-                      "insiden_terjadi_pada_pasien": "Penyakit Dalam dan Subspesialisasinya",
-                      "dampak_insiden_terhadap_pasien": "Cedera Ringan",
-                      "probabilitas": "Jarang",
-                      "orang_pertama_melaporkan_insiden": "perawat",
-                      "jenis_pasien": "Pasien rawat inap",
-                      "tempat_insiden": "di loby",
-                      "departement_penyebab_insiden": "Rawat jalan",
-                      "tindak_lanjut_setelah_kejadian_dan_hasil": "tindak lanjut ditolong dan diobati dan hasilnya didapatkan Vulnus laceratum di dengkul kiri dan telapak tangan kiri",
-                      "yang_melakukan_tindak_lanjut_setelah_insiden": "Perawat",
-                      "kejadian_sama_pernah_terjadi_di_unit_lain": "Ya, tindakan untuk pencegahan yaitu memasang tanda lantai basah",
-                      "status": "dalam antrian",
-                      "tanggal_laporan_dikirim": "2023-09-29 10:32:20",
-                      "gambar": null
-                    },
-                    {
-                      "id_laporan": 15,
-                      "nama_pasien": "Josua Tumatar",
-                      "no_rekam_medis": "123458",
-                      "ruangan": "Poli umum",
-                      "umur": "20 tahun",
-                      "asuransi": "BPJS",
-                      "jenis_kelamin_pasien": "Laki-laki",
-                      "waktu_mendapatkan_pelayanan": "2023-09-22 13:48:52",
-                      "waktu_kejadian_insiden": "2023-09-22 14:48:52",
-                      "insiden": "Pasien jatuh",
-                      "kronologis_insiden": "pada waktu pagi pasien jatuh di kamar mandi akibat lantai licin",
-                      "insiden_terjadi_pada_pasien": "Penyakit Dalam dan Subspesialisasinya",
-                      "dampak_insiden_terhadap_pasien": "Cedera Ringan",
-                      "probabilitas": "Jarang",
-                      "orang_pertama_melaporkan_insiden": "perawat",
-                      "jenis_pasien": "Pasien rawat inap",
-                      "tempat_insiden": "di loby",
-                      "departement_penyebab_insiden": "Rawat jalan",
-                      "tindak_lanjut_setelah_kejadian_dan_hasil": "tindak lanjut ditolong dan diobati dan hasilnya didapatkan Vulnus laceratum di dengkul kiri dan telapak tangan kiri",
-                      "yang_melakukan_tindak_lanjut_setelah_insiden": "Perawat",
-                      "kejadian_sama_pernah_terjadi_di_unit_lain": "Ya, tindakan untuk pencegahan yaitu memasang tanda lantai basah",
-                      "status": "dalam antrian",
-                      "tanggal_laporan_dikirim": "2023-09-27 14:53:34",
-                      "gambar": null
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/laporan/user/latest/{id_user}": {
       "get": {
         "security": [
@@ -1917,6 +1742,179 @@
       }
     },
     "/api/laporan/user/{id_user}": {
+      "get": {
+        "security": [
+          {
+            "siladenAuth": []
+          }
+        ],
+        "tags": ["Laporan"],
+        "summary": "Get All Laporan By User ID",
+        "description": "get semua laporan milik user tertentu",
+        "parameters": [
+          {
+            "name": "id_user",
+            "description": "parameter path untuk id user",
+            "required": true,
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success Get All Laporan By User ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id_laporan": {
+                            "type": "integer"
+                          },
+                          "nama_pasien": {
+                            "type": "string"
+                          },
+                          "ruangan": {
+                            "type": "string"
+                          },
+                          "umur": {
+                            "type": "string"
+                          },
+                          "asuransi": {
+                            "type": "string"
+                          },
+                          "jenis_kelamin_pasien": {
+                            "type": "string"
+                          },
+                          "waktu_mendapatkan_pelayanan": {
+                            "type": "string"
+                          },
+                          "waktu_kejadian_insiden": {
+                            "type": "string"
+                          },
+                          "insiden": {
+                            "type": "string"
+                          },
+                          "kronologis_insiden": {
+                            "type": "string"
+                          },
+                          "insiden_terjadi_pada_pasien": {
+                            "type": "string"
+                          },
+                          "dampak_insiden_terhadap_pasien": {
+                            "type": "string"
+                          },
+                          "probabilitas": {
+                            "type": "string"
+                          },
+                          "orang_pertama_melaporkan_insiden": {
+                            "type": "string"
+                          },
+                          "jenis_pasien": {
+                            "type": "string"
+                          },
+                          "tempat_insiden": {
+                            "type": "string"
+                          },
+                          "departement_penyebab_insiden": {
+                            "type": "string"
+                          },
+                          "tindak_lanjut_setelah_kejadian_dan_hasil": {
+                            "type": "string"
+                          },
+                          "yang_melakukan_tindak_lanjut_setelah_insiden": {
+                            "type": "string"
+                          },
+                          "kejadian_sama_pernah_terjadi_di_unit_lain": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "tanggal_laporan_dikirim": {
+                            "type": "string"
+                          },
+                          "gambar": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "code": "200",
+                  "status": "OK",
+                  "data": [
+                    {
+                      "id_laporan": 19,
+                      "nama_pasien": "Josua Wuisan",
+                      "no_rekam_medis": "123458",
+                      "ruangan": "Poli umum",
+                      "umur": "20 tahun",
+                      "asuransi": "BPJS",
+                      "jenis_kelamin_pasien": "Laki-laki",
+                      "waktu_mendapatkan_pelayanan": "2023-09-22 13:48:52",
+                      "waktu_kejadian_insiden": "2023-09-22 14:48:52",
+                      "insiden": "Pasien jatuh",
+                      "kronologis_insiden": "pada waktu pagi pasien jatuh di kamar mandi akibat lantai licin",
+                      "insiden_terjadi_pada_pasien": "Penyakit Dalam dan Subspesialisasinya",
+                      "dampak_insiden_terhadap_pasien": "Cedera Ringan",
+                      "probabilitas": "Jarang",
+                      "orang_pertama_melaporkan_insiden": "perawat",
+                      "jenis_pasien": "Pasien rawat inap",
+                      "tempat_insiden": "di loby",
+                      "departement_penyebab_insiden": "Rawat jalan",
+                      "tindak_lanjut_setelah_kejadian_dan_hasil": "tindak lanjut ditolong dan diobati dan hasilnya didapatkan Vulnus laceratum di dengkul kiri dan telapak tangan kiri",
+                      "yang_melakukan_tindak_lanjut_setelah_insiden": "Perawat",
+                      "kejadian_sama_pernah_terjadi_di_unit_lain": "Ya, tindakan untuk pencegahan yaitu memasang tanda lantai basah",
+                      "status": "dalam antrian",
+                      "tanggal_laporan_dikirim": "2023-09-29 10:32:20",
+                      "gambar": null
+                    },
+                    {
+                      "id_laporan": 15,
+                      "nama_pasien": "Josua Tumatar",
+                      "no_rekam_medis": "123458",
+                      "ruangan": "Poli umum",
+                      "umur": "20 tahun",
+                      "asuransi": "BPJS",
+                      "jenis_kelamin_pasien": "Laki-laki",
+                      "waktu_mendapatkan_pelayanan": "2023-09-22 13:48:52",
+                      "waktu_kejadian_insiden": "2023-09-22 14:48:52",
+                      "insiden": "Pasien jatuh",
+                      "kronologis_insiden": "pada waktu pagi pasien jatuh di kamar mandi akibat lantai licin",
+                      "insiden_terjadi_pada_pasien": "Penyakit Dalam dan Subspesialisasinya",
+                      "dampak_insiden_terhadap_pasien": "Cedera Ringan",
+                      "probabilitas": "Jarang",
+                      "orang_pertama_melaporkan_insiden": "perawat",
+                      "jenis_pasien": "Pasien rawat inap",
+                      "tempat_insiden": "di loby",
+                      "departement_penyebab_insiden": "Rawat jalan",
+                      "tindak_lanjut_setelah_kejadian_dan_hasil": "tindak lanjut ditolong dan diobati dan hasilnya didapatkan Vulnus laceratum di dengkul kiri dan telapak tangan kiri",
+                      "yang_melakukan_tindak_lanjut_setelah_insiden": "Perawat",
+                      "kejadian_sama_pernah_terjadi_di_unit_lain": "Ya, tindakan untuk pencegahan yaitu memasang tanda lantai basah",
+                      "status": "dalam antrian",
+                      "tanggal_laporan_dikirim": "2023-09-27 14:53:34",
+                      "gambar": null
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "security": [
           {

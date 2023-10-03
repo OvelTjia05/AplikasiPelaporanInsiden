@@ -22,6 +22,7 @@ import {
   IconWaktu,
 } from '../../assets/icons';
 import axios from 'axios';
+import {useSelector, useDispatch} from 'react-redux';
 
 interface Laporan {
   tanggal_laporan_dikirim: Date;
@@ -30,6 +31,7 @@ interface Laporan {
 }
 
 const HomePage = ({navigation, route}: any) => {
+  const dataIdUser = useSelector((data: any) => data.id_user);
   const today = new Date();
   const [name, setName] = useState('');
   const [latestLaporan, setLatestLaporan] = useState<Laporan[]>([]);
@@ -39,6 +41,7 @@ const HomePage = ({navigation, route}: any) => {
     setName(dataUser.name);
     getLatestLaporan();
     console.log('ehem: ', dataUser);
+    console.log('INI EE id user memang: ', dataIdUser);
   }, []);
 
   const getLatestLaporan = async () => {

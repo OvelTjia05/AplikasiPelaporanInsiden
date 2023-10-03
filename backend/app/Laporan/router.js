@@ -26,7 +26,7 @@ router.get("/laporan/current/day", VerifyTokenAdmin, getLaporanToday);
 router.get("/laporan/current/month", VerifyTokenAdmin, getLaporanCurrentMonth);
 router.get("/laporan/amount", VerifyTokenAdmin, getLaporanAmount);
 
-router.get("/laporan/:id_laporan", VerifyTokenUser, getLaporanByIdLaporan);
+router.get("/laporan/detail/:id_laporan", VerifyTokenUser, getLaporanByIdLaporan);
 router.get("/laporan/user/:id_user", VerifyTokenUser, getLaporanByUserId);
 router.get("/laporan/user/latest/:id_user", VerifyTokenUser, getLatestThreeLaporanByUserId);
 
