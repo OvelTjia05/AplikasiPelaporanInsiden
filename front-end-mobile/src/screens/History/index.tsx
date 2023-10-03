@@ -16,17 +16,15 @@ import {
   IconTolak,
   IconWaktu,
 } from '../../assets/icons';
-import {Ilustrasi} from '../../assets/images';
 import {MyFont} from '../../components/atoms/MyFont';
 import Gap from '../../components/atoms/Gap';
 import axios from 'axios';
 
 interface Laporan {
+  status: string;
   id_laporan: string;
-  kategori_bidang: string;
-  waktu_submit: string;
-  url_gambar: string;
-  status_laporan: string;
+  tanggal_laporan_dikirim: Date;
+  gambar: string;
 }
 
 const History = ({navigation, route}: any) => {
@@ -39,60 +37,66 @@ const History = ({navigation, route}: any) => {
 
   const getAllLaporan = async () => {
     if (dataUser.id_user) {
+      console.log('test: ', dataUser);
       try {
+        const headers = {
+          Authorization: `Bearer ${dataUser.token}`,
+        };
         const response = await axios.get(
-          `https://backend-pelaporaninsiden.glitch.me/api/laporan/user/${dataUser.id_user}`,
+          `https://backend-pelaporan-final.glitch.me/api/laporan/${dataUser.id_user}`,
+          {headers},
         );
+        console.log('halo ', response.data);
         setLaporan(response.data.data);
-        console.log('Ini response.data.data: ', response.data.data);
-      } catch (error) {
+      } catch (error: any) {
         console.log(error);
+        console.log('Ini response.data.data: ', error.response);
       }
+    }
+  };
+
+  const getStatusColor = (status: any) => {
+    switch (status) {
+      case 'dalam antrian':
+        return MyColor.Primary;
+      case 'investigasi':
+        return '#A37F00';
+      case 'laporan selesai':
+        return '#008656';
+      case 'laporan ditolak':
+        return '#8D0000';
+      default:
+        return 'transparent';
     }
   };
 
   const convertStatus = (status: any) => {
     switch (status) {
-      case 'antrian':
+      case 'dalam antrian':
         return 'Dalam Antrian';
-      case 'tindak':
-        return 'Sedang Ditindak';
-      case 'selesai':
+      case 'investigasi':
+        return 'Sedang Di Investigasi';
+      case 'laporan selesai':
         return 'Laporan Selesai';
-      case 'tolak':
+      case 'laporan ditolak':
         return 'Laporan Ditolak';
       default:
         return null;
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'antrian':
-        return MyColor.Primary;
-      case 'tindak':
-        return '#A37F00';
-      case 'selesai':
-        return '#008656';
-      case 'tolak':
-        return '#8D0000';
-      default:
-        return 'white';
-    }
-  };
-
   const getStatusIcon = (status: any) => {
     switch (status) {
-      case 'antrian':
+      case 'dalam antrian':
         return <IconWaktu />;
-      case 'tindak':
+      case 'investigasi':
         return <IconSedangDitindak />;
-      case 'selesai':
+      case 'laporan selesai':
         return <IconCentang />;
-      case 'tolak':
+      case 'laporan ditolak':
         return <IconTolak />;
       default:
-        return null;
+        return '';
     }
   };
 
@@ -205,7 +209,7 @@ const History = ({navigation, route}: any) => {
                 style={[
                   styles.cardContent,
                   {
-                    backgroundColor: getStatusColor(item.status_laporan),
+                    backgroundColor: getStatusColor(item.status),
                   },
                 ]}
                 key={index}
@@ -215,24 +219,20 @@ const History = ({navigation, route}: any) => {
                   })
                 }>
                 <View style={{flexDirection: 'row', columnGap: 20}}>
-                  <Image
-                    source={{uri: item.url_gambar}}
-                    style={styles.cardImage}
-                  />
+                  <Image source={{uri: item.gambar}} style={styles.cardImage} />
                   <View>
-                    <Text style={styles.txtCard}>{item.kategori_bidang}</Text>
                     <Text style={styles.txtCardTime}>
-                      {convertToWITHour(new Date(item.waktu_submit))}
+                      {convertToWITHour(new Date(item.tanggal_laporan_dikirim))}
                     </Text>
                     <Text style={styles.txtCard}>
-                      {convertToWITDate(new Date(item.waktu_submit))}
+                      {convertToWITDate(new Date(item.tanggal_laporan_dikirim))}
                     </Text>
                     <Text style={styles.txtCardStatus}>
-                      {convertStatus(item.status_laporan)}
+                      {convertStatus(item.status)}
                     </Text>
                   </View>
                 </View>
-                {getStatusIcon(item.status_laporan)}
+                {getStatusIcon(item.status)}
               </TouchableOpacity>
             ))}
           </View>
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
   },
   createReportButton: {
     flexDirection: 'row',
-    columnGap: 60,
+    columnGap: 50,
     paddingHorizontal: 20,
   },
   createReportButtonText: {

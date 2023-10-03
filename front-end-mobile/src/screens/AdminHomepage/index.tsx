@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from '../../components/molecules/Header';
 import {MyColor} from '../../components/atoms/MyColor';
 import Title from '../../components/atoms/Title';
@@ -22,28 +22,65 @@ import {
 } from '../../assets/icons';
 import {Path, Svg} from 'react-native-svg';
 import Gap from '../../components/atoms/Gap';
-import {Ilustrasi1} from '../../assets/images';
+import {Ilustrasi, Ilustrasi1} from '../../assets/images';
+import axios from 'axios';
 
-const AdminHomepage = ({navigation}: any) => {
+interface Laporan {
+  status: string;
+  tanggal_laporan_dikirim: Date;
+  gambar: string;
+}
+
+const AdminHomepage = ({navigation, route}: any) => {
+  console.log('in homepage admin: ', route.params);
+  const dataUser = route.params;
   const today = new Date();
+  const [laporanHariIni, setLaporanHariIni] = useState<Laporan[]>([]);
+  const [laporanBulanIni, setLaporanBulanIni] = useState<Laporan[]>([]);
 
-  const dataDummy = {
-    username: 'Roger',
-    role: 'Petugas Rumah Sakit',
+  useEffect(() => {
+    getTodayReports();
+    getCurrentMonthReports();
+    console.log('ini di admin homepage', dataUser);
+  }, []);
+
+  const getTodayReports = async () => {
+    if (dataUser.id_user) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${dataUser.token}`, // Tambahkan token ke header dengan format Bearer
+        };
+
+        const response = await axios.get(
+          `https://backend-pelaporan-final.glitch.me/api/laporan/current/day`,
+          {headers},
+        );
+        setLaporanHariIni(response.data.data);
+        console.log('laporan hari ini: ', response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
-  const dataDummyLaporan = [
-    {
-      tanggal_laporan_dikirim: '2023-09-21T06:39:54.000Z',
-      status: 'dalam antrian',
-      url_gambar: `${Ilustrasi1}`,
-    },
-    {
-      tanggal_laporan_dikirim: '2023-08-211T09:30:50.000Z',
-      status: 'laporan ditolak',
-      url_gambar: `${Ilustrasi1}`,
-    },
-  ];
+  const getCurrentMonthReports = async () => {
+    if (dataUser.id_user) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${dataUser.token}`, // Tambahkan token ke header dengan format Bearer
+        };
+
+        const response = await axios.get(
+          `https://backend-pelaporan-final.glitch.me/api/laporan/current/month`,
+          {headers},
+        );
+        setLaporanBulanIni(response.data.data);
+        console.log('laporan bulan ini: ', response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   const getStatusColor = (status: any) => {
     switch (status) {
@@ -66,7 +103,7 @@ const AdminHomepage = ({navigation}: any) => {
         return <IconWaktu />;
       case 'investigasi':
         return <IconSedangDitindak />;
-      case 'laporan elesai':
+      case 'laporan selesai':
         return <IconCentang />;
       case 'laporan ditolak':
         return <IconTolak />;
@@ -90,6 +127,20 @@ const AdminHomepage = ({navigation}: any) => {
     }
   };
 
+  function greeting(date: Date) {
+    const currentHour = date.getHours();
+
+    if (currentHour >= 3 && currentHour < 11) {
+      return 'Selamat Pagi';
+    } else if (currentHour >= 11 && currentHour < 15) {
+      return 'Selamat Siang';
+    } else if (currentHour >= 15 && currentHour < 19) {
+      return 'Selamat Sore';
+    } else {
+      return 'Selamat Malam';
+    }
+  }
+
   function formatHour(date: any) {
     const localTime = new Date(date.getTime());
 
@@ -109,11 +160,9 @@ const AdminHomepage = ({navigation}: any) => {
     return `${day} ${month} ${year}`;
   }
   function formatDate2(date: any) {
-    const localTime = new Date(date.getTime());
-
-    const year = localTime.getFullYear().toString();
-    const month = localTime.getMonth();
-    const day = localTime.getDate().toString();
+    const year = date.getFullYear().toString();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
 
     return `${day}/${month}/${year}`;
   }
@@ -139,11 +188,19 @@ const AdminHomepage = ({navigation}: any) => {
   const todayReport = () => {
     return (
       <View>
-        {dataDummyLaporan.length === 0 ? (
-          <View style={styles.cardTodayReport}>
-            <Text style={styles.txtTodayReport}>
-              Tidak ada laporan hari ini 👏
+        {laporanHariIni.length === 0 ? (
+          <View style={styles.card}>
+            <Text style={styles.txtCardTitle}>
+              Laporan{' '}
+              <Text style={{fontFamily: 'Poppins-Bold'}}>
+                hari ini ({formatDate2(today)})
+              </Text>
             </Text>
+            <View style={styles.cardNoReport}>
+              <Text style={styles.txtTodayReport}>
+                Tidak ada laporan hari ini 👏
+              </Text>
+            </View>
           </View>
         ) : (
           <View style={styles.card}>
@@ -153,7 +210,7 @@ const AdminHomepage = ({navigation}: any) => {
                 hari ini ({formatDate2(today)})
               </Text>
             </Text>
-            {dataDummyLaporan.map((item, index) => (
+            {laporanHariIni.map((item, index) => (
               <View
                 style={[
                   styles.cardContent,
@@ -165,7 +222,8 @@ const AdminHomepage = ({navigation}: any) => {
                 <View style={{flexDirection: 'row', columnGap: 20}}>
                   <Image
                     source={{
-                      uri: item.url_gambar,
+                      uri:
+                        item.gambar || 'https://example.com/default-image.jpg',
                     }}
                     style={styles.cardImage}
                   />
@@ -193,11 +251,19 @@ const AdminHomepage = ({navigation}: any) => {
   const currentMonthReport = () => {
     return (
       <View>
-        {dataDummyLaporan.length === 0 ? (
-          <View style={styles.cardTodayReport}>
-            <Text style={styles.txtTodayReport}>
-              Tidak ada laporan bulan ini 👏
+        {laporanBulanIni.length === 0 ? (
+          <View style={styles.card}>
+            <Text style={styles.txtCardTitle}>
+              Laporan{' '}
+              <Text style={{fontFamily: 'Poppins-Bold'}}>
+                Bulan {getMonthName(today.getMonth())}
+              </Text>
             </Text>
+            <View style={styles.cardNoReport}>
+              <Text style={styles.txtTodayReport}>
+                Tidak ada laporan bulan ini 👏
+              </Text>
+            </View>
           </View>
         ) : (
           <View style={styles.card}>
@@ -207,7 +273,7 @@ const AdminHomepage = ({navigation}: any) => {
                 Bulan {getMonthName(today.getMonth())}
               </Text>
             </Text>
-            {dataDummyLaporan.map((item, index) => (
+            {laporanBulanIni.map((item, index) => (
               <View
                 style={[
                   styles.cardContent,
@@ -219,7 +285,8 @@ const AdminHomepage = ({navigation}: any) => {
                 <View style={{flexDirection: 'row', columnGap: 20}}>
                   <Image
                     source={{
-                      uri: item.url_gambar,
+                      uri:
+                        item.gambar || 'https://example.com/default-image.jpg',
                     }}
                     style={styles.cardImage}
                   />
@@ -249,15 +316,14 @@ const AdminHomepage = ({navigation}: any) => {
       <Header backgroundTransparent />
       <View style={styles.welcomeUser}>
         <View>
-          <Text style={styles.txtWelcome}>Selamat Pagi,</Text>
-          <Text style={styles.txtUsername}>{dataDummy.username}</Text>
-          {/* <Title label={dataDummy.username} /> */}
-          <Text style={styles.txtRole}>{dataDummy.role}</Text>
+          <Text style={styles.txtWelcome}>{greeting(today)},</Text>
+          <Text style={styles.txtUsername}>{dataUser.name}</Text>
+          <Text style={styles.txtRole}>{dataUser.role}</Text>
         </View>
         <View style={{flexDirection: 'row', columnGap: 20}}>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('AdminHistoryItems');
+              navigation.navigate('AdminHistoryItems', dataUser);
             }}>
             <Image source={IconRiwayat} tintColor="black" />
           </TouchableOpacity>
@@ -272,7 +338,13 @@ const AdminHomepage = ({navigation}: any) => {
         <Gap height={20} />
         <TouchableOpacity
           style={styles.btnReportList}
-          onPress={() => navigation.navigate('AdminHistoryItems')}>
+          onPress={() =>
+            navigation.navigate(
+              'AdminHistoryItems',
+              dataUser,
+              console.log('Ini dataUser di homepage Admin: ', dataUser),
+            )
+          }>
           <Text style={styles.txtCardStatus}>Daftar Semua Laporan</Text>
           <Image source={IconRiwayat} tintColor={MyColor.Light} />
         </TouchableOpacity>
@@ -309,7 +381,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     height: 120,
-    width: '100%',
   },
   cardImage: {
     resizeMode: 'cover',
@@ -317,9 +388,8 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 10,
   },
-  cardTodayReport: {
-    borderRadius: 20,
-    flexWrap: 'wrap',
+  cardNoReport: {
+    width: '100%',
     minHeight: 119,
     backgroundColor: MyColor.Primary,
   },

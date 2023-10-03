@@ -14,8 +14,6 @@ import {MyColor} from '../../components/atoms/MyColor';
 import Gap from '../../components/atoms/Gap';
 import {Ilustrasi, Ilustrasi1} from '../../assets/images';
 import {
-  IconBuatLaporan,
-  IconBuatLaporanAnonim,
   IconCentang,
   IconLaporan,
   IconPanahKanan,
@@ -26,27 +24,32 @@ import {
 import axios from 'axios';
 
 interface Laporan {
-  kategori_bidang: string;
-  waktu_submit: string;
-  url_gambar: string;
-  status_laporan: string;
+  tanggal_laporan_dikirim: Date;
+  gambar: string;
+  status: string;
 }
 
 const HomePage = ({navigation, route}: any) => {
-  const [username, setUsername] = useState('');
+  const today = new Date();
+  const [name, setName] = useState('');
   const [latestLaporan, setLatestLaporan] = useState<Laporan[]>([]);
   const dataUser = route.params;
 
   useEffect(() => {
-    setUsername(dataUser.username);
+    setName(dataUser.name);
     getLatestLaporan();
   }, []);
 
   const getLatestLaporan = async () => {
     if (dataUser.id_user) {
       try {
+        console.log(dataUser.token);
+        const headers = {
+          Authorization: `Bearer ${dataUser.token}`,
+        };
         const response = await axios.get(
-          `https://backend-pelaporaninsiden.glitch.me/api/laporan/user/latest/${dataUser.id_user}`,
+          `https://backend-pelaporan-final.glitch.me/api/laporan/user/latest/${dataUser.id_user}`,
+          {headers},
         );
         setLatestLaporan(response.data.data);
         console.log('ini response.data.data: ', response.data.data);
@@ -56,45 +59,45 @@ const HomePage = ({navigation, route}: any) => {
     }
   };
 
-  const getStatusColor = (status_laporan: any) => {
-    switch (status_laporan) {
-      case 'antrian':
+  const getStatusColor = (status: any) => {
+    switch (status) {
+      case 'dalam antrian':
         return MyColor.Primary;
-      case 'tindak':
+      case 'investigasi':
         return '#A37F00';
-      case 'selesai':
+      case 'laporan selesai':
         return '#008656';
-      case 'tolak':
+      case 'laporan ditolak':
         return '#8D0000';
       default:
-        return 'pink';
+        return 'transparent';
     }
   };
 
   const convertStatus = (status: any) => {
     switch (status) {
-      case 'antrian':
+      case 'dalam antrian':
         return 'Dalam Antrian';
-      case 'tindak':
-        return 'Sedang Ditindak';
-      case 'selesai':
+      case 'investigasi':
+        return 'Sedang Di Investigasi';
+      case 'laporan selesai':
         return 'Laporan Selesai';
-      case 'tolak':
+      case 'laporan ditolak':
         return 'Laporan Ditolak';
       default:
         return null;
     }
   };
 
-  const getStatusIcon = (status_laporan: any) => {
-    switch (status_laporan) {
-      case 'antrian':
+  const getStatusIcon = (status: any) => {
+    switch (status) {
+      case 'dalam antrian':
         return <IconWaktu />;
-      case 'tindak':
+      case 'investigasi':
         return <IconSedangDitindak />;
-      case 'selesai':
+      case 'laporan selesai':
         return <IconCentang />;
-      case 'tolak':
+      case 'laporan ditolak':
         return <IconTolak />;
       default:
         return '';
@@ -116,6 +119,20 @@ const HomePage = ({navigation, route}: any) => {
     tanggal: '5 September 2021',
     sumber: 'sehatnegeriku.kemkes.go.id',
   };
+
+  function greeting(date: Date) {
+    const currentHour = date.getHours();
+
+    if (currentHour >= 3 && currentHour < 11) {
+      return 'Selamat Pagi';
+    } else if (currentHour >= 11 && currentHour < 15) {
+      return 'Selamat Siang';
+    } else if (currentHour >= 15 && currentHour < 19) {
+      return 'Selamat Sore';
+    } else {
+      return 'Selamat Malam';
+    }
+  }
 
   function formatHour(date: any) {
     const localTime = new Date(date.getTime());
@@ -164,7 +181,7 @@ const HomePage = ({navigation, route}: any) => {
             </Text>
             <TouchableOpacity
               style={styles.createReportButton}
-              onPress={() => navigation.navigate('FotoPendukung')}>
+              onPress={() => navigation.navigate('BuatLaporan', dataUser)}>
               <Text style={styles.createReportButtonText}>
                 Tekan disini untuk {'\n'}membuat laporan baru!
               </Text>
@@ -179,32 +196,31 @@ const HomePage = ({navigation, route}: any) => {
                 style={[
                   styles.cardContent,
                   {
-                    backgroundColor: getStatusColor(
-                      latestLaporan[0].status_laporan,
-                    ),
+                    backgroundColor: getStatusColor(latestLaporan[0].status),
                   },
                 ]}>
                 <View style={{flexDirection: 'row', columnGap: 20}}>
                   <Image
-                    source={{uri: latestLaporan[0].url_gambar}}
+                    source={{uri: latestLaporan[0].gambar}}
                     style={styles.cardImage}
                   />
                   <View>
-                    <Text style={styles.txtCard}>
-                      {latestLaporan[0].kategori_bidang}
-                    </Text>
                     <Text style={styles.txtCardTime}>
-                      {formatHour(new Date(latestLaporan[0].waktu_submit))}
+                      {formatHour(
+                        new Date(latestLaporan[0].tanggal_laporan_dikirim),
+                      )}
                     </Text>
                     <Text style={styles.txtCard}>
-                      {formatDate(new Date(latestLaporan[0].waktu_submit))}
+                      {formatDate(
+                        new Date(latestLaporan[0].tanggal_laporan_dikirim),
+                      )}
                     </Text>
                     <Text style={styles.txtCardStatus}>
-                      {convertStatus(latestLaporan[0].status_laporan)}
+                      {convertStatus(latestLaporan[0].status)}
                     </Text>
                   </View>
                 </View>
-                {getStatusIcon(latestLaporan[0].status_laporan)}
+                {getStatusIcon(latestLaporan[0].status)}
               </View>
             )}
           </View>
@@ -222,31 +238,31 @@ const HomePage = ({navigation, route}: any) => {
             style={[
               styles.cardContent,
               {
-                backgroundColor: getStatusColor(item.status_laporan),
+                backgroundColor: getStatusColor(item.status),
               },
             ]}
             key={index}>
             <View style={{flexDirection: 'row', columnGap: 20}}>
               <Image
                 source={{
-                  uri: item.url_gambar,
+                  uri: item.gambar,
                 }}
                 style={styles.cardImage}
               />
               <View>
                 <Text style={styles.txtCard}>{item.kategori_bidang}</Text>
                 <Text style={styles.txtCardTime}>
-                  {formatHour(new Date(item.waktu_submit))}
+                  {formatHour(new Date(item.tanggal_laporan_dikirim))}
                 </Text>
                 <Text style={styles.txtCard}>
-                  {formatDate(new Date(item.waktu_submit))}
+                  {formatDate(new Date(item.tanggal_laporan_dikirim))}
                 </Text>
                 <Text style={styles.txtCardStatus}>
-                  {convertStatus(item.status_laporan)}
+                  {convertStatus(item.status)}
                 </Text>
               </View>
             </View>
-            {getStatusIcon(item.status_laporan)}
+            {getStatusIcon(item.status)}
           </View>
         ))}
         <Pressable
@@ -274,8 +290,8 @@ const HomePage = ({navigation, route}: any) => {
       <Gap height={20} />
       <View style={styles.container1}>
         <Text style={styles.txtWelcome}>
-          Selamat Pagi,{'\n'}
-          <Text style={styles.txtName}>{username}</Text>
+          {greeting(today)},{'\n'}
+          <Text style={styles.txtName}>{name}</Text>
         </Text>
         {laporanTerakhir()}
         <Gap height={20} />
@@ -363,7 +379,7 @@ const styles = StyleSheet.create({
   },
   createReportButton: {
     flexDirection: 'row',
-    columnGap: 60,
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
   },
   createReportButtonText: {
