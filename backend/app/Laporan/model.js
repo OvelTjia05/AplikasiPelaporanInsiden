@@ -33,10 +33,10 @@ const Laporan = db.define(
       allowNull: false,
     },
     asuransi: {
-      type: DataTypes.ENUM("BPJS", "Jamkesda", "Umum/Pribadi", "Asuransi"),
+      type: DataTypes.ENUM("BPJS", "Jamkesda", "Umum/Pribadi", "Asuransi Swasta", "Pemerintah", "Perusahaan", "Lain-lain"),
       allowNull: false,
       validate: {
-        isIn: [["BPJS", "Jamkesda", "Umum/Pribadi", "Asuransi"]],
+        isIn: [["BPJS", "Jamkesda", "Umum/Pribadi", "Asuransi Swasta", "Pemerintah", "Perusahaan", "Lain-lain"]],
       },
     },
     jenis_kelamin_pasien: {
