@@ -43,7 +43,7 @@ const History = ({navigation, route}: any) => {
           Authorization: `Bearer ${dataUser.token}`,
         };
         const response = await axios.get(
-          `https://backend-pelaporan-final.glitch.me/api/laporan/${dataUser.id_user}`,
+          `https://backend-pelaporan-final.glitch.me/api/laporan/user/${dataUser.id_user}`,
           {headers},
         );
         console.log('halo ', response.data);
@@ -219,7 +219,13 @@ const History = ({navigation, route}: any) => {
                   })
                 }>
                 <View style={{flexDirection: 'row', columnGap: 20}}>
-                  <Image source={{uri: item.gambar}} style={styles.cardImage} />
+                  <Image
+                    source={{
+                      uri:
+                        item.gambar || 'https://example.com/default-image.jpg',
+                    }}
+                    style={styles.cardImage}
+                  />
                   <View>
                     <Text style={styles.txtCardTime}>
                       {convertToWITHour(new Date(item.tanggal_laporan_dikirim))}

@@ -38,6 +38,7 @@ const HomePage = ({navigation, route}: any) => {
   useEffect(() => {
     setName(dataUser.name);
     getLatestLaporan();
+    console.log('ehem: ', dataUser);
   }, []);
 
   const getLatestLaporan = async () => {
@@ -201,7 +202,11 @@ const HomePage = ({navigation, route}: any) => {
                 ]}>
                 <View style={{flexDirection: 'row', columnGap: 20}}>
                   <Image
-                    source={{uri: latestLaporan[0].gambar}}
+                    source={{
+                      uri:
+                        latestLaporan[0].gambar ||
+                        'https://example.com/default-image.jpg',
+                    }}
                     style={styles.cardImage}
                   />
                   <View>
@@ -245,12 +250,11 @@ const HomePage = ({navigation, route}: any) => {
             <View style={{flexDirection: 'row', columnGap: 20}}>
               <Image
                 source={{
-                  uri: item.gambar,
+                  uri: item.gambar || 'https://example.com/default-image.jpg',
                 }}
                 style={styles.cardImage}
               />
               <View>
-                <Text style={styles.txtCard}>{item.kategori_bidang}</Text>
                 <Text style={styles.txtCardTime}>
                   {formatHour(new Date(item.tanggal_laporan_dikirim))}
                 </Text>

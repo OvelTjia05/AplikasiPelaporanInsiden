@@ -21,6 +21,7 @@ import AdminHomepage from './src/screens/AdminHomepage';
 import AdminHistory from './src/screens/AdminHistory';
 import AdminHistoryItems from './src/screens/AdminHistoryItems';
 import AdminHistoryDetail from './src/screens/AdminHistoryDetail';
+import {DOMAIN_API} from '@env';
 
 const Stack = createNativeStackNavigator();
 

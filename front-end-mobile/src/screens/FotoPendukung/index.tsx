@@ -78,7 +78,7 @@ const FotoPendukung = ({navigation, route}: any) => {
   };
   const submitFoto = () => {
     if (imageCamera === null) {
-      navigation.navigate('SubmitLaporan');
+      navigation.navigate('SubmitLaporan', {...dataUser, imageCamera});
     } else {
       const fileSizeInMB = imageCamera.fileSize / (1024 * 1024);
       if (fileSizeInMB > 2) {

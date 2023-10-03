@@ -35,7 +35,7 @@ const DetailLaporan = ({navigation, route}: any) => {
   const getLaporan = async () => {
     try {
       const response = await axios.get(
-        `https://backend-pelaporaninsiden.glitch.me/api/laporan/${id_laporan}`,
+        `https://backend-pelaporan-final.glitch.me/api/laporan/${id_laporan}`,
       );
       setLaporanDetail(response.data.data);
       console.log('ini response.data.data', response.data.data);
