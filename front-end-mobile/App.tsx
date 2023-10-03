@@ -18,7 +18,7 @@ import AdminLogin from './src/screens/AdminLogin';
 import NavigationAdmin from './src/NavigationAdmin';
 import BuatLaporan from './src/screens/BuatLaporan';
 import AdminHomepage from './src/screens/AdminHomepage';
-import AdminHistory from './src/screens/AdminHistory';
+import AdminHistoryByStatus from './src/screens/AdminHistoryByStatus';
 import AdminHistoryItems from './src/screens/AdminHistoryItems';
 import AdminHistoryDetail from './src/screens/AdminHistoryDetail';
 import {DOMAIN_API} from '@env';
@@ -95,8 +95,8 @@ const App = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="AdminHistory"
-          component={AdminHistory}
+          name="AdminHistoryByStatus"
+          component={AdminHistoryByStatus}
           options={{headerShown: false}}
         />
         <Stack.Screen

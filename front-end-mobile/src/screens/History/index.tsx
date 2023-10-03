@@ -33,11 +33,12 @@ const History = ({navigation, route}: any) => {
 
   useEffect(() => {
     getAllLaporan();
+    console.log('ini di riwayat: ', dataUser);
   }, []);
 
   const getAllLaporan = async () => {
     if (dataUser.id_user) {
-      console.log('test: ', dataUser);
+      console.log('tes: ', dataUser);
       try {
         const headers = {
           Authorization: `Bearer ${dataUser.token}`,
@@ -100,13 +101,21 @@ const History = ({navigation, route}: any) => {
     }
   };
 
-  function convertToWITDate(utcDate: any) {
-    const offset = 8; // Offset waktu WIT dari UTC adalah +7 jam
-    const localTime = new Date(utcDate.getTime() + offset * 60 * 60 * 1000);
+  function formatHour(date: any) {
+    const localTime = new Date(date.getTime());
 
-    const year = localTime.getUTCFullYear().toString();
-    const month = getMonthName(localTime.getUTCMonth());
-    const day = localTime.getUTCDate().toString();
+    const hours = localTime.getHours().toString().padStart(2, '0');
+    const minutes = localTime.getMinutes().toString().padStart(2, '0');
+
+    return `${hours}:${minutes}`;
+  }
+
+  function formatDate(date: any) {
+    const localTime = new Date(date.getTime());
+
+    const year = localTime.getFullYear().toString();
+    const month = getMonthName(localTime.getMonth());
+    const day = localTime.getDate().toString();
 
     return `${day} ${month} ${year}`;
   }
@@ -162,16 +171,6 @@ const History = ({navigation, route}: any) => {
   //   },
   // ];
 
-  function convertToWITHour(utcDate: any) {
-    const offset = 8; // Offset waktu WIT dari UTC adalah +7 jam
-    const localTime = new Date(utcDate.getTime() + offset * 60 * 60 * 1000);
-
-    const hours = localTime.getUTCHours().toString().padStart(2, '0');
-    const minutes = localTime.getUTCMinutes().toString().padStart(2, '0');
-
-    return `${hours}:${minutes}`;
-  }
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Header />
@@ -216,6 +215,8 @@ const History = ({navigation, route}: any) => {
                 onPress={() =>
                   navigation.navigate('DetailLaporan', {
                     id_laporan: item.id_laporan,
+                    status: item.status,
+                    dataUser: dataUser,
                   })
                 }>
                 <View style={{flexDirection: 'row', columnGap: 20}}>
@@ -228,10 +229,10 @@ const History = ({navigation, route}: any) => {
                   />
                   <View>
                     <Text style={styles.txtCardTime}>
-                      {convertToWITHour(new Date(item.tanggal_laporan_dikirim))}
+                      {formatHour(new Date(item.tanggal_laporan_dikirim))}
                     </Text>
                     <Text style={styles.txtCard}>
-                      {convertToWITDate(new Date(item.tanggal_laporan_dikirim))}
+                      {formatDate(new Date(item.tanggal_laporan_dikirim))}
                     </Text>
                     <Text style={styles.txtCardStatus}>
                       {convertStatus(item.status)}
