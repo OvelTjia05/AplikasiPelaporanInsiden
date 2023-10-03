@@ -11,6 +11,53 @@ const SubmitLaporan = ({navigation, route}: any) => {
   const dataUser = route.params;
   const [checked, setChecked] = useState(false);
 
+  const formData = new FormData();
+  formData.append('nama_pasien', dataUser.name);
+  formData.append('no_rekam_medis', dataUser.nomorMR);
+  formData.append('ruangan', dataUser.ruangan);
+  formData.append('umur', dataUser.age);
+  formData.append('asuransi', dataUser.insurance);
+  formData.append('jenis_kelamin_pasien', dataUser.gender);
+  formData.append(
+    'waktu_mendapatkan_pelayanan',
+    dataUser.waktuMendapatPelayanan,
+  );
+  formData.append('waktu_kejadian_insiden', dataUser.waktuInsiden);
+  formData.append('insiden', dataUser.insiden);
+  formData.append('kronologis_insiden', dataUser.kronologiInsiden);
+  formData.append(
+    'insiden_terjadi_pada_pasien',
+    dataUser.insidenTerjadiPadaPasien,
+  );
+  formData.append('dampak_insiden_terhadap_pasien', dataUser.dampakInsiden);
+  formData.append('probabilitas', dataUser.probabilitas);
+  formData.append('orang_pertama_melaporkan_insiden', dataUser.pelaporPertama);
+  formData.append('id_jenis_pasien', dataUser.pasienTerkait);
+  formData.append('tempat_insiden', dataUser.lokasiInsiden);
+  formData.append('departement_penyebab_insiden', dataUser.unitTerkait);
+  formData.append(
+    'tindak_lanjut_setelah_kejadian_dan_hasil',
+    dataUser.tindakLanjut,
+  );
+  formData.append(
+    'yang_melakukan_tindak_lanjut_setelah_insiden',
+    dataUser.tindakLanjutOleh,
+  );
+  formData.append(
+    'kejadian_sama_pernah_terjadi_di_unit_lain',
+    dataUser.pernahTerjadi,
+  );
+  formData.append(
+    'gambar',
+    dataUser.imageCamera
+      ? {
+          uri: dataUser.imageCamera.uri,
+          type: dataUser.imageCamera.type,
+          name: dataUser.imageCamera.fileName,
+        }
+      : null,
+  );
+
   const handleCheckboxToggle = () => {
     setChecked(!checked);
     console.log(checked);
@@ -31,36 +78,41 @@ const SubmitLaporan = ({navigation, route}: any) => {
       console.log('ini headers: ', dataUser.dataUser.token);
       try {
         const headers = {
+          'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${dataUser.dataUser.token}`, // Tambahkan token ke header dengan format Beare
         };
 
         const response = await axios.post(
           `https://backend-pelaporan-final.glitch.me/api/laporan/user/${dataUser.dataUser.id_user}`,
+          formData,
           {
-            nama_pasien: dataUser.name,
-            no_rekam_medis: dataUser.nomorMR,
-            ruangan: dataUser.ruangan,
-            umur: dataUser.age,
-            asuransi: dataUser.insurance,
-            jenis_kelamin_pasien: dataUser.gender,
-            waktu_mendapatkan_pelayanan: dataUser.waktuMendapatPelayanan,
-            waktu_kejadian_insiden: dataUser.waktuInsiden,
-            insiden: dataUser.insiden,
-            kronologis_insiden: dataUser.kronologiInsiden,
-            insiden_terjadi_pada_pasien: dataUser.insidenTerjadiPadaPasien,
-            dampak_insiden_terhadap_pasien: dataUser.dampakInsiden,
-            probabilitas: dataUser.probabilitas,
-            orang_pertama_melaporkan_insiden: dataUser.pelaporPertama,
-            id_jenis_pasien: dataUser.pasienTerkait,
-            tempat_insiden: dataUser.lokasiInsiden,
-            departement_penyebab_insiden: dataUser.unitTerkait,
-            tindak_lanjut_setelah_kejadian_dan_hasil: dataUser.tindakLanjut,
-            yang_melakukan_tindak_lanjut_setelah_insiden:
-              dataUser.tindakLanjutOleh,
-            kejadian_sama_pernah_terjadi_di_unit_lain: dataUser.pernahTerjadi,
-            gambar: dataUser.imageCamera,
+            headers,
           },
-          {headers},
+          // {
+          //   nama_pasien: dataUser.name,
+          //   no_rekam_medis: dataUser.nomorMR,
+          //   ruangan: dataUser.ruangan,
+          //   umur: dataUser.age,
+          //   asuransi: dataUser.insurance,
+          //   jenis_kelamin_pasien: dataUser.gender,
+          //   waktu_mendapatkan_pelayanan: dataUser.waktuMendapatPelayanan,
+          //   waktu_kejadian_insiden: dataUser.waktuInsiden,
+          //   insiden: dataUser.insiden,
+          //   kronologis_insiden: dataUser.kronologiInsiden,
+          //   insiden_terjadi_pada_pasien: dataUser.insidenTerjadiPadaPasien,
+          //   dampak_insiden_terhadap_pasien: dataUser.dampakInsiden,
+          //   probabilitas: dataUser.probabilitas,
+          //   orang_pertama_melaporkan_insiden: dataUser.pelaporPertama,
+          //   id_jenis_pasien: dataUser.pasienTerkait,
+          //   tempat_insiden: dataUser.lokasiInsiden,
+          //   departement_penyebab_insiden: dataUser.unitTerkait,
+          //   tindak_lanjut_setelah_kejadian_dan_hasil: dataUser.tindakLanjut,
+          //   yang_melakukan_tindak_lanjut_setelah_insiden:
+          //     dataUser.tindakLanjutOleh,
+          //   kejadian_sama_pernah_terjadi_di_unit_lain: dataUser.pernahTerjadi,
+          //   gambar: dataUser.imageCamera,
+          // },
+          // {headers},
         );
         console.log('ini respon post: ', response.data);
         console.log('ini response: ', response.data.data);
@@ -68,7 +120,12 @@ const SubmitLaporan = ({navigation, route}: any) => {
         console.log('ini token: ', token);
 
         if (response.data.code == '201') {
-          // navigation.navigate('Navigation', dataUser);
+          navigation.navigate('Navigation', {
+            id_user: dataUser.dataUser.id_user,
+            name: dataUser.dataUser.name,
+            token: dataUser.dataUser.token,
+            username: dataUser.dataUser.username,
+          });
           console.log('Laporan Terkirim');
         }
       } catch (error: any) {
