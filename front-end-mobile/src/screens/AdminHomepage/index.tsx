@@ -23,10 +23,11 @@ import {
 } from '../../assets/icons';
 import {Path, Svg} from 'react-native-svg';
 import Gap from '../../components/atoms/Gap';
-import {Ilustrasi, Ilustrasi1} from '../../assets/images';
+import {Ilustrasi, Ilustrasi1, ImagePlaceHolder} from '../../assets/images';
 import axios from 'axios';
 
 interface Laporan {
+  id_laporan: string;
   status: string;
   tanggal_laporan_dikirim: Date;
   gambar: string;
@@ -214,23 +215,27 @@ const AdminHomepage = ({navigation, route}: any) => {
               </Text>
             </Text>
             {laporanHariIni.map((item, index) => (
-              <View
+              <TouchableOpacity
                 style={[
                   styles.cardContent,
                   {
                     backgroundColor: getStatusColor(item.status),
                   },
                 ]}
-                key={index}>
+                key={index}
+                onPress={() =>
+                  navigation.navigate('AdminHistoryDetail', {
+                    dataUser: dataUser,
+                    id_laporan: item.id_laporan,
+                    status: item.status,
+                  })
+                }>
                 <View style={{flexDirection: 'row', columnGap: 20}}>
                   <Image
-                    source={{
-                      uri:
-                        item.gambar || 'https://example.com/default-image.jpg',
-                    }}
+                    source={item.gambar ? {uri: item.gambar} : ImagePlaceHolder}
                     style={styles.cardImage}
                   />
-                  <View>
+                  <View style={{width: 150}}>
                     <Text style={styles.txtCardTime}>
                       {formatHour(new Date(item.tanggal_laporan_dikirim))}
                     </Text>
@@ -243,7 +248,7 @@ const AdminHomepage = ({navigation, route}: any) => {
                   </View>
                 </View>
                 {getStatusIcon(item.status)}
-              </View>
+              </TouchableOpacity>
             ))}
           </View>
         )}
@@ -277,23 +282,27 @@ const AdminHomepage = ({navigation, route}: any) => {
               </Text>
             </Text>
             {laporanBulanIni.map((item, index) => (
-              <View
+              <TouchableOpacity
                 style={[
                   styles.cardContent,
                   {
                     backgroundColor: getStatusColor(item.status),
                   },
                 ]}
-                key={index}>
+                key={index}
+                onPress={() =>
+                  navigation.navigate('AdminHistoryDetail', {
+                    dataUser: dataUser,
+                    id_laporan: item.id_laporan,
+                    status: item.status,
+                  })
+                }>
                 <View style={{flexDirection: 'row', columnGap: 20}}>
                   <Image
-                    source={{
-                      uri:
-                        item.gambar || 'https://example.com/default-image.jpg',
-                    }}
+                    source={item.gambar ? {uri: item.gambar} : ImagePlaceHolder}
                     style={styles.cardImage}
                   />
-                  <View>
+                  <View style={{width: 150}}>
                     <Text style={styles.txtCardTime}>
                       {formatHour(new Date(item.tanggal_laporan_dikirim))}
                     </Text>
@@ -306,7 +315,7 @@ const AdminHomepage = ({navigation, route}: any) => {
                   </View>
                 </View>
                 {getStatusIcon(item.status)}
-              </View>
+              </TouchableOpacity>
             ))}
           </View>
         )}
@@ -330,7 +339,12 @@ const AdminHomepage = ({navigation, route}: any) => {
             }}>
             <Image source={IconRiwayat} tintColor="black" />
           </TouchableOpacity>
-          <IconSettings />
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Settings', dataUser);
+            }}>
+            <IconSettings />
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.container}>

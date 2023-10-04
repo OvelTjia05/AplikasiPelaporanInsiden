@@ -18,6 +18,7 @@ import {
 } from '../../assets/icons';
 import {MyColor} from '../../components/atoms/MyColor';
 import {MyFont} from '../../components/atoms/MyFont';
+import {ImagePlaceHolder} from '../../assets/images';
 
 interface Laporan {
   id_laporan: string;
@@ -163,9 +164,7 @@ const AdminHistoryByStatus = ({navigation, route}: any) => {
             })
           }>
           <Image
-            source={{
-              uri: item.gambar || 'https://example.com/default-image.jpg',
-            }}
+            source={item.gambar ? {uri: item.gambar} : ImagePlaceHolder}
             style={styles.img}
           />
           <View style={{flex: 1}}>
