@@ -25,8 +25,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import PushNotification from 'react-native-push-notification';
 import {io} from 'socket.io-client';
 import {API_HOST} from '../../../config';
-import {useSelector, useDispatch} from 'react-redux';
-import {saveIdUserAction} from '../../../redux/action';
+import {useDispatch} from 'react-redux';
+import {
+  saveIdUserAction,
+  saveNameAction,
+  saveRoleAction,
+  saveTokenAction,
+  saveUsernameAction,
+} from '../../../redux/action';
 
 const socket = io(API_HOST);
 
@@ -117,9 +123,14 @@ const Login = ({navigation}: any) => {
         const dataUser = response.data.data;
         if (dataUser.role !== 'admin') {
           dispatch(saveIdUserAction(dataUser.id_user));
+          dispatch(saveNameAction(dataUser.name));
+          dispatch(saveRoleAction(dataUser.role));
+          dispatch(saveTokenAction(dataUser.token));
+          dispatch(saveUsernameAction(dataUser.username));
+
           console.log('ini di LOGIN: ', dataUser);
           console.log('ini di LOGIN id user: ', dataUser.id_user);
-          navigation.navigate('Navigation', dataUser);
+          navigation.navigate('Navigation');
           setUsername('');
           setPassword('');
         } else {

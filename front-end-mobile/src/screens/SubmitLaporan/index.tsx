@@ -6,23 +6,25 @@ import Button from '../../components/atoms/Button';
 import {IconPanahKanan} from '../../assets/icons';
 import {Checkbox} from 'react-native-paper';
 import axios from 'axios';
+import {useSelector} from 'react-redux';
 
 const SubmitLaporan = ({navigation, route}: any) => {
-  const dataUser = route.params;
+  // const dataUser = route.params;
+  const dataUser = useSelector((data: any) => data);
   const [checked, setChecked] = useState(false);
 
   const formData = new FormData();
-  formData.append('nama_pasien', dataUser.name);
-  formData.append('no_rekam_medis', dataUser.nomorMR);
+  formData.append('nama_pasien', dataUser.namePasien);
+  formData.append('no_rekam_medis', dataUser.noMR);
   formData.append('ruangan', dataUser.ruangan);
   formData.append('umur', dataUser.age);
-  formData.append('asuransi', dataUser.insurance);
-  formData.append('jenis_kelamin_pasien', dataUser.gender);
+  formData.append('asuransi', dataUser.asuransi);
+  formData.append('jenis_kelamin_pasien', dataUser.jenisKelamin);
   formData.append(
     'waktu_mendapatkan_pelayanan',
-    dataUser.waktuMendapatPelayanan,
+    dataUser.waktuMendapatPelayanan.toString(),
   );
-  formData.append('waktu_kejadian_insiden', dataUser.waktuInsiden);
+  formData.append('waktu_kejadian_insiden', dataUser.waktuInsiden.toString());
   formData.append('insiden', dataUser.insiden);
   formData.append('kronologis_insiden', dataUser.kronologiInsiden);
   formData.append(
@@ -74,45 +76,23 @@ const SubmitLaporan = ({navigation, route}: any) => {
         'Anda harus menyetujui pernyataan sebelum mengirim laporan.',
       );
     } else {
-      console.log('tes satu-satuu: ', dataUser.insurance);
-      console.log('ini headers: ', dataUser.dataUser.token);
+      console.log('tes satu-satuu: ', dataUser.asuransi);
+      console.log('ini headers: ', dataUser.token);
+      console.log('ini id user: ', dataUser.id_user);
+      console.log('Ini form data: ', formData);
       try {
         const headers = {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${dataUser.dataUser.token}`, // Tambahkan token ke header dengan format Beare
+          Authorization: `Bearer ${dataUser.token}`, // Tambahkan token ke header dengan format Beare
         };
 
         const response = await axios.post(
-          `https://backend-pelaporan-final.glitch.me/api/laporan/user/${dataUser.dataUser.id_user}`,
+          `https://backend-pelaporan-final.glitch.me/api/laporan/user/${dataUser.id_user}`,
           formData,
+
           {
             headers,
           },
-          // {
-          //   nama_pasien: dataUser.name,
-          //   no_rekam_medis: dataUser.nomorMR,
-          //   ruangan: dataUser.ruangan,
-          //   umur: dataUser.age,
-          //   asuransi: dataUser.insurance,
-          //   jenis_kelamin_pasien: dataUser.gender,
-          //   waktu_mendapatkan_pelayanan: dataUser.waktuMendapatPelayanan,
-          //   waktu_kejadian_insiden: dataUser.waktuInsiden,
-          //   insiden: dataUser.insiden,
-          //   kronologis_insiden: dataUser.kronologiInsiden,
-          //   insiden_terjadi_pada_pasien: dataUser.insidenTerjadiPadaPasien,
-          //   dampak_insiden_terhadap_pasien: dataUser.dampakInsiden,
-          //   probabilitas: dataUser.probabilitas,
-          //   orang_pertama_melaporkan_insiden: dataUser.pelaporPertama,
-          //   id_jenis_pasien: dataUser.pasienTerkait,
-          //   tempat_insiden: dataUser.lokasiInsiden,
-          //   departement_penyebab_insiden: dataUser.unitTerkait,
-          //   tindak_lanjut_setelah_kejadian_dan_hasil: dataUser.tindakLanjut,
-          //   yang_melakukan_tindak_lanjut_setelah_insiden:
-          //     dataUser.tindakLanjutOleh,
-          //   kejadian_sama_pernah_terjadi_di_unit_lain: dataUser.pernahTerjadi,
-          //   gambar: dataUser.imageCamera,
-          // },
-          // {headers},
         );
         console.log('ini respon post: ', response.data);
         console.log('ini response: ', response.data.data);
@@ -120,12 +100,15 @@ const SubmitLaporan = ({navigation, route}: any) => {
         console.log('ini token: ', token);
 
         if (response.data.code == '201') {
-          navigation.navigate('Navigation', {
-            id_user: dataUser.dataUser.id_user,
-            name: dataUser.dataUser.name,
-            token: dataUser.dataUser.token,
-            username: dataUser.dataUser.username,
-          });
+          navigation.navigate(
+            'Navigation',
+            // {
+            //   id_user: dataUser.dataUser.id_user,
+            //   name: dataUser.dataUser.name,
+            //   token: dataUser.dataUser.token,
+            //   username: dataUser.dataUser.username,
+            // }
+          );
           console.log('Laporan Terkirim');
         }
       } catch (error: any) {
@@ -138,10 +121,11 @@ const SubmitLaporan = ({navigation, route}: any) => {
           //   Alert.alert('gagal');
           // }
         } else if (error.request) {
-          Alert.alert(
-            'Kesalahan Jaringan',
-            'Pastikan anda telah terhubung ke internet',
-          );
+          console.log('INI ERROR: ', error);
+          // Alert.alert(
+          //   'Kesalahan Jaringan',
+          //   'Pastikan anda telah terhubung ke internet',
+          // );
         }
       }
     }

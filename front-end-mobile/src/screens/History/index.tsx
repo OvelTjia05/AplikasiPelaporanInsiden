@@ -19,6 +19,7 @@ import {
 import {MyFont} from '../../components/atoms/MyFont';
 import Gap from '../../components/atoms/Gap';
 import axios from 'axios';
+import {useSelector} from 'react-redux';
 
 interface Laporan {
   status: string;
@@ -28,11 +29,14 @@ interface Laporan {
 }
 
 const History = ({navigation, route}: any) => {
+  const dataUser = useSelector((data: any) => data);
   const [laporan, setLaporan] = useState<Laporan[]>([]);
-  const dataUser = route.params;
+  // const dataUser = route.params;
+  // const dataUser =
 
   useEffect(() => {
     getAllLaporan();
+    console.log('ini so masuk di history: ', dataUser);
   }, []);
 
   const getAllLaporan = async () => {
@@ -216,6 +220,7 @@ const History = ({navigation, route}: any) => {
                 onPress={() =>
                   navigation.navigate('DetailLaporan', {
                     id_laporan: item.id_laporan,
+                    status: item.status,
                   })
                 }>
                 <View style={{flexDirection: 'row', columnGap: 20}}>

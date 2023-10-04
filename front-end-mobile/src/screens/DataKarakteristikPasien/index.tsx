@@ -14,20 +14,36 @@ import {MyColor} from '../../components/atoms/MyColor';
 import {MyFont} from '../../components/atoms/MyFont';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Gap from '../../components/atoms/Gap';
+import {useSelector, useDispatch} from 'react-redux';
+import {
+  saveNamePasienAction,
+  saveNoMRAction,
+  saveRuanganAction,
+  saveAgeAction,
+  saveAgeNoAction,
+  saveSelectedAgeTypeAction,
+  saveAsuransiAction,
+  saveJenisKelaminAction,
+  saveWaktuMendapatPelayananAction,
+} from '../../../redux/action';
 
 const DataKarakteristikPasien = ({navigation, route}: any) => {
-  const dataUser = route.params;
-  const [name, setName] = useState('');
-  const [nomorMR, setNomorMR] = useState('');
-  const [ruangan, setRuangan] = useState('');
-  const [age, setAge] = useState('');
-  const [ageNo, setAgeNo] = useState('');
-  const [selectedAgeType, setSelectedAgeType] = useState('');
-  const [insurance, setInsurance] = useState('');
-  const [gender, setGender] = useState('');
+  const dispatch = useDispatch();
+  const dataUser = useSelector((data: any) => data);
+  // const dataUser = route.params;
+  const [name, setName] = useState(dataUser.namePasien);
+  const [nomorMR, setNomorMR] = useState(dataUser.noMR);
+  const [ruangan, setRuangan] = useState(dataUser.ruangan);
+  const [age, setAge] = useState(dataUser.age);
+  const [ageNo, setAgeNo] = useState(dataUser.ageNo);
+  const [selectedAgeType, setSelectedAgeType] = useState(
+    dataUser.selectedAgeType,
+  );
+  const [insurance, setInsurance] = useState(dataUser.asuransi);
+  const [gender, setGender] = useState(dataUser.jenisKelamin);
   const [isDateTimePickerVisible, setDateTimePickerVisible] = useState(false);
   const [waktuMendapatPelayanan, setWaktuMendapatPelayanan] = useState(
-    new Date(),
+    new Date(dataUser.waktuMendapatPelayanan),
   );
 
   const isBulanDisabled = Number(ageNo) > 11;
@@ -378,29 +394,39 @@ const DataKarakteristikPasien = ({navigation, route}: any) => {
           textColor={MyColor.Light}
           width={173}
           onClick={() => {
+            dispatch(saveNamePasienAction(name));
+            dispatch(saveNoMRAction(nomorMR));
+            dispatch(saveRuanganAction(ruangan));
+            dispatch(saveAgeAction(age));
+            dispatch(saveAgeNoAction(ageNo));
+            dispatch(saveSelectedAgeTypeAction(selectedAgeType));
+            dispatch(saveAsuransiAction(insurance));
+            dispatch(saveJenisKelaminAction(gender));
+            dispatch(saveWaktuMendapatPelayananAction(waktuMendapatPelayanan));
+
             navigation.navigate(
               'RincianKejadian',
-              {
-                dataUser,
-                name,
-                nomorMR,
-                ruangan,
-                age,
-                insurance,
-                gender,
-                waktuMendapatPelayanan: waktuMendapatPelayanan.toISOString(),
-              },
-              console.log(
-                'ini data karakteristik pasien: ',
-                dataUser,
-                name,
-                nomorMR,
-                ruangan,
-                age,
-                insurance,
-                gender,
-                waktuMendapatPelayanan,
-              ),
+              // {
+              //   dataUser,
+              //   name,
+              //   nomorMR,
+              //   ruangan,
+              //   age,
+              //   insurance,
+              //   gender,
+              //   waktuMendapatPelayanan: waktuMendapatPelayanan.toISOString(),
+              // },
+              // console.log(
+              //   'ini data karakteristik pasien: ',
+              //   dataUser,
+              //   name,
+              //   nomorMR,
+              //   ruangan,
+              //   age,
+              //   insurance,
+              //   gender,
+              //   waktuMendapatPelayanan,
+              // ),
             );
           }}
         />

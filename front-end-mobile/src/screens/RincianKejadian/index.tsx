@@ -15,6 +15,24 @@ import Gap from '../../components/atoms/Gap';
 import Button from '../../components/atoms/Button';
 import {IconPanahKanan} from '../../assets/icons';
 import axios from 'axios';
+import {useSelector, useDispatch} from 'react-redux';
+import {
+  saveWaktuInsidenAction,
+  saveInsidenAction,
+  saveKronologiInsidenAction,
+  saveInsidenTerjadiPadaPasienAction,
+  savePelaporPertamaAction,
+  savePasienTerkaitAction,
+  saveDampakInsidenAction,
+  saveLokasiInsidenAction,
+  saveProbabilitasAction,
+  saveUnitTerkaitAction,
+  saveTindakLanjutAction,
+  saveTindakLanjutOlehAction,
+  saveIsPernahTerjadiAction,
+  saveDeskripsiPernahTerjadiAction,
+  savePernahTerjadiAction,
+} from '../../../redux/action';
 
 interface JenisPasien {
   id_jenis_pasien: number;
@@ -22,25 +40,39 @@ interface JenisPasien {
 }
 
 const RincianKejadian = ({navigation, route}: any) => {
-  const dataUser = route.params;
+  const dispatch = useDispatch();
+  const dataUser = useSelector((data: any) => data);
+  // const dataUser = route.params;
   const [isDateTimePickerVisible, setDateTimePickerVisible] = useState(false);
-  const [waktuInsiden, setWaktuInsiden] = useState(new Date());
-  const [insiden, setInsiden] = useState('');
-  const [kronologiInsiden, setKronologiInsiden] = useState('');
-  const [insidenTerjadiPadaPasien, setInsidenTerjadiPadaPasien] = useState('');
-  const [pelaporPertama, setPelaporPertama] = useState('');
+  const [waktuInsiden, setWaktuInsiden] = useState(
+    new Date(dataUser.waktuInsiden),
+  );
+  const [insiden, setInsiden] = useState(dataUser.insiden);
+  const [kronologiInsiden, setKronologiInsiden] = useState(
+    dataUser.kronologiInsiden,
+  );
+  const [insidenTerjadiPadaPasien, setInsidenTerjadiPadaPasien] = useState(
+    dataUser.insidenTerjadiPadaPasien,
+  );
+  const [pelaporPertama, setPelaporPertama] = useState(dataUser.pelaporPertama);
   const [jenisPasien, setJenisPasien] = useState<JenisPasien[]>([]);
-  const [pasienTerkait, setPasienTerkait] = useState(0);
-  const [dampakInsiden, setDampakInsiden] = useState('');
-  const [lokasiInsiden, setLokasiInsiden] = useState('');
-  const [probabilitas, setProbabilitas] = useState('');
-  const [unitTerkait, setUnitTerkait] = useState('');
-  const [tindakLanjut, setTindakLanjut] = useState('');
-  const [tindakLanjutOleh, setTindakLanjutOleh] = useState('');
-  const [isPernahTerjadi, setIsPernahTerjadi]: any = useState(undefined);
-  const [deskripsiPernahTerjadi, setDeskripsiPernahTerjadi] = useState('');
+  const [pasienTerkait, setPasienTerkait] = useState(dataUser.pasienTerkait);
+  const [dampakInsiden, setDampakInsiden] = useState(dataUser.dampakInsiden);
+  const [lokasiInsiden, setLokasiInsiden] = useState(dataUser.lokasiInsiden);
+  const [probabilitas, setProbabilitas] = useState(dataUser.probabilitas);
+  const [unitTerkait, setUnitTerkait] = useState(dataUser.unitTerkait);
+  const [tindakLanjut, setTindakLanjut] = useState(dataUser.tindakLanjut);
+  const [tindakLanjutOleh, setTindakLanjutOleh] = useState(
+    dataUser.tindakLanjutOleh,
+  );
+  const [isPernahTerjadi, setIsPernahTerjadi]: any = useState(
+    dataUser.isPernahTerjadi,
+  );
+  const [deskripsiPernahTerjadi, setDeskripsiPernahTerjadi] = useState(
+    dataUser.deskripsiPernahTerjadi,
+  );
   // let pernahTerjadi = '';
-  const [pernahTerjadi, setPernahTerjadi] = useState('');
+  const [pernahTerjadi, setPernahTerjadi] = useState(dataUser.pernahTerjadi);
 
   useEffect(() => {}, [pasienTerkait]);
 
@@ -57,6 +89,7 @@ const RincianKejadian = ({navigation, route}: any) => {
 
   useEffect(() => {
     getJenisPasien();
+    console.log('ini data user di rincian kejadian oi: ', dataUser);
   }, []);
 
   const datePick = () => {
@@ -213,9 +246,9 @@ const RincianKejadian = ({navigation, route}: any) => {
   const getJenisPasien = async () => {
     try {
       const headers = {
-        Authorization: `Bearer ${dataUser.dataUser.token}`, // Tambahkan token ke header dengan format Bearer
+        Authorization: `Bearer ${dataUser.token}`, // Tambahkan token ke header dengan format Bearer
       };
-      console.log('ini headers: ', dataUser.dataUser.token);
+      console.log('ini headers: ', dataUser.token);
       const response = await axios.get(
         `https://backend-pelaporan-final.glitch.me/api/jenis_pasien`,
         {headers},
@@ -663,23 +696,42 @@ const RincianKejadian = ({navigation, route}: any) => {
           width={173}
           icons={<IconPanahKanan />}
           onClick={() => {
-            navigation.navigate('FotoPendukung', {
-              ...dataUser,
-
-              waktuInsiden: waktuInsiden.toISOString(),
-              insiden,
-              kronologiInsiden,
-              insidenTerjadiPadaPasien,
-              pelaporPertama,
-              pasienTerkait,
-              lokasiInsiden,
-              unitTerkait,
-              tindakLanjut,
-              tindakLanjutOleh,
-              pernahTerjadi,
-              dampakInsiden,
-              probabilitas,
-            });
+            dispatch(saveWaktuInsidenAction(waktuInsiden));
+            dispatch(saveInsidenAction(insiden));
+            dispatch(saveKronologiInsidenAction(kronologiInsiden));
+            dispatch(
+              saveInsidenTerjadiPadaPasienAction(insidenTerjadiPadaPasien),
+            );
+            dispatch(savePelaporPertamaAction(pelaporPertama));
+            dispatch(savePasienTerkaitAction(pasienTerkait));
+            dispatch(saveDampakInsidenAction(dampakInsiden));
+            dispatch(saveLokasiInsidenAction(lokasiInsiden));
+            dispatch(saveProbabilitasAction(probabilitas));
+            dispatch(saveUnitTerkaitAction(unitTerkait));
+            dispatch(saveTindakLanjutAction(tindakLanjut));
+            dispatch(saveTindakLanjutOlehAction(tindakLanjutOleh));
+            dispatch(saveIsPernahTerjadiAction(isPernahTerjadi));
+            dispatch(saveDeskripsiPernahTerjadiAction(deskripsiPernahTerjadi));
+            dispatch(savePernahTerjadiAction(pernahTerjadi));
+            navigation.navigate(
+              'FotoPendukung',
+              // {
+              //   ...dataUser,
+              //   waktuInsiden: waktuInsiden.toISOString(),
+              //   insiden,
+              //   kronologiInsiden,
+              //   insidenTerjadiPadaPasien,
+              //   pelaporPertama,
+              //   pasienTerkait,
+              //   lokasiInsiden,
+              //   unitTerkait,
+              //   tindakLanjut,
+              //   tindakLanjutOleh,
+              //   pernahTerjadi,
+              //   dampakInsiden,
+              //   probabilitas,
+              // }
+            );
           }}
         />
       </View>

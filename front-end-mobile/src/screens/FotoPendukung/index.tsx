@@ -21,15 +21,19 @@ import Gap from '../../components/atoms/Gap';
 import Button from '../../components/atoms/Button';
 import {MyColor} from '../../components/atoms/MyColor';
 import {IconCamera, IconGaleri, IconPanahKanan} from '../../assets/icons';
-
+import {useSelector, useDispatch} from 'react-redux';
+import {saveImageCameraAction} from '../../../redux/action';
 interface ImageData {
   uri: string;
   fileSize: number;
 }
 
 const FotoPendukung = ({navigation, route}: any) => {
-  const dataUser = route.params;
-  const [imageCamera, setImageCamera] = useState<ImageData | null>(null);
+  const dataUser = useSelector((data: any) => data);
+  const dispatch = useDispatch();
+  // const dataUser = route.params;
+  // const [imageCamera, setImageCamera] = useState<ImageData | null>(null);
+  const [imageCamera, setImageCamera] = useState(dataUser.imageCamera);
   // const dataUser = route.params;
   // console.log('ini di laporan foto: ', dataUser);
   // console.log('ini di laporan foto 2: ', dataUser.dataUser.id_user);
@@ -72,13 +76,20 @@ const FotoPendukung = ({navigation, route}: any) => {
       } else {
         const data = res.assets?.[0] as ImageData;
         setImageCamera(data);
-        console.log(data);
+        console.log('ini isi imgae camera: ', data);
       }
     });
   };
   const submitFoto = () => {
+    dispatch(saveImageCameraAction(imageCamera));
     if (imageCamera === null) {
-      navigation.navigate('SubmitLaporan', {...dataUser, imageCamera});
+      navigation.navigate(
+        'SubmitLaporan',
+        // {
+        //   ...dataUser,
+        //   imageCamera
+        // }
+      );
     } else {
       const fileSizeInMB = imageCamera.fileSize / (1024 * 1024);
       if (fileSizeInMB > 2) {
@@ -86,7 +97,13 @@ const FotoPendukung = ({navigation, route}: any) => {
       } else {
         console.log(fileSizeInMB);
         // navigation.navigate('BuatLaporan', { dataUser, imageCamera, setImageCamera });
-        navigation.navigate('SubmitLaporan', {...dataUser, imageCamera});
+        navigation.navigate(
+          'SubmitLaporan',
+          // {
+          //   ...dataUser,
+          //   imageCamera
+          // }
+        );
       }
     }
   };

@@ -10,11 +10,13 @@ import {useNavigationState, useRoute} from '@react-navigation/native';
 import RincianKejadian from '../RincianKejadian';
 import FotoPendukung from '../FotoPendukung';
 import SubmitLaporan from '../SubmitLaporan';
+import {useSelector, useDispatch} from 'react-redux';
 
 const Stack = createNativeStackNavigator();
 
 const BuatLaporan = ({route}: any) => {
-  const dataUser = route.params;
+  // const dataUser = route.params;
+  const dataUser = useSelector((data: any) => data);
   const [activeStep, setActiveStep]: any = useState(1);
   const stepDone = {
     1: activeStep > 1 ? [styles.doneStep, styles.txtActiveStep] : {},
@@ -124,7 +126,7 @@ const BuatLaporan = ({route}: any) => {
         <Stack.Screen
           name="DataKarakteristikPasien"
           component={DataKarakteristikPasien}
-          initialParams={dataUser}
+          // initialParams={dataUser}
           listeners={({route}) => ({
             focus: () => {
               setActiveStep(1);

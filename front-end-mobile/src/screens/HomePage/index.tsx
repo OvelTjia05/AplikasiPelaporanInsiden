@@ -31,17 +31,17 @@ interface Laporan {
 }
 
 const HomePage = ({navigation, route}: any) => {
-  const dataIdUser = useSelector((data: any) => data.id_user);
+  const dataUser = useSelector((data: any) => data);
   const today = new Date();
   const [name, setName] = useState('');
   const [latestLaporan, setLatestLaporan] = useState<Laporan[]>([]);
-  const dataUser = route.params;
+  // const dataUser = route.params;
 
   useEffect(() => {
     setName(dataUser.name);
     getLatestLaporan();
     console.log('ehem: ', dataUser);
-    console.log('INI EE id user memang: ', dataIdUser);
+    console.log('INI EE id user memang: ', dataUser);
   }, []);
 
   const getLatestLaporan = async () => {
@@ -185,7 +185,7 @@ const HomePage = ({navigation, route}: any) => {
             </Text>
             <TouchableOpacity
               style={styles.createReportButton}
-              onPress={() => navigation.navigate('BuatLaporan', dataUser)}>
+              onPress={() => navigation.navigate('BuatLaporan')}>
               <Text style={styles.createReportButtonText}>
                 Tekan disini untuk {'\n'}membuat laporan baru!
               </Text>
