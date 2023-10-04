@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 import Header from '../../components/molecules/Header';
 import {MyColor} from '../../components/atoms/MyColor';
 import Title from '../../components/atoms/Title';
@@ -38,11 +39,13 @@ const AdminHomepage = ({navigation, route}: any) => {
   const [laporanHariIni, setLaporanHariIni] = useState<Laporan[]>([]);
   const [laporanBulanIni, setLaporanBulanIni] = useState<Laporan[]>([]);
 
-  useEffect(() => {
-    getTodayReports();
-    getCurrentMonthReports();
-    console.log('ini di admin homepage', dataUser);
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getTodayReports();
+      getCurrentMonthReports();
+      console.log('ini di admin homepage', dataUser);
+    }, []),
+  );
 
   const getTodayReports = async () => {
     if (dataUser.id_user) {
@@ -371,7 +374,6 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#ffffff',
     overflow: 'hidden',
-    flexWrap: 'wrap',
     minHeight: 114,
     maxHeight: 'auto',
     borderRadius: 20,
