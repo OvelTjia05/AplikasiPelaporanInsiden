@@ -199,7 +199,7 @@ const RincianKejadian = ({navigation, route}: any) => {
     return (
       <View>
         <TouchableOpacity
-          style={[styles.button, {height: 40, width: '100%'}]}
+          style={styles.timePicker}
           onPress={showDateTimePicker}>
           <Text style={styles.txtButton}>{formatDateTime(waktuInsiden)}</Text>
         </TouchableOpacity>
@@ -377,7 +377,7 @@ const RincianKejadian = ({navigation, route}: any) => {
       console.log('ini dampak insiden: ', option);
     };
     return (
-      <View style={[styles.containerBtn, {justifyContent: 'center'}]}>
+      <View style={styles.containerBtn}>
         <TouchableOpacity
           style={[
             styles.button,
@@ -472,7 +472,7 @@ const RincianKejadian = ({navigation, route}: any) => {
       console.log('ini probabilitas: ', option);
     };
     return (
-      <View style={[styles.containerBtn, {justifyContent: 'center'}]}>
+      <View style={styles.containerBtn}>
         <TouchableOpacity
           style={[
             styles.button,
@@ -618,7 +618,7 @@ const RincianKejadian = ({navigation, route}: any) => {
           <TouchableOpacity
             style={[
               styles.button,
-              {width: 'auto', flex: 1},
+              {flex: 1},
               isPernahTerjadi === true && styles.selectedButton,
             ]}
             onPress={() => handlePernahTerjadi(true)}>
@@ -633,7 +633,7 @@ const RincianKejadian = ({navigation, route}: any) => {
           <TouchableOpacity
             style={[
               styles.button,
-              {width: 'auto', flex: 1},
+              {flex: 1},
               isPernahTerjadi === false && styles.selectedButton,
             ]}
             onPress={() => handlePernahTerjadi(false)}>
@@ -889,16 +889,29 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 10,
     flexWrap: 'wrap',
+    maxWidth: 360,
+    alignSelf: 'center',
+    // backgroundColor: 'green',
+    // justifyContent: 'space-between',
     // justifyContent: 'space-around',
   },
   button: {
-    marginRight: 'auto',
     height: 52,
-    width: 100,
+    minWidth: 100,
+    maxWidth: 150,
+    width: '30%',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
     backgroundColor: MyColor.Light,
+  },
+  timePicker: {
+    width: '100%',
+    // maxWidth: 380,
+    backgroundColor: MyColor.Light,
+    borderRadius: 10,
+    height: 40,
+    justifyContent: 'center',
   },
   selectedButton: {
     backgroundColor: MyColor.Primary,
