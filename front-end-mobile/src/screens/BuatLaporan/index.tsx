@@ -6,7 +6,11 @@ import DataKarakteristikPasien from '../DataKarakteristikPasien';
 import {MyColor} from '../../components/atoms/MyColor';
 import {MyFont} from '../../components/atoms/MyFont';
 import Gap from '../../components/atoms/Gap';
-import {useNavigationState, useRoute} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigationState,
+  useRoute,
+} from '@react-navigation/native';
 import RincianKejadian from '../RincianKejadian';
 import FotoPendukung from '../FotoPendukung';
 import SubmitLaporan from '../SubmitLaporan';
@@ -14,7 +18,7 @@ import {useSelector, useDispatch} from 'react-redux';
 
 const Stack = createNativeStackNavigator();
 
-const BuatLaporan = ({route}: any) => {
+const BuatLaporan = ({navigation, route}: any) => {
   const [activeStep, setActiveStep]: any = useState(1);
   const stepDone = {
     1: activeStep > 1 ? [styles.doneStep, styles.txtActiveStep] : {},
@@ -24,6 +28,21 @@ const BuatLaporan = ({route}: any) => {
         ? [styles.doneStep, styles.txtActiveStep]
         : {},
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const unsubscribe = navigation.addListener('beforeRemove', (e: any) => {
+        // Prevent default back navigation if not on the HomePage
+        if (route.name !== 'Navigation') {
+          e.preventDefault();
+          // Navigate to HomePage instead
+          navigation.navigate('Navigation');
+        }
+      });
+
+      return unsubscribe;
+    }, [navigation, route]),
+  );
 
   return (
     <ScrollView contentContainerStyle={{flex: 1}}>

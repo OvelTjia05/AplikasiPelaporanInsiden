@@ -17,7 +17,7 @@ import {MyColor} from '../../components/atoms/MyColor';
 import Header from '../../components/molecules/Header';
 import {MyFont} from '../../components/atoms/MyFont';
 import Gap from '../../components/atoms/Gap';
-import {Ilustrasi} from '../../assets/images';
+import {Ilustrasi, ImagePlaceHolder} from '../../assets/images';
 import axios from 'axios';
 import Title from '../../components/atoms/Title';
 import {useSelector} from 'react-redux';
@@ -324,11 +324,11 @@ const DetailLaporan = ({navigation, route}: any) => {
         {laporanDetail && (
           <View style={styles.boxImage}>
             <Image
-              source={{
-                uri:
-                  laporanDetail.gambar ||
-                  'https://example.com/default-image.jpg',
-              }}
+              source={
+                laporanDetail.gambar
+                  ? {uri: laporanDetail.gambar}
+                  : ImagePlaceHolder
+              }
               style={styles.img}
             />
             {/* <Text>{laporanDetail.gambar}</Text> */}
@@ -439,11 +439,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   img: {
-    width: '100%',
-    // height: 229,
+    height: 350,
     aspectRatio: 1,
     // borderRadius: 20,
     resizeMode: 'contain',
     backgroundColor: 'black',
+    alignSelf: 'center',
   },
 });
