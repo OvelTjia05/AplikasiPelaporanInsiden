@@ -29,17 +29,71 @@ interface ImageData {
 }
 
 const FotoPendukung = ({navigation, route}: any) => {
-  const dataUser = useSelector((data: any) => data);
+  // const dataUser = useSelector((data: any) => data);
   const dispatch = useDispatch();
   // const dataUser = route.params;
   // const [imageCamera, setImageCamera] = useState<ImageData | null>(null);
+
+  const imageCameraSelector = useSelector((data: any) => data.imageCamera);
+  const dataUser = {imageCamera: imageCameraSelector};
+
   const [imageCamera, setImageCamera] = useState(dataUser.imageCamera);
   // const dataUser = route.params;
   // console.log('ini di laporan foto: ', dataUser);
   // console.log('ini di laporan foto 2: ', dataUser.dataUser.id_user);
 
+  const waktuInsidenSelector = useSelector((data: any) => data.waktuInsiden);
+  const insidenSelector = useSelector((data: any) => data.insiden);
+  const kronologiInsidenSelector = useSelector(
+    (data: any) => data.kronologiInsiden,
+  );
+  const insidenTerjadiPadaPasienSelector = useSelector(
+    (data: any) => data.insidenTerjadiPadaPasien,
+  );
+  const pelaporPertamaSelector = useSelector(
+    (data: any) => data.pelaporPertama,
+  );
+  const pasienTerkaitSelector = useSelector((data: any) => data.pasienTerkait);
+  const dampakInsidenSelector = useSelector((data: any) => data.dampakInsiden);
+  const lokasiInsidenSelector = useSelector((data: any) => data.lokasiInsiden);
+  const probabilitasSelector = useSelector((data: any) => data.probabilitas);
+  const unitTerkaitSelector = useSelector((data: any) => data.unitTerkait);
+  const tindakLanjutSelector = useSelector((data: any) => data.tindakLanjut);
+  const tindakLanjutOlehSelector = useSelector(
+    (data: any) => data.tindakLanjutOleh,
+  );
+  const isPernahTerjadiSelector = useSelector(
+    (data: any) => data.isPernahTerjadi,
+  );
+  const deskripsiPernahTerjadiSelector = useSelector(
+    (data: any) => data.deskripsiPernahTerjadi,
+  );
+  const pernahTerjadiSelector = useSelector(
+    (data: any) => data.pernahTerjadiSelector,
+  );
+
+  const dataUserCoba = {
+    // token: tokenSelector,
+    waktuInsiden: waktuInsidenSelector,
+    insiden: insidenSelector,
+    kronologiInsiden: kronologiInsidenSelector,
+    insidenTerjadiPadaPasien: insidenTerjadiPadaPasienSelector,
+    pelaporPertama: pelaporPertamaSelector,
+    pasienTerkait: pasienTerkaitSelector,
+    dampakInsiden: dampakInsidenSelector,
+    lokasiInsiden: lokasiInsidenSelector,
+    probabilitas: probabilitasSelector,
+    unitTerkait: unitTerkaitSelector,
+    tindakLanjut: tindakLanjutSelector,
+    tindakLanjutOleh: tindakLanjutOlehSelector,
+    isPernahTerjadi: isPernahTerjadiSelector,
+    deskripsiPernahTerjadi: deskripsiPernahTerjadiSelector,
+    pernahTerjadi: pernahTerjadiSelector,
+  };
+
   useEffect(() => {
     console.log('masuk di foto: ', dataUser);
+    console.log('masuk di foto di rincian kejadian : ', dataUserCoba);
   }, []);
 
   const openCamera = () => {
@@ -120,7 +174,7 @@ const FotoPendukung = ({navigation, route}: any) => {
           pelaporan Anda
         </Text>
         <Gap height={40} />
-        {imageCamera != null && (
+        {imageCamera && Object.keys(imageCamera).length !== 0 && (
           <View>
             <Image source={{uri: imageCamera.uri}} style={styles.image} />
             <Text style={styles.txtBtnImage}>
@@ -158,7 +212,8 @@ const FotoPendukung = ({navigation, route}: any) => {
           width={126}
           backgroundColor={MyColor.Light}
           textColor={MyColor.Primary}
-          onClick={() =>
+          onClick={() => {
+            dispatch(saveImageCameraAction(imageCamera));
             navigation.navigate(
               'RincianKejadian',
               // , {
@@ -166,8 +221,8 @@ const FotoPendukung = ({navigation, route}: any) => {
               //   username: dataUser.dataUser.username,
               //   accessToken: dataUser.dataUser.accessToken,
               // }
-            )
-          }
+            );
+          }}
         />
         <Button
           label="Lanjut"

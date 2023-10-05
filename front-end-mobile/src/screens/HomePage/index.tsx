@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import {
   Image,
   ScrollView,
@@ -31,7 +31,22 @@ interface Laporan {
 }
 
 const HomePage = ({navigation, route}: any) => {
-  const dataUser = useSelector((data: any) => data);
+  // const dataUser = useSelector((data: any) => ({
+  //   id_user: selectUserId(data),
+  //   name: selectUserName(data),
+  //   token: selectUserToken(data),
+  // }));
+
+  const idUser = useSelector((data: any) => data.id_user);
+  const nameUser = useSelector((data: any) => data.name);
+  const token = useSelector((data: any) => data.token);
+
+  const dataUser = {
+    name: nameUser,
+    id_user: idUser,
+    token: token,
+  };
+
   const today = new Date();
   const [name, setName] = useState('');
   const [latestLaporan, setLatestLaporan] = useState<Laporan[]>([]);

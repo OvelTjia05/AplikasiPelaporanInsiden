@@ -15,8 +15,6 @@ import {useSelector, useDispatch} from 'react-redux';
 const Stack = createNativeStackNavigator();
 
 const BuatLaporan = ({route}: any) => {
-  // const dataUser = route.params;
-  const dataUser = useSelector((data: any) => data);
   const [activeStep, setActiveStep]: any = useState(1);
   const stepDone = {
     1: activeStep > 1 ? [styles.doneStep, styles.txtActiveStep] : {},

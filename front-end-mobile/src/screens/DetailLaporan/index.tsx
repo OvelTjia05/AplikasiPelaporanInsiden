@@ -20,13 +20,15 @@ import Gap from '../../components/atoms/Gap';
 import {Ilustrasi} from '../../assets/images';
 import axios from 'axios';
 import Title from '../../components/atoms/Title';
+import {useSelector} from 'react-redux';
 
 const DetailLaporan = ({navigation, route}: any) => {
   const windowWidth = Dimensions.get('window').width;
 
+  const token = useSelector((data: any) => data.token);
   const [laporanDetail, setLaporanDetail] = useState<any | null>(null);
-  const {id_laporan, status, dataUser} = route.params;
-  console.log('ini page detail laporan: ', dataUser, status, id_laporan);
+  const {id_laporan, status} = route.params;
+  console.log('ini page detail laporan: ', status, id_laporan);
 
   useEffect(() => {
     getLaporan();
@@ -35,7 +37,7 @@ const DetailLaporan = ({navigation, route}: any) => {
   const getLaporan = async () => {
     try {
       const headers = {
-        Authorization: `Bearer ${dataUser.token}`,
+        Authorization: `Bearer ${token}`,
       };
       const response = await axios.get(
         `https://backend-pelaporan-final.glitch.me/api/laporan/detail/${id_laporan}?status=${status}`,

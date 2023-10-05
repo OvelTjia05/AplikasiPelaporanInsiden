@@ -29,10 +29,18 @@ interface Laporan {
 }
 
 const History = ({navigation, route}: any) => {
-  const dataUser = useSelector((data: any) => data);
+  // const dataUser = useSelector((data: any) => data);
   const [laporan, setLaporan] = useState<Laporan[]>([]);
   // const dataUser = route.params;
   // const dataUser =
+
+  const idUser = useSelector((data: any) => data.id_user);
+  const token = useSelector((data: any) => data.token);
+
+  const dataUser = {
+    id_user: idUser,
+    token,
+  };
 
   useEffect(() => {
     getAllLaporan();
@@ -219,7 +227,7 @@ const History = ({navigation, route}: any) => {
                   navigation.navigate('DetailLaporan', {
                     id_laporan: item.id_laporan,
                     status: item.status,
-                    dataUser: dataUser,
+                    // dataUser: dataUser,
                   })
                 }>
                 <View style={{flexDirection: 'row', columnGap: 20}}>

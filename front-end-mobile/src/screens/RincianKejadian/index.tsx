@@ -6,7 +6,7 @@ import {
   View,
   TextInput as Input,
 } from 'react-native';
-import React, {useState, useEffect, useReducer} from 'react';
+import React, {useState, useEffect} from 'react';
 import Title from '../../components/atoms/Title';
 import {MyFont} from '../../components/atoms/MyFont';
 import {MyColor} from '../../components/atoms/MyColor';
@@ -41,8 +41,83 @@ interface JenisPasien {
 
 const RincianKejadian = ({navigation, route}: any) => {
   const dispatch = useDispatch();
-  const dataUser = useSelector((data: any) => data);
+  // const dataUser = useSelector((data: any) => data);
   // const dataUser = route.params;
+
+  const tokenSelector = useSelector((data: any) => data.token);
+  const waktuInsidenSelector = useSelector((data: any) => data.waktuInsiden);
+  const insidenSelector = useSelector((data: any) => data.insiden);
+  const kronologiInsidenSelector = useSelector(
+    (data: any) => data.kronologiInsiden,
+  );
+  const insidenTerjadiPadaPasienSelector = useSelector(
+    (data: any) => data.insidenTerjadiPadaPasien,
+  );
+  const pelaporPertamaSelector = useSelector(
+    (data: any) => data.pelaporPertama,
+  );
+  const pasienTerkaitSelector = useSelector((data: any) => data.pasienTerkait);
+  const dampakInsidenSelector = useSelector((data: any) => data.dampakInsiden);
+  const lokasiInsidenSelector = useSelector((data: any) => data.lokasiInsiden);
+  const probabilitasSelector = useSelector((data: any) => data.probabilitas);
+  const unitTerkaitSelector = useSelector((data: any) => data.unitTerkait);
+  const tindakLanjutSelector = useSelector((data: any) => data.tindakLanjut);
+  const tindakLanjutOlehSelector = useSelector(
+    (data: any) => data.tindakLanjutOleh,
+  );
+  const isPernahTerjadiSelector = useSelector(
+    (data: any) => data.isPernahTerjadi,
+  );
+  const deskripsiPernahTerjadiSelector = useSelector(
+    (data: any) => data.deskripsiPernahTerjadi,
+  );
+  const pernahTerjadiSelector = useSelector((data: any) => data.pernahTerjadi);
+
+  const namePasienSelector = useSelector((data: any) => data.namePasien);
+  const noMRSelector = useSelector((data: any) => data.noMR);
+  const ruanganSelector = useSelector((data: any) => data.ruangan);
+  const ageSelector = useSelector((data: any) => data.age);
+  const ageNoSelector = useSelector((data: any) => data.ageNo);
+  const selectedAgeTypeSelector = useSelector(
+    (data: any) => data.selectedAgeType,
+  );
+  const asuransiSelector = useSelector((data: any) => data.asuransi);
+  const jenisKelaminSelector = useSelector((data: any) => data.jenisKelamin);
+  const waktuMendapatPelayananSelector = useSelector(
+    (data: any) => data.waktuMendapatPelayanan,
+  );
+
+  const dataUserCoba = {
+    namePasien: namePasienSelector,
+    noMR: noMRSelector,
+    ruangan: ruanganSelector,
+    age: ageSelector,
+    ageNo: ageNoSelector,
+    selectedAgeType: selectedAgeTypeSelector,
+    asuransi: asuransiSelector,
+    jenisKelamin: jenisKelaminSelector,
+    waktuMendapatPelayanan: waktuMendapatPelayananSelector,
+  };
+
+  const dataUser = {
+    token: tokenSelector,
+    waktuInsiden: waktuInsidenSelector,
+    insiden: insidenSelector,
+    kronologiInsiden: kronologiInsidenSelector,
+    insidenTerjadiPadaPasien: insidenTerjadiPadaPasienSelector,
+    pelaporPertama: pelaporPertamaSelector,
+    pasienTerkait: pasienTerkaitSelector,
+    dampakInsiden: dampakInsidenSelector,
+    lokasiInsiden: lokasiInsidenSelector,
+    probabilitas: probabilitasSelector,
+    unitTerkait: unitTerkaitSelector,
+    tindakLanjut: tindakLanjutSelector,
+    tindakLanjutOleh: tindakLanjutOlehSelector,
+    isPernahTerjadi: isPernahTerjadiSelector,
+    deskripsiPernahTerjadi: deskripsiPernahTerjadiSelector,
+    pernahTerjadi: pernahTerjadiSelector,
+  };
+
   const [isDateTimePickerVisible, setDateTimePickerVisible] = useState(false);
   const [waktuInsiden, setWaktuInsiden] = useState(
     new Date(dataUser.waktuInsiden),
@@ -89,7 +164,12 @@ const RincianKejadian = ({navigation, route}: any) => {
 
   useEffect(() => {
     getJenisPasien();
+
     console.log('ini data user di rincian kejadian oi: ', dataUser);
+    console.log(
+      'ini data user di rincian kejadian oi di coba : ',
+      dataUserCoba,
+    );
   }, []);
 
   const datePick = () => {
@@ -686,6 +766,23 @@ const RincianKejadian = ({navigation, route}: any) => {
           textColor={MyColor.Primary}
           width={126}
           onClick={() => {
+            dispatch(saveWaktuInsidenAction(waktuInsiden));
+            dispatch(saveInsidenAction(insiden));
+            dispatch(saveKronologiInsidenAction(kronologiInsiden));
+            dispatch(
+              saveInsidenTerjadiPadaPasienAction(insidenTerjadiPadaPasien),
+            );
+            dispatch(savePelaporPertamaAction(pelaporPertama));
+            dispatch(savePasienTerkaitAction(pasienTerkait));
+            dispatch(saveDampakInsidenAction(dampakInsiden));
+            dispatch(saveLokasiInsidenAction(lokasiInsiden));
+            dispatch(saveProbabilitasAction(probabilitas));
+            dispatch(saveUnitTerkaitAction(unitTerkait));
+            dispatch(saveTindakLanjutAction(tindakLanjut));
+            dispatch(saveTindakLanjutOlehAction(tindakLanjutOleh));
+            dispatch(saveIsPernahTerjadiAction(isPernahTerjadi));
+            dispatch(saveDeskripsiPernahTerjadiAction(deskripsiPernahTerjadi));
+            dispatch(savePernahTerjadiAction(pernahTerjadi));
             navigation.navigate('DataKarakteristikPasien');
           }}
         />

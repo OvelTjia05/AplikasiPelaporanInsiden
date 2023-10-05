@@ -6,12 +6,108 @@ import Button from '../../components/atoms/Button';
 import {IconPanahKanan} from '../../assets/icons';
 import {Checkbox} from 'react-native-paper';
 import axios from 'axios';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
+import {
+  saveNamePasienAction,
+  saveNoMRAction,
+  saveRuanganAction,
+  saveAgeAction,
+  saveAgeNoAction,
+  saveSelectedAgeTypeAction,
+  saveAsuransiAction,
+  saveJenisKelaminAction,
+  saveWaktuMendapatPelayananAction,
+  saveWaktuInsidenAction,
+  saveInsidenAction,
+  saveKronologiInsidenAction,
+  saveInsidenTerjadiPadaPasienAction,
+  savePelaporPertamaAction,
+  savePasienTerkaitAction,
+  saveDampakInsidenAction,
+  saveLokasiInsidenAction,
+  saveProbabilitasAction,
+  saveUnitTerkaitAction,
+  saveTindakLanjutAction,
+  saveTindakLanjutOlehAction,
+  saveIsPernahTerjadiAction,
+  saveDeskripsiPernahTerjadiAction,
+  savePernahTerjadiAction,
+  saveImageCameraAction,
+} from '../../../redux/action';
 
 const SubmitLaporan = ({navigation, route}: any) => {
+  const dispatch = useDispatch();
   // const dataUser = route.params;
-  const dataUser = useSelector((data: any) => data);
+  // const dataUser = useSelector((data: any) => data);
   const [checked, setChecked] = useState(false);
+
+  const idUserSelector = useSelector((data: any) => data.id_user);
+  const tokenSelector = useSelector((data: any) => data.token);
+  const namePasienSelector = useSelector((data: any) => data.namePasien);
+  const noMRSelector = useSelector((data: any) => data.noMR);
+  const ruanganSelector = useSelector((data: any) => data.ruangan);
+  const ageSelector = useSelector((data: any) => data.age);
+  const asuransiSelector = useSelector((data: any) => data.asuransi);
+  const jenisKelaminSelector = useSelector((data: any) => data.jenisKelamin);
+  const waktuMendapatPelayananSelector = useSelector(
+    (data: any) => data.waktuMendapatPelayanan,
+  );
+  const waktuInsidenSelector = useSelector((data: any) => data.waktuInsiden);
+  const insidenSelector = useSelector((data: any) => data.insiden);
+  const kronologiInsidenSelector = useSelector(
+    (data: any) => data.kronologiInsiden,
+  );
+  const insidenTerjadiPadaPasienSelector = useSelector(
+    (data: any) => data.insidenTerjadiPadaPasien,
+  );
+  const pelaporPertamaSelector = useSelector(
+    (data: any) => data.pelaporPertama,
+  );
+  const pasienTerkaitSelector = useSelector((data: any) => data.pasienTerkait);
+  const dampakInsidenSelector = useSelector((data: any) => data.dampakInsiden);
+  const lokasiInsidenSelector = useSelector((data: any) => data.lokasiInsiden);
+  const probabilitasSelector = useSelector((data: any) => data.probabilitas);
+  const unitTerkaitSelector = useSelector((data: any) => data.unitTerkait);
+  const tindakLanjutSelector = useSelector((data: any) => data.tindakLanjut);
+  const tindakLanjutOlehSelector = useSelector(
+    (data: any) => data.tindakLanjutOleh,
+  );
+  const isPernahTerjadiSelector = useSelector(
+    (data: any) => data.isPernahTerjadi,
+  );
+  const deskripsiPernahTerjadiSelector = useSelector(
+    (data: any) => data.deskripsiPernahTerjadi,
+  );
+  const pernahTerjadiSelector = useSelector((data: any) => data.pernahTerjadi);
+  const imageCameraSelector = useSelector((data: any) => data.imageCamera);
+
+  const dataUser = {
+    id_user: idUserSelector,
+    token: tokenSelector,
+    namePasien: namePasienSelector,
+    noMR: noMRSelector,
+    ruangan: ruanganSelector,
+    age: ageSelector,
+    asuransi: asuransiSelector,
+    jenisKelamin: jenisKelaminSelector,
+    waktuMendapatPelayanan: waktuMendapatPelayananSelector,
+    waktuInsiden: waktuInsidenSelector,
+    insiden: insidenSelector,
+    kronologiInsiden: kronologiInsidenSelector,
+    insidenTerjadiPadaPasien: insidenTerjadiPadaPasienSelector,
+    pelaporPertama: pelaporPertamaSelector,
+    pasienTerkait: pasienTerkaitSelector,
+    dampakInsiden: dampakInsidenSelector,
+    lokasiInsiden: lokasiInsidenSelector,
+    probabilitas: probabilitasSelector,
+    unitTerkait: unitTerkaitSelector,
+    tindakLanjut: tindakLanjutSelector,
+    tindakLanjutOleh: tindakLanjutOlehSelector,
+    isPernahTerjadi: isPernahTerjadiSelector,
+    deskripsiPernahTerjadi: deskripsiPernahTerjadiSelector,
+    pernahTerjadi: pernahTerjadiSelector,
+    imageCamera: imageCameraSelector,
+  };
 
   const formData = new FormData();
   formData.append('nama_pasien', dataUser.namePasien);
@@ -100,6 +196,33 @@ const SubmitLaporan = ({navigation, route}: any) => {
         console.log('ini token: ', token);
 
         if (response.data.code == '201') {
+          dispatch(saveNamePasienAction(''));
+          dispatch(saveNoMRAction(''));
+          dispatch(saveRuanganAction(''));
+          dispatch(saveAgeAction(''));
+          dispatch(saveAgeNoAction(''));
+          dispatch(saveSelectedAgeTypeAction(''));
+          dispatch(saveAsuransiAction(''));
+          dispatch(saveJenisKelaminAction(''));
+          dispatch(saveWaktuMendapatPelayananAction(new Date()));
+
+          dispatch(saveWaktuInsidenAction(new Date()));
+          dispatch(saveInsidenAction(''));
+          dispatch(saveKronologiInsidenAction(''));
+          dispatch(saveInsidenTerjadiPadaPasienAction(''));
+          dispatch(savePelaporPertamaAction(''));
+          dispatch(savePasienTerkaitAction(0));
+          dispatch(saveDampakInsidenAction(''));
+          dispatch(saveLokasiInsidenAction(''));
+          dispatch(saveProbabilitasAction(''));
+          dispatch(saveUnitTerkaitAction(''));
+          dispatch(saveTindakLanjutAction(''));
+          dispatch(saveTindakLanjutOlehAction(''));
+          dispatch(saveIsPernahTerjadiAction(false));
+          dispatch(saveDeskripsiPernahTerjadiAction(''));
+          dispatch(savePernahTerjadiAction(''));
+
+          dispatch(saveImageCameraAction({}));
           navigation.navigate(
             'Navigation',
             // {

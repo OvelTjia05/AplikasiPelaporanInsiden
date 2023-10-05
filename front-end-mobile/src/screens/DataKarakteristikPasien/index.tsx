@@ -25,12 +25,55 @@ import {
   saveAsuransiAction,
   saveJenisKelaminAction,
   saveWaktuMendapatPelayananAction,
+  saveWaktuInsidenAction,
+  saveInsidenAction,
+  saveKronologiInsidenAction,
+  saveInsidenTerjadiPadaPasienAction,
+  savePelaporPertamaAction,
+  savePasienTerkaitAction,
+  saveDampakInsidenAction,
+  saveLokasiInsidenAction,
+  saveProbabilitasAction,
+  saveUnitTerkaitAction,
+  saveTindakLanjutAction,
+  saveTindakLanjutOlehAction,
+  saveIsPernahTerjadiAction,
+  saveDeskripsiPernahTerjadiAction,
+  savePernahTerjadiAction,
+  saveImageCameraAction,
 } from '../../../redux/action';
 
 const DataKarakteristikPasien = ({navigation, route}: any) => {
   const dispatch = useDispatch();
-  const dataUser = useSelector((data: any) => data);
+  // const dataUser = useSelector((data: any) => data);
   // const dataUser = route.params;
+
+  const namePasienSelector = useSelector((data: any) => data.namePasien);
+  const noMRSelector = useSelector((data: any) => data.noMR);
+  const ruanganSelector = useSelector((data: any) => data.ruangan);
+  const ageSelector = useSelector((data: any) => data.age);
+  const ageNoSelector = useSelector((data: any) => data.ageNo);
+  const selectedAgeTypeSelector = useSelector(
+    (data: any) => data.selectedAgeType,
+  );
+  const asuransiSelector = useSelector((data: any) => data.asuransi);
+  const jenisKelaminSelector = useSelector((data: any) => data.jenisKelamin);
+  const waktuMendapatPelayananSelector = useSelector(
+    (data: any) => data.waktuMendapatPelayanan,
+  );
+
+  const dataUser = {
+    namePasien: namePasienSelector,
+    noMR: noMRSelector,
+    ruangan: ruanganSelector,
+    age: ageSelector,
+    ageNo: ageNoSelector,
+    selectedAgeType: selectedAgeTypeSelector,
+    asuransi: asuransiSelector,
+    jenisKelamin: jenisKelaminSelector,
+    waktuMendapatPelayanan: waktuMendapatPelayananSelector,
+  };
+
   const [name, setName] = useState(dataUser.namePasien);
   const [nomorMR, setNomorMR] = useState(dataUser.noMR);
   const [ruangan, setRuangan] = useState(dataUser.ruangan);
@@ -385,7 +428,35 @@ const DataKarakteristikPasien = ({navigation, route}: any) => {
           textColor={MyColor.Primary}
           width={126}
           onClick={() => {
-            navigation.navigate('DataKarakteristikPasien');
+            dispatch(saveNamePasienAction(''));
+            dispatch(saveNoMRAction(''));
+            dispatch(saveRuanganAction(''));
+            dispatch(saveAgeAction(''));
+            dispatch(saveAgeNoAction(''));
+            dispatch(saveSelectedAgeTypeAction(''));
+            dispatch(saveAsuransiAction(''));
+            dispatch(saveJenisKelaminAction(''));
+            dispatch(saveWaktuMendapatPelayananAction(new Date()));
+
+            dispatch(saveWaktuInsidenAction(new Date()));
+            dispatch(saveInsidenAction(''));
+            dispatch(saveKronologiInsidenAction(''));
+            dispatch(saveInsidenTerjadiPadaPasienAction(''));
+            dispatch(savePelaporPertamaAction(''));
+            dispatch(savePasienTerkaitAction(0));
+            dispatch(saveDampakInsidenAction(''));
+            dispatch(saveLokasiInsidenAction(''));
+            dispatch(saveProbabilitasAction(''));
+            dispatch(saveUnitTerkaitAction(''));
+            dispatch(saveTindakLanjutAction(''));
+            dispatch(saveTindakLanjutOlehAction(''));
+            dispatch(saveIsPernahTerjadiAction(false));
+            dispatch(saveDeskripsiPernahTerjadiAction(''));
+            dispatch(savePernahTerjadiAction(''));
+
+            dispatch(saveImageCameraAction({}));
+
+            navigation.navigate('Navigation');
           }}
         />
         <Button
