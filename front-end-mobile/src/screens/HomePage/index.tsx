@@ -67,7 +67,11 @@ const HomePage = ({navigation, route}: any) => {
     socket.emit('join chat', dataUser.id_user);
     socket.emit('join admin', 'admin');
     socket.on('message received', message => {
-      console.log('yeee dapa pesan dari admin');
+      PushNotification.localNotification({
+        channelId: 'tes-channel1',
+        title: 'Response dari Admin!',
+        message,
+      });
     });
   }, []);
 

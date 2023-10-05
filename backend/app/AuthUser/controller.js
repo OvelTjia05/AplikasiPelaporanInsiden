@@ -91,6 +91,15 @@ const loginUser = async (req, res) => {
           errors: "User not found",
         });
 
+      // User sedang login di akun lain
+      if (user.token) {
+        return res.status(403).json({
+          code: "403",
+          status: "FORBIDDEN",
+          errors: "Akun sedang login di perangkat lain",
+        });
+      }
+
       // PASSWORD TIDAK COCOK
       const match = await bcrypt.compare(password, user.password);
       console.log(match);

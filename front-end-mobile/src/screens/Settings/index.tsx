@@ -4,7 +4,7 @@ import Button from '../../components/atoms/Button';
 import {MyColor} from '../../components/atoms/MyColor';
 import Header from '../../components/molecules/Header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   saveIdUserAction,
   saveNameAction,
@@ -12,20 +12,35 @@ import {
   saveTokenAction,
   saveUsernameAction,
 } from '../../../redux/action';
+import axios from 'axios';
 
 const Settings = ({navigation}: any) => {
   const dispatch = useDispatch();
-  const logout = async () => {
-    await AsyncStorage.setItem('id_user', '');
-    await AsyncStorage.setItem('name', '');
-    await AsyncStorage.setItem('token', '');
-    await AsyncStorage.setItem('role', '');
-    dispatch(saveIdUserAction(''));
-    dispatch(saveNameAction(''));
-    dispatch(saveTokenAction(''));
-    dispatch(saveRoleAction(''));
+  const token = useSelector((data: any) => data.token);
 
-    navigation.navigate('WelcomePage');
+  const logout = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${token}`, // Tambahkan token ke header dengan format Bearer
+      };
+      const response = await axios.delete(
+        `https://backend-pelaporan-final.glitch.me/auth/user/logout`,
+        {headers},
+      );
+
+      await AsyncStorage.setItem('id_user', '');
+      await AsyncStorage.setItem('name', '');
+      await AsyncStorage.setItem('token', '');
+      await AsyncStorage.setItem('role', '');
+      dispatch(saveIdUserAction(''));
+      dispatch(saveNameAction(''));
+      dispatch(saveTokenAction(''));
+      dispatch(saveRoleAction(''));
+
+      navigation.navigate('WelcomePage');
+    } catch (error) {
+      console.log('ini error login: ', error);
+    }
   };
   return (
     <View style={styles.container}>

@@ -27,6 +27,7 @@ import {API_HOST} from '../../../config';
 import Line from '../../components/atoms/Line';
 import Button from '../../components/atoms/Button';
 import {useSelector} from 'react-redux';
+import socket from '../../../socket';
 
 const AdminHistoryDetail = ({navigation, route}: any) => {
   const windowWidth = Dimensions.get('window').width;
@@ -76,7 +77,8 @@ const AdminHistoryDetail = ({navigation, route}: any) => {
     }
   };
 
-  const handleUpdateStatus = async () => {
+  const handleUpdateStatus = async (id_user: string) => {
+    console.log('ini eee id USER PARAH: ', id_user);
     try {
       const headers = {
         Authorization: `Bearer ${dataUser.token}`,
@@ -88,6 +90,11 @@ const AdminHistoryDetail = ({navigation, route}: any) => {
       );
       getLaporan();
       console.log('ini updated status: ', response.data);
+      const data = {
+        id_user,
+        message: 'laporan ini sedang diinvestigasi',
+      };
+      socket.emit('new message', data);
       navigation.navigate('AdminHistoryItems', dataUser);
     } catch (error) {
       console.log(error);
@@ -99,7 +106,7 @@ const AdminHistoryDetail = ({navigation, route}: any) => {
     console.log('status: ', status);
   }, [status]);
 
-  const handleTolak = async () => {
+  const handleTolak = async (id_user: string) => {
     try {
       const headers = {
         Authorization: `Bearer ${dataUser.token}`,
@@ -113,6 +120,11 @@ const AdminHistoryDetail = ({navigation, route}: any) => {
         {headers},
       );
       if (response.data.success === true) {
+        const data = {
+          id_user,
+          message: 'laporan ini ditolak',
+        };
+        socket.emit('new message', data);
         setStatus('laporan ditolak');
       }
       console.log('ini updated status: ', response.data);
@@ -121,7 +133,7 @@ const AdminHistoryDetail = ({navigation, route}: any) => {
     }
   };
 
-  const handleSelesai = async () => {
+  const handleSelesai = async (id_user: string) => {
     try {
       const headers = {
         Authorization: `Bearer ${dataUser.token}`,
@@ -135,6 +147,12 @@ const AdminHistoryDetail = ({navigation, route}: any) => {
         {headers},
       );
       if (response.data.success === true) {
+        const data = {
+          id_user,
+          message: 'laporan ini selesai',
+        };
+        socket.emit('new message', data);
+        setStatus('laporan ditolak');
         setStatus('laporan selesai');
       }
       console.log('ini updated status: ', response.data);
@@ -483,7 +501,7 @@ const AdminHistoryDetail = ({navigation, route}: any) => {
         // Tampilan untuk kondisi 'dalam antrian'
         <TouchableOpacity
           style={styles.statusLaporan2}
-          onPress={handleUpdateStatus}>
+          onPress={() => handleUpdateStatus(laporanDetail?.id_user)}>
           <Text style={styles.txtCardStatus}>Investigasi</Text>
           <View>{getStatusIcon('investigasi')}</View>
         </TouchableOpacity>
@@ -538,12 +556,14 @@ const AdminHistoryDetail = ({navigation, route}: any) => {
           </View>
           <Gap height={30} />
           <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-            <TouchableOpacity style={styles.btn} onPress={handleTolak}>
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() => handleTolak(laporanDetail?.id_user)}>
               <Text style={styles.txtCardStatus}>Tolak</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.btn, {backgroundColor: '#008656'}]}
-              onPress={handleSelesai}>
+              onPress={() => handleSelesai(laporanDetail?.id_user)}>
               <Text style={styles.txtCardStatus}>Selesai</Text>
             </TouchableOpacity>
           </View>
