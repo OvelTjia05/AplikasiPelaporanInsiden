@@ -26,11 +26,20 @@ import Title from '../../components/atoms/Title';
 import {API_HOST} from '../../../config';
 import Line from '../../components/atoms/Line';
 import Button from '../../components/atoms/Button';
+import {useSelector} from 'react-redux';
 
 const AdminHistoryDetail = ({navigation, route}: any) => {
   const windowWidth = Dimensions.get('window').width;
 
-  const {id_laporan, dataUser} = route.params;
+  // const {id_laporan, dataUser} = route.params;
+  const {id_laporan} = route.params;
+
+  const tokenSelector = useSelector((data: any) => data.token);
+
+  const dataUser = {
+    token: tokenSelector,
+  };
+
   const [status, setStatus] = useState(route.params.status);
   const [laporanDetail, setLaporanDetail] = useState<any | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);

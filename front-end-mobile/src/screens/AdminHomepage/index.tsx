@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import Header from '../../components/molecules/Header';
 import {MyColor} from '../../components/atoms/MyColor';
@@ -25,6 +25,7 @@ import {Path, Svg} from 'react-native-svg';
 import Gap from '../../components/atoms/Gap';
 import {Ilustrasi, Ilustrasi1, ImagePlaceHolder} from '../../assets/images';
 import axios from 'axios';
+import {useSelector} from 'react-redux';
 
 interface Laporan {
   id_laporan: string;
@@ -34,8 +35,18 @@ interface Laporan {
 }
 
 const AdminHomepage = ({navigation, route}: any) => {
-  console.log('in homepage admin: ', route.params);
-  const dataUser = route.params;
+  // console.log('in homepage admin: ', route.params);
+  // const dataUser = route.params;
+  const tokenSelector = useSelector((data: any) => data.token);
+  const nameSelector = useSelector((data: any) => data.name);
+  const roleSelector = useSelector((data: any) => data.role);
+
+  const dataUser = {
+    token: tokenSelector,
+    name: nameSelector,
+    role: roleSelector,
+  };
+
   const today = new Date();
   const [laporanHariIni, setLaporanHariIni] = useState<Laporan[]>([]);
   const [laporanBulanIni, setLaporanBulanIni] = useState<Laporan[]>([]);
@@ -49,40 +60,36 @@ const AdminHomepage = ({navigation, route}: any) => {
   );
 
   const getTodayReports = async () => {
-    if (dataUser.id_user) {
-      try {
-        const headers = {
-          Authorization: `Bearer ${dataUser.token}`, // Tambahkan token ke header dengan format Bearer
-        };
+    try {
+      const headers = {
+        Authorization: `Bearer ${dataUser.token}`, // Tambahkan token ke header dengan format Bearer
+      };
 
-        const response = await axios.get(
-          `https://backend-pelaporan-final.glitch.me/api/laporan/current/day`,
-          {headers},
-        );
-        setLaporanHariIni(response.data.data);
-        console.log('laporan hari ini: ', response.data.data);
-      } catch (error) {
-        console.log(error);
-      }
+      const response = await axios.get(
+        `https://backend-pelaporan-final.glitch.me/api/laporan/current/day`,
+        {headers},
+      );
+      setLaporanHariIni(response.data.data);
+      console.log('laporan hari ini: ', response.data.data);
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const getCurrentMonthReports = async () => {
-    if (dataUser.id_user) {
-      try {
-        const headers = {
-          Authorization: `Bearer ${dataUser.token}`, // Tambahkan token ke header dengan format Bearer
-        };
+    try {
+      const headers = {
+        Authorization: `Bearer ${dataUser.token}`, // Tambahkan token ke header dengan format Bearer
+      };
 
-        const response = await axios.get(
-          `https://backend-pelaporan-final.glitch.me/api/laporan/current/month`,
-          {headers},
-        );
-        setLaporanBulanIni(response.data.data);
-        console.log('laporan bulan ini: ', response.data.data);
-      } catch (error) {
-        console.log(error);
-      }
+      const response = await axios.get(
+        `https://backend-pelaporan-final.glitch.me/api/laporan/current/month`,
+        {headers},
+      );
+      setLaporanBulanIni(response.data.data);
+      console.log('laporan bulan ini: ', response.data.data);
+    } catch (error) {
+      console.log(error);
     }
   };
 

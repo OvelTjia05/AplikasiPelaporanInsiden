@@ -19,6 +19,7 @@ import {
 import {MyColor} from '../../components/atoms/MyColor';
 import {MyFont} from '../../components/atoms/MyFont';
 import {ImagePlaceHolder} from '../../assets/images';
+import {useSelector} from 'react-redux';
 
 interface Laporan {
   id_laporan: string;
@@ -30,7 +31,14 @@ interface Laporan {
 }
 
 const AdminHistoryByStatus = ({navigation, route}: any) => {
-  const {dataUser, status} = route.params;
+  // const {dataUser, status} = route.params;
+  const {status} = route.params;
+
+  const tokenSelector = useSelector((data: any) => data.token);
+
+  const dataUser = {
+    token: tokenSelector,
+  };
   const [laporanList, setLaporanList] = useState<Laporan[]>([]);
 
   useFocusEffect(

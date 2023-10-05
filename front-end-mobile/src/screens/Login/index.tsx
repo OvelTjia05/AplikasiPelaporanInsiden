@@ -115,10 +115,25 @@ const Login = ({navigation}: any) => {
       const token = response.data.data.token;
       console.log('ini token: ', token);
 
-      await AsyncStorage.setItem('token', token);
+      const id_user = response.data.data.id_user;
+      const name = response.data.data.name;
+      const role = response.data.data.role;
 
-      const value = await AsyncStorage.getItem('token');
-      console.log('ini adalah value: ', value);
+      await AsyncStorage.setItem('id_user', id_user);
+      await AsyncStorage.setItem('name', name);
+      await AsyncStorage.setItem('token', token);
+      await AsyncStorage.setItem('role', role);
+
+      const tokenAsync = await AsyncStorage.getItem('token');
+      const nameAsync = await AsyncStorage.getItem('name');
+      const idUserAsync = await AsyncStorage.getItem('id_user');
+      const roleAsync = await AsyncStorage.getItem('role');
+
+      console.log('ini adalah token: ', tokenAsync);
+      console.log('ini name dari asyn storage: ', nameAsync);
+      console.log('ini id user dari asyn: ', idUserAsync);
+      console.log('ini role dari asyn: ', roleAsync);
+
       if (response.data.code == '200') {
         const dataUser = response.data.data;
         if (dataUser.role !== 'admin') {

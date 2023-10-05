@@ -13,7 +13,6 @@ import SignUp from './src/screens/SignUp';
 import ForgetPass from './src/screens/ForgetPass';
 import Navigation from './src/Navigation';
 import DetailLaporan from './src/screens/DetailLaporan';
-import SubmitLaporan from './src/screens/SubmitLaporan';
 import AdminLogin from './src/screens/AdminLogin';
 import NavigationAdmin from './src/NavigationAdmin';
 import BuatLaporan from './src/screens/BuatLaporan';

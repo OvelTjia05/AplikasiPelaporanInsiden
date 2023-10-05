@@ -19,6 +19,7 @@ import axios from 'axios';
 import {MyFont} from '../../components/atoms/MyFont';
 import Gap from '../../components/atoms/Gap';
 import Line from '../../components/atoms/Line';
+import {useSelector} from 'react-redux';
 
 interface JumlahLaporan {
   jumlah_keseluruhan: number;
@@ -29,7 +30,13 @@ interface JumlahLaporan {
 }
 
 const AdminHistoryItems = ({navigation, route}: any) => {
-  const dataUser = route.params;
+  // const dataUser = route.params;
+  const tokenSelector = useSelector((data: any) => data.token);
+
+  const dataUser = {
+    token: tokenSelector,
+  };
+
   const [jumlahLaporan, setJumlahLaporan] = useState<JumlahLaporan | null>(
     null,
   );
@@ -46,21 +53,19 @@ const AdminHistoryItems = ({navigation, route}: any) => {
   );
 
   const getJumlahLaporan = async () => {
-    if (dataUser.id_user) {
-      try {
-        const headers = {
-          Authorization: `Bearer ${dataUser.token}`, // Tambahkan token ke header dengan format Bearer
-        };
+    try {
+      const headers = {
+        Authorization: `Bearer ${dataUser.token}`, // Tambahkan token ke header dengan format Bearer
+      };
 
-        const response = await axios.get(
-          `https://backend-pelaporan-final.glitch.me/api/laporan/amount`,
-          {headers},
-        );
-        setJumlahLaporan(response.data.data);
-        console.log('jumlah laporan: ', response.data.data);
-      } catch (error) {
-        console.log(error);
-      }
+      const response = await axios.get(
+        `https://backend-pelaporan-final.glitch.me/api/laporan/amount`,
+        {headers},
+      );
+      setJumlahLaporan(response.data.data);
+      console.log('jumlah laporan: ', response.data.data);
+    } catch (error) {
+      console.log(error);
     }
   };
 
