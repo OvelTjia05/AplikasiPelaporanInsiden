@@ -24,6 +24,9 @@ import {
 import axios from 'axios';
 import {useSelector, useDispatch} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
+import PushNotification from 'react-native-push-notification';
+import {API_HOST} from '../../../config';
+import socket from '../../../socket';
 
 interface Laporan {
   id_laporan: string;
@@ -59,6 +62,13 @@ const HomePage = ({navigation, route}: any) => {
     getLatestLaporan();
     console.log('ehem: ', dataUser);
     console.log('INI EE id user memang: ', dataUser);
+
+    // konfigurasi socket
+    socket.emit('join chat', dataUser.id_user);
+    socket.emit('join admin', 'admin');
+    socket.on('message received', message => {
+      console.log('yeee dapa pesan dari admin');
+    });
   }, []);
 
   useFocusEffect(

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import Header from '../../components/molecules/Header';
 import {MyColor} from '../../components/atoms/MyColor';
@@ -26,6 +26,8 @@ import Gap from '../../components/atoms/Gap';
 import {Ilustrasi, Ilustrasi1, ImagePlaceHolder} from '../../assets/images';
 import axios from 'axios';
 import {useSelector} from 'react-redux';
+import socket from '../../../socket';
+import PushNotification from 'react-native-push-notification';
 
 interface Laporan {
   id_laporan: string;
@@ -58,6 +60,18 @@ const AdminHomepage = ({navigation, route}: any) => {
       console.log('ini di admin homepage', dataUser);
     }, []),
   );
+
+  useEffect(() => {
+    socket.emit('join admin', 'admin');
+    socket.on('admin received', message => {
+      PushNotification.localNotification({
+        channelId: 'tes-channel1',
+        title: 'Ada Laporan Baru!',
+        message: 'Segera Periksa laporan ini',
+      });
+      console.log('ini pesan dari user', message);
+    });
+  }, []);
 
   const getTodayReports = async () => {
     try {

@@ -34,6 +34,7 @@ import {
   savePernahTerjadiAction,
   saveImageCameraAction,
 } from '../../../redux/action';
+import socket from '../../../socket';
 
 const SubmitLaporan = ({navigation, route}: any) => {
   const dispatch = useDispatch();
@@ -225,6 +226,7 @@ const SubmitLaporan = ({navigation, route}: any) => {
           dispatch(savePernahTerjadiAction(''));
 
           dispatch(saveImageCameraAction({}));
+          socket.emit('message admin', 'helo admin, saya sudah submit laporan');
           Alert.alert(
             'Laporan Terkirim',
             'Laporan anda akan segera ditangani, terima kasih sudah mau membantu kami dalam meningkatkan kualitas pelayanan Rumah Sakit',

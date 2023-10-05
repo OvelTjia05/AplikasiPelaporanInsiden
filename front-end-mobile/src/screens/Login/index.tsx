@@ -34,7 +34,7 @@ import {
   saveUsernameAction,
 } from '../../../redux/action';
 
-const socket = io(API_HOST);
+// const socket = io(API_HOST);
 
 const PasswordInput = ({placeholder, onChangeText, value}: any) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
@@ -69,15 +69,15 @@ const Login = ({navigation}: any) => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    socket.on('pesan', data => {
-      console.log('Pesan diterima dari server:', data);
-      // Tampilkan notifikasi push
-      PushNotification.localNotification({
-        channelId: 'tes-channel1',
-        title: 'test title server',
-        message: 'test body',
-      });
-    });
+    // socket.on('pesan', data => {
+    //   console.log('Pesan diterima dari server:', data);
+    //   // Tampilkan notifikasi push
+    //   PushNotification.localNotification({
+    //     channelId: 'tes-channel1',
+    //     title: 'test title server',
+    //     message: 'test body',
+    //   });
+    // });
     console.log('ini api host: ', API_HOST);
 
     // console.log('ini nilai awal: ', valueRedux);
