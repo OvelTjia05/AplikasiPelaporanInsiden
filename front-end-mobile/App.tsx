@@ -23,6 +23,7 @@ import AdminHistoryItems from './src/screens/AdminHistoryItems';
 import AdminHistoryDetail from './src/screens/AdminHistoryDetail';
 import {Provider, useDispatch, useSelector} from 'react-redux';
 import storeState from './redux/store';
+import Settings from './src/screens/Settings';
 // import {printAction} from '../../../redux/action';
 
 const Stack = createNativeStackNavigator();
@@ -34,7 +35,6 @@ const App = () => {
   // }, []);
 
   return (
-
     <Provider store={storeState}>
       <NavigationContainer>
         <Stack.Navigator>
@@ -116,6 +116,11 @@ const App = () => {
           <Stack.Screen
             name="AdminHistoryDetail"
             component={AdminHistoryDetail}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Settings"
+            component={Settings}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
