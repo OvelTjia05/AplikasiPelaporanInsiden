@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, Alert} from 'react-native';
+import {StyleSheet, Text, View, Alert, ActivityIndicator} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {MyFont} from '../../components/atoms/MyFont';
 import {MyColor} from '../../components/atoms/MyColor';
@@ -40,6 +40,7 @@ const SubmitLaporan = ({navigation, route}: any) => {
   // const dataUser = route.params;
   // const dataUser = useSelector((data: any) => data);
   const [checked, setChecked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const idUserSelector = useSelector((data: any) => data.id_user);
   const tokenSelector = useSelector((data: any) => data.token);
@@ -176,6 +177,7 @@ const SubmitLaporan = ({navigation, route}: any) => {
       console.log('ini headers: ', dataUser.token);
       console.log('ini id user: ', dataUser.id_user);
       console.log('Ini form data: ', formData);
+      setIsLoading(true);
       try {
         const headers = {
           'Content-Type': 'multipart/form-data',
@@ -223,32 +225,51 @@ const SubmitLaporan = ({navigation, route}: any) => {
           dispatch(savePernahTerjadiAction(''));
 
           dispatch(saveImageCameraAction({}));
-          navigation.navigate(
-            'Navigation',
-            // {
-            //   id_user: dataUser.dataUser.id_user,
-            //   name: dataUser.dataUser.name,
-            //   token: dataUser.dataUser.token,
-            //   username: dataUser.dataUser.username,
-            // }
+          Alert.alert(
+            'Laporan Terkirim',
+            'Laporan anda akan segera ditangani, terima kasih sudah mau membantu kami dalam meningkatkan kualitas pelayanan Rumah Sakit',
+            [
+              {
+                text: 'OK',
+                onPress: () => {
+                  navigation.navigate('Navigation');
+                },
+              },
+            ],
           );
+          // navigation.navigate(
+          //   'Navigation',
+          //   // {
+          //   //   id_user: dataUser.dataUser.id_user,
+          //   //   name: dataUser.dataUser.name,
+          //   //   token: dataUser.dataUser.token,
+          //   //   username: dataUser.dataUser.username,
+          //   // }
+          // );
           console.log('Laporan Terkirim');
         }
+        setIsLoading(false);
       } catch (error: any) {
+        setIsLoading(false);
         if (error.response) {
           console.log('ini dari post', error);
-          // if (error.response.data.code == '400') {
-          //   Alert.alert('isi semua field');
-          //   console.log('yuhu', error.message);
-          // } else {
-          //   Alert.alert('gagal');
-          // }
+          if (error.response.data.code == '400') {
+            Alert.alert(
+              'Gagal mengirim laporan',
+              'Mohon periksa lagi inputan anda lalu coba lagi',
+            );
+          } else {
+            Alert.alert(
+              'Gagal mengirim laporan',
+              'Mohon coba lagi, jika kesalahan terus terjadi silahkan hubungi Costumer Service',
+            );
+          }
         } else if (error.request) {
           console.log('INI ERROR: ', error);
-          // Alert.alert(
-          //   'Kesalahan Jaringan',
-          //   'Pastikan anda telah terhubung ke internet',
-          // );
+          Alert.alert(
+            'Kesalahan Jaringan',
+            'Pastikan anda telah terhubung ke internet',
+          );
         }
       }
     }
@@ -279,14 +300,25 @@ const SubmitLaporan = ({navigation, route}: any) => {
             navigation.navigate('FotoPendukung');
           }}
         />
-        <Button
-          label="Kirim Laporan"
-          backgroundColor={MyColor.Primary}
-          textColor={MyColor.Light}
-          width={173}
-          icons={<IconPanahKanan />}
-          onClick={handleSubmit}
-        />
+        {isLoading ? (
+          <View
+            style={{
+              width: 173,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <ActivityIndicator size="large" color={MyColor.Primary} />
+          </View>
+        ) : (
+          <Button
+            label="Kirim Laporan"
+            backgroundColor={MyColor.Primary}
+            textColor={MyColor.Light}
+            width={173}
+            icons={<IconPanahKanan />}
+            onClick={handleSubmit}
+          />
+        )}
       </View>
     </View>
   );
