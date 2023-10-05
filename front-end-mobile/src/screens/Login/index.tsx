@@ -201,7 +201,9 @@ const Login = ({navigation}: any) => {
       </TouchableOpacity>
       <Gap height={40} />
       {isLoading ? (
-        <ActivityIndicator size="large" color={MyColor.Primary} />
+        <View style={{height: 45}}>
+          <ActivityIndicator size="large" color={MyColor.Primary} />
+        </View>
       ) : (
         <Button
           label="Masuk"
