@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 import Header from '../../components/molecules/Header';
 import {MyColor} from '../../components/atoms/MyColor';
 import {
@@ -20,6 +21,7 @@ import {MyFont} from '../../components/atoms/MyFont';
 import Gap from '../../components/atoms/Gap';
 import axios from 'axios';
 import {useSelector} from 'react-redux';
+import {ImagePlaceHolder} from '../../assets/images';
 
 interface Laporan {
   status: string;
@@ -42,10 +44,12 @@ const History = ({navigation, route}: any) => {
     token,
   };
 
-  useEffect(() => {
-    getAllLaporan();
-    console.log('ini so masuk di history: ', dataUser);
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getAllLaporan();
+      console.log('ini so masuk di history: ', dataUser);
+    }, []),
+  );
 
   const getAllLaporan = async () => {
     if (dataUser.id_user) {
@@ -232,13 +236,10 @@ const History = ({navigation, route}: any) => {
                 }>
                 <View style={{flexDirection: 'row', columnGap: 20}}>
                   <Image
-                    source={{
-                      uri:
-                        item.gambar || 'https://example.com/default-image.jpg',
-                    }}
+                    source={item.gambar ? {uri: item.gambar} : ImagePlaceHolder}
                     style={styles.cardImage}
                   />
-                  <View>
+                  <View style={{width: 150}}>
                     <Text style={styles.txtCardTime}>
                       {formatHour(new Date(item.tanggal_laporan_dikirim))}
                     </Text>

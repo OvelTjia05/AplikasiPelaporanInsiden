@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import React, {useState, useEffect, useMemo, useCallback} from 'react';
 import {
   Image,
   ScrollView,
@@ -12,7 +12,7 @@ import Header from '../../components/molecules/Header';
 import {MyFont} from '../../components/atoms/MyFont';
 import {MyColor} from '../../components/atoms/MyColor';
 import Gap from '../../components/atoms/Gap';
-import {Ilustrasi, Ilustrasi1} from '../../assets/images';
+import {Ilustrasi, Ilustrasi1, ImagePlaceHolder} from '../../assets/images';
 import {
   IconCentang,
   IconLaporan,
@@ -23,8 +23,10 @@ import {
 } from '../../assets/icons';
 import axios from 'axios';
 import {useSelector, useDispatch} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
 
 interface Laporan {
+  id_laporan: string;
   tanggal_laporan_dikirim: Date;
   gambar: string;
   status: string;
@@ -58,6 +60,12 @@ const HomePage = ({navigation, route}: any) => {
     console.log('ehem: ', dataUser);
     console.log('INI EE id user memang: ', dataUser);
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      getLatestLaporan();
+    }, []),
+  );
 
   const getLatestLaporan = async () => {
     if (dataUser.id_user) {
@@ -211,23 +219,29 @@ const HomePage = ({navigation, route}: any) => {
           <View style={styles.card}>
             <Text style={styles.txtCardTitle}>Laporan Terakhir Anda</Text>
             {latestLaporan && latestLaporan[0] && (
-              <View
+              <TouchableOpacity
                 style={[
                   styles.cardContent,
                   {
                     backgroundColor: getStatusColor(latestLaporan[0].status),
                   },
-                ]}>
+                ]}
+                onPress={() =>
+                  navigation.navigate('DetailLaporan', {
+                    id_laporan: latestLaporan[0].id_laporan,
+                    status: latestLaporan[0].status,
+                  })
+                }>
                 <View style={{flexDirection: 'row', columnGap: 20}}>
                   <Image
-                    source={{
-                      uri:
-                        latestLaporan[0].gambar ||
-                        'https://example.com/default-image.jpg',
-                    }}
+                    source={
+                      latestLaporan[0].gambar
+                        ? {uri: latestLaporan[0].gambar}
+                        : ImagePlaceHolder
+                    }
                     style={styles.cardImage}
                   />
-                  <View>
+                  <View style={{width: 150}}>
                     <Text style={styles.txtCardTime}>
                       {formatHour(
                         new Date(latestLaporan[0].tanggal_laporan_dikirim),
@@ -244,7 +258,7 @@ const HomePage = ({navigation, route}: any) => {
                   </View>
                 </View>
                 {getStatusIcon(latestLaporan[0].status)}
-              </View>
+              </TouchableOpacity>
             )}
           </View>
         )}
@@ -257,22 +271,26 @@ const HomePage = ({navigation, route}: any) => {
       <View style={styles.card}>
         <Text style={styles.txtCardTitle}>Riwayat Laporan</Text>
         {latestLaporan.slice(1, 3).map((item: any, index) => (
-          <View
+          <TouchableOpacity
             style={[
               styles.cardContent,
               {
                 backgroundColor: getStatusColor(item.status),
               },
             ]}
-            key={index}>
+            key={index}
+            onPress={() =>
+              navigation.navigate('DetailLaporan', {
+                id_laporan: item.id_laporan,
+                status: item.status,
+              })
+            }>
             <View style={{flexDirection: 'row', columnGap: 20}}>
               <Image
-                source={{
-                  uri: item.gambar || 'https://example.com/default-image.jpg',
-                }}
+                source={item.gambar ? {uri: item.gambar} : ImagePlaceHolder}
                 style={styles.cardImage}
               />
-              <View>
+              <View style={{width: 150}}>
                 <Text style={styles.txtCardTime}>
                   {formatHour(new Date(item.tanggal_laporan_dikirim))}
                 </Text>
@@ -285,7 +303,7 @@ const HomePage = ({navigation, route}: any) => {
               </View>
             </View>
             {getStatusIcon(item.status)}
-          </View>
+          </TouchableOpacity>
         ))}
         <Pressable
           style={styles.cardFooter}
