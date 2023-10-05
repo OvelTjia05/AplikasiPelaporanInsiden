@@ -47,7 +47,6 @@ const DataKarakteristikPasien = ({navigation, route}: any) => {
   const dispatch = useDispatch();
   // const dataUser = useSelector((data: any) => data);
   // const dataUser = route.params;
-
   const namePasienSelector = useSelector((data: any) => data.namePasien);
   const noMRSelector = useSelector((data: any) => data.noMR);
   const ruanganSelector = useSelector((data: any) => data.ruangan);
@@ -61,6 +60,7 @@ const DataKarakteristikPasien = ({navigation, route}: any) => {
   const waktuMendapatPelayananSelector = useSelector(
     (data: any) => data.waktuMendapatPelayanan,
   );
+  const [isDateTimePickerVisible, setDateTimePickerVisible] = useState(false);
 
   const dataUser = {
     namePasien: namePasienSelector,
@@ -84,7 +84,6 @@ const DataKarakteristikPasien = ({navigation, route}: any) => {
   );
   const [insurance, setInsurance] = useState(dataUser.asuransi);
   const [gender, setGender] = useState(dataUser.jenisKelamin);
-  const [isDateTimePickerVisible, setDateTimePickerVisible] = useState(false);
   const [waktuMendapatPelayanan, setWaktuMendapatPelayanan] = useState(
     new Date(dataUser.waktuMendapatPelayanan),
   );
@@ -170,12 +169,7 @@ const DataKarakteristikPasien = ({navigation, route}: any) => {
       setInsurance(option);
     };
     return (
-      <View
-        style={{
-          flexDirection: 'row',
-          gap: 10,
-          flexWrap: 'wrap',
-        }}>
+      <View style={styles.containerBtn}>
         <TouchableOpacity
           style={[
             styles.button2,
@@ -537,6 +531,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
   },
+  containerBtn: {
+    flexDirection: 'row',
+    gap: 10,
+    flexWrap: 'wrap',
+    maxWidth: 360,
+    alignSelf: 'center',
+    justifyContent: 'space-between',
+  },
   button: {
     height: 40,
     alignItems: 'center',
@@ -546,7 +548,6 @@ const styles = StyleSheet.create({
     backgroundColor: MyColor.Light,
   },
   button2: {
-    marginRight: 'auto',
     height: 52,
     width: 100,
     alignItems: 'center',

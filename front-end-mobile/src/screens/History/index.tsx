@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
   cardContent: {
     padding: 20,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     height: 120,
     marginBottom: 20,
     borderRadius: 20,
