@@ -35,6 +35,7 @@ import {
   saveImageCameraAction,
 } from '../../../redux/action';
 import socket from '../../../socket';
+import {API_HOST} from '../../../config';
 
 const SubmitLaporan = ({navigation, route}: any) => {
   const dispatch = useDispatch();
@@ -185,14 +186,25 @@ const SubmitLaporan = ({navigation, route}: any) => {
           Authorization: `Bearer ${dataUser.token}`, // Tambahkan token ke header dengan format Beare
         };
 
-        const response = await axios.post(
-          `https://backend-pelaporan-final.glitch.me/api/laporan/user/${dataUser.id_user}`,
-          formData,
+        let response;
 
-          {
-            headers,
-          },
-        );
+        if (dataUser.id_user) {
+          console.log('ada id user yang dijalankan');
+          response = await axios.post(
+            `${API_HOST}/api/laporan/user/${dataUser.id_user}`,
+            formData,
+
+            {
+              headers,
+            },
+          );
+        } else {
+          console.log('anonim yang dijalankan');
+          response = await axios.post(
+            `${API_HOST}/api/laporan/anonim`,
+            formData,
+          );
+        }
         console.log('ini respon post: ', response.data);
         console.log('ini response: ', response.data.data);
         const token = response.data.data.token;
@@ -234,7 +246,11 @@ const SubmitLaporan = ({navigation, route}: any) => {
               {
                 text: 'OK',
                 onPress: () => {
-                  navigation.navigate('Navigation');
+                  if (!dataUser.id_user) {
+                    navigation.navigate('WelcomePage');
+                  } else {
+                    navigation.navigate('Navigation');
+                  }
                 },
               },
             ],

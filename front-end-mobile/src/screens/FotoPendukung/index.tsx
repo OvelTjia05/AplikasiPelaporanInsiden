@@ -7,6 +7,8 @@ import {
   Image,
   Alert,
   TouchableOpacity,
+  PermissionsAndroid,
+  Platform,
 } from 'react-native';
 import {
   launchCamera,
@@ -20,9 +22,15 @@ import Line from '../../components/atoms/Line';
 import Gap from '../../components/atoms/Gap';
 import Button from '../../components/atoms/Button';
 import {MyColor} from '../../components/atoms/MyColor';
-import {IconCamera, IconGaleri, IconPanahKanan} from '../../assets/icons';
+import {
+  IconCamera,
+  IconGaleri,
+  IconPanahKanan,
+  IconX,
+} from '../../assets/icons';
 import {useSelector, useDispatch} from 'react-redux';
 import {saveImageCameraAction} from '../../../redux/action';
+import {white} from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
 interface ImageData {
   uri: string;
   fileSize: number;
@@ -96,6 +104,23 @@ const FotoPendukung = ({navigation, route}: any) => {
     console.log('masuk di foto di rincian kejadian : ', dataUserCoba);
   }, []);
 
+  const requestCameraPermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          //akses diterima
+        } else {
+          console.log('Izin kamera ditolak');
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+  };
+
   const openCamera = () => {
     const options: any = {
       mediaType: 'photo',
@@ -134,6 +159,7 @@ const FotoPendukung = ({navigation, route}: any) => {
       }
     });
   };
+  requestCameraPermission();
   const submitFoto = () => {
     dispatch(saveImageCameraAction(imageCamera));
     if (imageCamera === null) {
@@ -175,20 +201,37 @@ const FotoPendukung = ({navigation, route}: any) => {
         </Text>
         <Gap height={40} />
         {imageCamera && Object.keys(imageCamera).length !== 0 && (
-          <View>
-            <Image source={{uri: imageCamera.uri}} style={styles.image} />
-            <Text style={styles.txtBtnImage}>
+          <View
+            style={{
+              backgroundColor: MyColor.Light,
+              borderRadius: 20,
+              overflow: 'hidden',
+            }}>
+            <View
+              style={{
+                // overflow: 'hidden',
+                backgroundColor: 'black',
+              }}>
+              <TouchableOpacity
+                style={{
+                  height: 40,
+                  width: 40,
+                  position: 'absolute',
+                  alignSelf: 'flex-end',
+                  zIndex: 50,
+                }}
+                onPress={() => setImageCamera(null)}>
+                <IconX />
+              </TouchableOpacity>
+              <Image source={{uri: imageCamera.uri}} style={styles.image} />
+            </View>
+            <Text style={[styles.txtBtnImage, {padding: 10}]}>
               Ukuran gambar: {(imageCamera.fileSize / (1024 * 1024)).toFixed(2)}{' '}
               MB
             </Text>
-            <TouchableOpacity
-              style={styles.deleteImage}
-              onPress={() => setImageCamera(null)}>
-              <Text style={styles.txtDeleteImage}>Hapus</Text>
-            </TouchableOpacity>
-            <Gap height={10} />
           </View>
         )}
+        <Gap height={10} />
         <TouchableOpacity style={styles.btnImage} onPress={openGallery}>
           <IconGaleri />
           <Text style={styles.txtBtnImage}>Ambil dari Galeri</Text>

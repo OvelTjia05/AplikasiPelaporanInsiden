@@ -114,10 +114,14 @@ const AdminLogin = ({navigation}: any) => {
       setIsLoading(false);
       console.log(error);
       if (error.response) {
-        Alert.alert(
-          'Login Gagal',
-          'Username tidak ditemukan atau password salah.',
-        );
+        if (error.response.data.code === '403') {
+          Alert.alert('Login Gagal', 'Akun sedang login di perangkat lain');
+        } else {
+          Alert.alert(
+            'Login Gagal',
+            'Username tidak ditemukan atau password salah.',
+          );
+        }
       } else if (error.request) {
         Alert.alert(
           'Kesalahan Jaringan',

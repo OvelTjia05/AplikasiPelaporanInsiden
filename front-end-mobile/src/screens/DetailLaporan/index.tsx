@@ -312,7 +312,9 @@ const DetailLaporan = ({navigation, route}: any) => {
           </Text>
         </View>
         <Text style={styles.txtKey}>
-          Apakah kejadian yang sama pernah terjadi di Unit Kerja lain?
+          Apakah kejadian yang sama pernah terjadi di Unit Kerja lain? Jika YA,
+          Kapan? Dan langkah/ tindakan apa yang telah diambil pada unit kerja
+          tersebut untuk mencegah terulangnya kejadian yang sama?
         </Text>
         <View style={styles.box}>
           <Text style={styles.txtValue}>
