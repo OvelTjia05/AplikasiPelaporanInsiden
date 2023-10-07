@@ -1,5 +1,5 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import {StyleSheet, Text, View, Alert, ActivityIndicator} from 'react-native';
+import React, {useState} from 'react';
 import Button from '../../components/atoms/Button';
 import {MyColor} from '../../components/atoms/MyColor';
 import Header from '../../components/molecules/Header';
@@ -17,11 +17,13 @@ import axios from 'axios';
 const Settings = ({navigation}: any) => {
   const dispatch = useDispatch();
   const token = useSelector((data: any) => data.token);
+  const [isLoading, setIsLoading] = useState(false);
 
   const logout = async () => {
+    setIsLoading(true);
     try {
       const headers = {
-        Authorization: `Bearer ${token}`, // Tambahkan token ke header dengan format Bearer
+        Authorization: `Bearer ${token}`,
       };
       const response = await axios.delete(
         `https://backend-pelaporan-final.glitch.me/auth/user/logout`,
@@ -37,8 +39,16 @@ const Settings = ({navigation}: any) => {
       dispatch(saveTokenAction(''));
       dispatch(saveRoleAction(''));
 
-      navigation.navigate('WelcomePage');
-    } catch (error) {
+      if (response.data.code === '200') {
+        navigation.navigate('WelcomePage');
+      }
+      setIsLoading(false);
+    } catch (error: any) {
+      setIsLoading(false);
+      Alert.alert(
+        'Terjadi kesalahan',
+        'Mohon coba lagi, jika kesalahan terus berlanjut silahkan hubungi Costumer Service',
+      );
       console.log('ini error login: ', error);
     }
   };
@@ -46,13 +56,17 @@ const Settings = ({navigation}: any) => {
     <View style={styles.container}>
       <Header />
       <View style={styles.container1}>
-        <Button
-          label="Log out"
-          width={150}
-          onClick={logout}
-          textColor={MyColor.Light}
-          backgroundColor={MyColor.Primary}
-        />
+        {isLoading ? (
+          <ActivityIndicator size="large" color={MyColor.Primary} />
+        ) : (
+          <Button
+            label="Log out"
+            width={150}
+            onClick={logout}
+            textColor={MyColor.Light}
+            backgroundColor={MyColor.Primary}
+          />
+        )}
       </View>
     </View>
   );
