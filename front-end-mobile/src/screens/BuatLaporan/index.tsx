@@ -30,21 +30,6 @@ const BuatLaporan = ({navigation, route}: any) => {
         : {},
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const unsubscribe = navigation.addListener('beforeRemove', (e: any) => {
-        // Prevent default back navigation if not on the HomePage
-        if (route.name !== 'Navigation' && id_user) {
-          e.preventDefault();
-          // Navigate to HomePage instead
-          navigation.navigate('Navigation');
-        }
-      });
-
-      return unsubscribe;
-    }, [navigation, route]),
-  );
-
   return (
     <ScrollView contentContainerStyle={{flex: 1}}>
       <Header />

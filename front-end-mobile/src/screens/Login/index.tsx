@@ -146,7 +146,6 @@ const Login = ({navigation}: any) => {
 
           console.log('ini di LOGIN: ', dataUser);
           console.log('ini di LOGIN id user: ', dataUser.id_user);
-          // navigation.reset('Navigation');
           navigation.dispatch(
             CommonActions.reset({
               index: 0,

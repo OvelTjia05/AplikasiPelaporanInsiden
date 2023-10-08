@@ -6,8 +6,10 @@ import {
   TextInput as Input,
   TouchableOpacity,
   Alert,
+  BackHandler,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+import React, {useState, useEffect, useCallback} from 'react';
 import Title from '../../components/atoms/Title';
 import Button from '../../components/atoms/Button';
 import {MyColor} from '../../components/atoms/MyColor';
@@ -362,6 +364,96 @@ const DataKarakteristikPasien = ({navigation, route}: any) => {
     );
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      const backAction = () => {
+        Alert.alert(
+          'Peringatan!',
+          'Jika anda kembali maka semua perubahan anda akan dihapus',
+          [
+            {
+              text: 'Batal',
+              onPress: () => null,
+              style: 'cancel',
+            },
+            {
+              text: 'OK',
+              onPress: () => {
+                if (!idUser) {
+                  dispatch(saveNamePasienAction(''));
+                  dispatch(saveNoMRAction(''));
+                  dispatch(saveRuanganAction(''));
+                  dispatch(saveAgeAction(''));
+                  dispatch(saveAgeNoAction(''));
+                  dispatch(saveSelectedAgeTypeAction(''));
+                  dispatch(saveAsuransiAction(''));
+                  dispatch(saveJenisKelaminAction(''));
+                  dispatch(saveWaktuMendapatPelayananAction(new Date()));
+
+                  dispatch(saveWaktuInsidenAction(new Date()));
+                  dispatch(saveInsidenAction(''));
+                  dispatch(saveKronologiInsidenAction(''));
+                  dispatch(saveInsidenTerjadiPadaPasienAction(''));
+                  dispatch(savePelaporPertamaAction(''));
+                  dispatch(savePasienTerkaitAction(0));
+                  dispatch(saveDampakInsidenAction(''));
+                  dispatch(saveLokasiInsidenAction(''));
+                  dispatch(saveProbabilitasAction(''));
+                  dispatch(saveUnitTerkaitAction(''));
+                  dispatch(saveTindakLanjutAction(''));
+                  dispatch(saveTindakLanjutOlehAction(''));
+                  dispatch(saveIsPernahTerjadiAction(false));
+                  dispatch(saveDeskripsiPernahTerjadiAction(''));
+                  dispatch(savePernahTerjadiAction(''));
+
+                  dispatch(saveImageCameraAction({}));
+                  navigation.navigate('WelcomePage');
+                } else {
+                  dispatch(saveNamePasienAction(''));
+                  dispatch(saveNoMRAction(''));
+                  dispatch(saveRuanganAction(''));
+                  dispatch(saveAgeAction(''));
+                  dispatch(saveAgeNoAction(''));
+                  dispatch(saveSelectedAgeTypeAction(''));
+                  dispatch(saveAsuransiAction(''));
+                  dispatch(saveJenisKelaminAction(''));
+                  dispatch(saveWaktuMendapatPelayananAction(new Date()));
+
+                  dispatch(saveWaktuInsidenAction(new Date()));
+                  dispatch(saveInsidenAction(''));
+                  dispatch(saveKronologiInsidenAction(''));
+                  dispatch(saveInsidenTerjadiPadaPasienAction(''));
+                  dispatch(savePelaporPertamaAction(''));
+                  dispatch(savePasienTerkaitAction(0));
+                  dispatch(saveDampakInsidenAction(''));
+                  dispatch(saveLokasiInsidenAction(''));
+                  dispatch(saveProbabilitasAction(''));
+                  dispatch(saveUnitTerkaitAction(''));
+                  dispatch(saveTindakLanjutAction(''));
+                  dispatch(saveTindakLanjutOlehAction(''));
+                  dispatch(saveIsPernahTerjadiAction(false));
+                  dispatch(saveDeskripsiPernahTerjadiAction(''));
+                  dispatch(savePernahTerjadiAction(''));
+
+                  dispatch(saveImageCameraAction({}));
+                  navigation.navigate('Navigation');
+                }
+              },
+            },
+          ],
+        );
+        return true;
+      };
+
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction,
+      );
+
+      return () => backHandler.remove();
+    }, []),
+  );
+
   return (
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <View style={styles.container}>
@@ -424,35 +516,50 @@ const DataKarakteristikPasien = ({navigation, route}: any) => {
             textColor={MyColor.Primary}
             width={126}
             onClick={() => {
-              dispatch(saveNamePasienAction(''));
-              dispatch(saveNoMRAction(''));
-              dispatch(saveRuanganAction(''));
-              dispatch(saveAgeAction(''));
-              dispatch(saveAgeNoAction(''));
-              dispatch(saveSelectedAgeTypeAction(''));
-              dispatch(saveAsuransiAction(''));
-              dispatch(saveJenisKelaminAction(''));
-              dispatch(saveWaktuMendapatPelayananAction(new Date()));
+              Alert.alert(
+                'Peringatan!',
+                'Jika anda kembali maka semua perubahan anda akan dihapus',
+                [
+                  {
+                    text: 'Batal',
+                    onPress: () => null,
+                    style: 'cancel',
+                  },
+                  {
+                    text: 'OK',
+                    onPress: () => {
+                      dispatch(saveNamePasienAction(''));
+                      dispatch(saveNoMRAction(''));
+                      dispatch(saveRuanganAction(''));
+                      dispatch(saveAgeAction(''));
+                      dispatch(saveAgeNoAction(''));
+                      dispatch(saveSelectedAgeTypeAction(''));
+                      dispatch(saveAsuransiAction(''));
+                      dispatch(saveJenisKelaminAction(''));
+                      dispatch(saveWaktuMendapatPelayananAction(new Date()));
 
-              dispatch(saveWaktuInsidenAction(new Date()));
-              dispatch(saveInsidenAction(''));
-              dispatch(saveKronologiInsidenAction(''));
-              dispatch(saveInsidenTerjadiPadaPasienAction(''));
-              dispatch(savePelaporPertamaAction(''));
-              dispatch(savePasienTerkaitAction(0));
-              dispatch(saveDampakInsidenAction(''));
-              dispatch(saveLokasiInsidenAction(''));
-              dispatch(saveProbabilitasAction(''));
-              dispatch(saveUnitTerkaitAction(''));
-              dispatch(saveTindakLanjutAction(''));
-              dispatch(saveTindakLanjutOlehAction(''));
-              dispatch(saveIsPernahTerjadiAction(false));
-              dispatch(saveDeskripsiPernahTerjadiAction(''));
-              dispatch(savePernahTerjadiAction(''));
+                      dispatch(saveWaktuInsidenAction(new Date()));
+                      dispatch(saveInsidenAction(''));
+                      dispatch(saveKronologiInsidenAction(''));
+                      dispatch(saveInsidenTerjadiPadaPasienAction(''));
+                      dispatch(savePelaporPertamaAction(''));
+                      dispatch(savePasienTerkaitAction(0));
+                      dispatch(saveDampakInsidenAction(''));
+                      dispatch(saveLokasiInsidenAction(''));
+                      dispatch(saveProbabilitasAction(''));
+                      dispatch(saveUnitTerkaitAction(''));
+                      dispatch(saveTindakLanjutAction(''));
+                      dispatch(saveTindakLanjutOlehAction(''));
+                      dispatch(saveIsPernahTerjadiAction(false));
+                      dispatch(saveDeskripsiPernahTerjadiAction(''));
+                      dispatch(savePernahTerjadiAction(''));
 
-              dispatch(saveImageCameraAction({}));
-
-              navigation.navigate('WelcomePage');
+                      dispatch(saveImageCameraAction({}));
+                      navigation.navigate('WelcomePage');
+                    },
+                  },
+                ],
+              );
             }}
           />
         ) : (
@@ -462,35 +569,49 @@ const DataKarakteristikPasien = ({navigation, route}: any) => {
             textColor={MyColor.Primary}
             width={126}
             onClick={() => {
-              dispatch(saveNamePasienAction(''));
-              dispatch(saveNoMRAction(''));
-              dispatch(saveRuanganAction(''));
-              dispatch(saveAgeAction(''));
-              dispatch(saveAgeNoAction(''));
-              dispatch(saveSelectedAgeTypeAction(''));
-              dispatch(saveAsuransiAction(''));
-              dispatch(saveJenisKelaminAction(''));
-              dispatch(saveWaktuMendapatPelayananAction(new Date()));
+              Alert.alert(
+                'Peringatan!',
+                'Jika anda kembali maka semua perubahan anda akan dihapus',
+                [
+                  {
+                    text: 'Batal',
+                    onPress: () => null,
+                    style: 'cancel',
+                  },
+                  {
+                    text: 'OK',
+                    onPress: () => {
+                      dispatch(saveNamePasienAction(''));
+                      dispatch(saveNoMRAction(''));
+                      dispatch(saveRuanganAction(''));
+                      dispatch(saveAgeAction(''));
+                      dispatch(saveAgeNoAction(''));
+                      dispatch(saveSelectedAgeTypeAction(''));
+                      dispatch(saveAsuransiAction(''));
+                      dispatch(saveJenisKelaminAction(''));
+                      dispatch(saveWaktuMendapatPelayananAction(new Date()));
+                      dispatch(saveWaktuInsidenAction(new Date()));
+                      dispatch(saveInsidenAction(''));
+                      dispatch(saveKronologiInsidenAction(''));
+                      dispatch(saveInsidenTerjadiPadaPasienAction(''));
+                      dispatch(savePelaporPertamaAction(''));
+                      dispatch(savePasienTerkaitAction(0));
+                      dispatch(saveDampakInsidenAction(''));
+                      dispatch(saveLokasiInsidenAction(''));
+                      dispatch(saveProbabilitasAction(''));
+                      dispatch(saveUnitTerkaitAction(''));
+                      dispatch(saveTindakLanjutAction(''));
+                      dispatch(saveTindakLanjutOlehAction(''));
+                      dispatch(saveIsPernahTerjadiAction(false));
+                      dispatch(saveDeskripsiPernahTerjadiAction(''));
+                      dispatch(savePernahTerjadiAction(''));
 
-              dispatch(saveWaktuInsidenAction(new Date()));
-              dispatch(saveInsidenAction(''));
-              dispatch(saveKronologiInsidenAction(''));
-              dispatch(saveInsidenTerjadiPadaPasienAction(''));
-              dispatch(savePelaporPertamaAction(''));
-              dispatch(savePasienTerkaitAction(0));
-              dispatch(saveDampakInsidenAction(''));
-              dispatch(saveLokasiInsidenAction(''));
-              dispatch(saveProbabilitasAction(''));
-              dispatch(saveUnitTerkaitAction(''));
-              dispatch(saveTindakLanjutAction(''));
-              dispatch(saveTindakLanjutOlehAction(''));
-              dispatch(saveIsPernahTerjadiAction(false));
-              dispatch(saveDeskripsiPernahTerjadiAction(''));
-              dispatch(savePernahTerjadiAction(''));
-
-              dispatch(saveImageCameraAction({}));
-
-              navigation.navigate('Navigation');
+                      dispatch(saveImageCameraAction({}));
+                      navigation.navigate('Navigation');
+                    },
+                  },
+                ],
+              );
             }}
           />
         )}
