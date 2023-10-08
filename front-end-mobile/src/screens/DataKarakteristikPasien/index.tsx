@@ -47,6 +47,7 @@ const DataKarakteristikPasien = ({navigation, route}: any) => {
   const dispatch = useDispatch();
   // const dataUser = useSelector((data: any) => data);
   // const dataUser = route.params;
+  const idUser = useSelector((data: any) => data.id_user);
   const namePasienSelector = useSelector((data: any) => data.namePasien);
   const noMRSelector = useSelector((data: any) => data.noMR);
   const ruanganSelector = useSelector((data: any) => data.ruangan);
@@ -416,43 +417,83 @@ const DataKarakteristikPasien = ({navigation, route}: any) => {
         <Gap height={30} />
       </View>
       <View style={styles.footer}>
-        <Button
-          label="Menu Utama"
-          backgroundColor={MyColor.Light}
-          textColor={MyColor.Primary}
-          width={126}
-          onClick={() => {
-            dispatch(saveNamePasienAction(''));
-            dispatch(saveNoMRAction(''));
-            dispatch(saveRuanganAction(''));
-            dispatch(saveAgeAction(''));
-            dispatch(saveAgeNoAction(''));
-            dispatch(saveSelectedAgeTypeAction(''));
-            dispatch(saveAsuransiAction(''));
-            dispatch(saveJenisKelaminAction(''));
-            dispatch(saveWaktuMendapatPelayananAction(new Date()));
+        {!idUser ? (
+          <Button
+            label="Kembali"
+            backgroundColor={MyColor.Light}
+            textColor={MyColor.Primary}
+            width={126}
+            onClick={() => {
+              dispatch(saveNamePasienAction(''));
+              dispatch(saveNoMRAction(''));
+              dispatch(saveRuanganAction(''));
+              dispatch(saveAgeAction(''));
+              dispatch(saveAgeNoAction(''));
+              dispatch(saveSelectedAgeTypeAction(''));
+              dispatch(saveAsuransiAction(''));
+              dispatch(saveJenisKelaminAction(''));
+              dispatch(saveWaktuMendapatPelayananAction(new Date()));
 
-            dispatch(saveWaktuInsidenAction(new Date()));
-            dispatch(saveInsidenAction(''));
-            dispatch(saveKronologiInsidenAction(''));
-            dispatch(saveInsidenTerjadiPadaPasienAction(''));
-            dispatch(savePelaporPertamaAction(''));
-            dispatch(savePasienTerkaitAction(0));
-            dispatch(saveDampakInsidenAction(''));
-            dispatch(saveLokasiInsidenAction(''));
-            dispatch(saveProbabilitasAction(''));
-            dispatch(saveUnitTerkaitAction(''));
-            dispatch(saveTindakLanjutAction(''));
-            dispatch(saveTindakLanjutOlehAction(''));
-            dispatch(saveIsPernahTerjadiAction(false));
-            dispatch(saveDeskripsiPernahTerjadiAction(''));
-            dispatch(savePernahTerjadiAction(''));
+              dispatch(saveWaktuInsidenAction(new Date()));
+              dispatch(saveInsidenAction(''));
+              dispatch(saveKronologiInsidenAction(''));
+              dispatch(saveInsidenTerjadiPadaPasienAction(''));
+              dispatch(savePelaporPertamaAction(''));
+              dispatch(savePasienTerkaitAction(0));
+              dispatch(saveDampakInsidenAction(''));
+              dispatch(saveLokasiInsidenAction(''));
+              dispatch(saveProbabilitasAction(''));
+              dispatch(saveUnitTerkaitAction(''));
+              dispatch(saveTindakLanjutAction(''));
+              dispatch(saveTindakLanjutOlehAction(''));
+              dispatch(saveIsPernahTerjadiAction(false));
+              dispatch(saveDeskripsiPernahTerjadiAction(''));
+              dispatch(savePernahTerjadiAction(''));
 
-            dispatch(saveImageCameraAction({}));
+              dispatch(saveImageCameraAction({}));
 
-            navigation.navigate('Navigation');
-          }}
-        />
+              navigation.navigate('WelcomePage');
+            }}
+          />
+        ) : (
+          <Button
+            label="Menu Utama"
+            backgroundColor={MyColor.Light}
+            textColor={MyColor.Primary}
+            width={126}
+            onClick={() => {
+              dispatch(saveNamePasienAction(''));
+              dispatch(saveNoMRAction(''));
+              dispatch(saveRuanganAction(''));
+              dispatch(saveAgeAction(''));
+              dispatch(saveAgeNoAction(''));
+              dispatch(saveSelectedAgeTypeAction(''));
+              dispatch(saveAsuransiAction(''));
+              dispatch(saveJenisKelaminAction(''));
+              dispatch(saveWaktuMendapatPelayananAction(new Date()));
+
+              dispatch(saveWaktuInsidenAction(new Date()));
+              dispatch(saveInsidenAction(''));
+              dispatch(saveKronologiInsidenAction(''));
+              dispatch(saveInsidenTerjadiPadaPasienAction(''));
+              dispatch(savePelaporPertamaAction(''));
+              dispatch(savePasienTerkaitAction(0));
+              dispatch(saveDampakInsidenAction(''));
+              dispatch(saveLokasiInsidenAction(''));
+              dispatch(saveProbabilitasAction(''));
+              dispatch(saveUnitTerkaitAction(''));
+              dispatch(saveTindakLanjutAction(''));
+              dispatch(saveTindakLanjutOlehAction(''));
+              dispatch(saveIsPernahTerjadiAction(false));
+              dispatch(saveDeskripsiPernahTerjadiAction(''));
+              dispatch(savePernahTerjadiAction(''));
+
+              dispatch(saveImageCameraAction({}));
+
+              navigation.navigate('Navigation');
+            }}
+          />
+        )}
         <Button
           label="Selanjutnya"
           backgroundColor={MyColor.Primary}

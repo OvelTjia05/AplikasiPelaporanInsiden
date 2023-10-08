@@ -30,6 +30,7 @@ import {
   saveNameAction,
   saveRoleAction,
 } from '../../../redux/action';
+import {CommonActions} from '@react-navigation/native';
 
 const socket = io('https://backend-pelaporan-final.glitch.me.glitch.me');
 
@@ -101,7 +102,15 @@ const AdminLogin = ({navigation}: any) => {
           dispatch(saveRoleAction(dataUser.role));
           console.log('ini di LOGIN: ', dataUser);
           console.log('ini di LOGIN id user: ', dataUser.id_user);
-          navigation.navigate('AdminHomepage');
+          // navigation.navigate('AdminHomepage');
+
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: 'AdminHomepage'}],
+            }),
+          );
+
           setUsername('');
           setPassword('');
         } else {

@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, Component} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SplashScreen from './src/screens/SplashScreen';
@@ -23,11 +23,15 @@ import AdminHistoryDetail from './src/screens/AdminHistoryDetail';
 import {Provider, useDispatch, useSelector} from 'react-redux';
 import storeState from './redux/store';
 import Settings from './src/screens/Settings';
+import {Permission, PERMISSIONS_TYPE} from './src/Permission';
 // import {printAction} from '../../../redux/action';
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
+  useEffect(() => {
+    Permission.checkPermission(PERMISSIONS_TYPE.notifications);
+  }, []);
   // const dataAwal = useSelector((data: any) => data.value);
   // useEffect(() => {
   //   console.log('ini data awal: ', dataAwal);

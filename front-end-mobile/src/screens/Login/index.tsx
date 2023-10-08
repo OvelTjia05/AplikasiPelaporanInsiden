@@ -33,6 +33,7 @@ import {
   saveTokenAction,
   saveUsernameAction,
 } from '../../../redux/action';
+import {CommonActions} from '@react-navigation/native';
 
 // const socket = io(API_HOST);
 
@@ -145,7 +146,14 @@ const Login = ({navigation}: any) => {
 
           console.log('ini di LOGIN: ', dataUser);
           console.log('ini di LOGIN id user: ', dataUser.id_user);
-          navigation.navigate('Navigation');
+          // navigation.reset('Navigation');
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: 'Navigation'}],
+            }),
+          );
+
           setUsername('');
           setPassword('');
         } else {
@@ -228,13 +236,13 @@ const Login = ({navigation}: any) => {
           navigation.navigate('SignUp');
         }}
       />
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={{width: 100, height: 30, backgroundColor: 'pink'}}
         onPress={() => {
           triggerNotification();
         }}>
         <Text style={{color: 'black'}}>Trigger Notifikasi</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </ScrollView>
   );
 };

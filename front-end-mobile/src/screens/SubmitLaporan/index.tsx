@@ -186,6 +186,10 @@ const SubmitLaporan = ({navigation, route}: any) => {
           Authorization: `Bearer ${dataUser.token}`, // Tambahkan token ke header dengan format Beare
         };
 
+        const headersAnonim = {
+          'Content-Type': 'multipart/form-data',
+        };
+
         let response;
 
         if (dataUser.id_user) {
@@ -203,6 +207,9 @@ const SubmitLaporan = ({navigation, route}: any) => {
           response = await axios.post(
             `${API_HOST}/api/laporan/anonim`,
             formData,
+            {
+              headers: headersAnonim,
+            },
           );
         }
         console.log('ini respon post: ', response.data);

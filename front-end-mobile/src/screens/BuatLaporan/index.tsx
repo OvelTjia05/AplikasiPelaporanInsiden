@@ -19,6 +19,7 @@ import {useSelector, useDispatch} from 'react-redux';
 const Stack = createNativeStackNavigator();
 
 const BuatLaporan = ({navigation, route}: any) => {
+  const id_user = useSelector((data: any) => data.id_user);
   const [activeStep, setActiveStep]: any = useState(1);
   const stepDone = {
     1: activeStep > 1 ? [styles.doneStep, styles.txtActiveStep] : {},
@@ -33,7 +34,7 @@ const BuatLaporan = ({navigation, route}: any) => {
     React.useCallback(() => {
       const unsubscribe = navigation.addListener('beforeRemove', (e: any) => {
         // Prevent default back navigation if not on the HomePage
-        if (route.name !== 'Navigation') {
+        if (route.name !== 'Navigation' && id_user) {
           e.preventDefault();
           // Navigate to HomePage instead
           navigation.navigate('Navigation');

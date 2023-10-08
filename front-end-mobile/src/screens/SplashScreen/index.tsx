@@ -45,16 +45,10 @@ const SplashScreen = ({navigation, route}: any) => {
             );
 
             if (response.data.data) {
-              const navigateToDashboard = setTimeout(() => {
-                navigation.replace('Navigation');
-              }, 3000);
-              return () => clearTimeout(navigateToDashboard);
+              navigation.replace('Navigation');
             }
           } catch (error) {
-            const navigateToDashboard = setTimeout(() => {
-              navigation.replace('WelcomePage');
-            }, 3000);
-            return () => clearTimeout(navigateToDashboard);
+            navigation.replace('WelcomePage');
           }
         } else if (roleAsync === 'admin') {
           try {
@@ -64,16 +58,10 @@ const SplashScreen = ({navigation, route}: any) => {
             );
 
             if (response.data.data) {
-              const navigateToDashboard = setTimeout(() => {
-                navigation.replace('AdminHomepage');
-              }, 3000);
-              return () => clearTimeout(navigateToDashboard);
+              navigation.replace('AdminHomepage');
             }
           } catch (error) {
-            const navigateToDashboard = setTimeout(() => {
-              navigation.replace('WelcomePage');
-            }, 3000);
-            return () => clearTimeout(navigateToDashboard);
+            navigation.replace('WelcomePage');
           }
         }
       } else {
